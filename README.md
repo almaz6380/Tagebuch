@@ -25,33 +25,23 @@ npm start         # Expo Dev-Server (QR-Code mit Expo Go scannen)
 
 Prüfen: `npm run typecheck` und `npm run lint`.
 
-## Web / PWA veröffentlichen
+## Web-App
 
-```bash
-npm run build:web   # erzeugt dist/ inkl. Service Worker (sw.js) für Offline-Betrieb
-```
+**Live:** https://almaz6380.github.io/Tagebuch/
 
-Den Ordner `dist/` kannst du auf jedem statischen Hoster veröffentlichen (Netlify, Vercel,
-Cloudflare Pages, GitHub Pages …). HTTPS ist Pflicht, sonst funktionieren PIN und IDs nicht.
-Danach lässt sich die Seite auf dem Handy über „Zum Home-Bildschirm“ als App installieren.
+Jeder Push auf `main` oder `claude/tagebuch-app` baut die App über GitHub Actions
+(`.github/workflows/deploy.yml`) und veröffentlicht sie auf GitHub Pages.
+Einmalig nötig: **Settings → Pages → Source: „GitHub Actions“**.
 
-## In die App Stores
+Auf dem Handy die Seite öffnen und „Zum Home-Bildschirm“ wählen, dann läuft sie wie eine App,
+auch offline.
 
-Die Store-Builds laufen in der Cloud über [EAS](https://docs.expo.dev/eas/). Du brauchst keinen Mac.
-Dafür benötigst du:
+Lokal bauen: `npm run build:web` erzeugt `dist/` inklusive Service Worker.
 
-- ein kostenloses [Expo-Konto](https://expo.dev/signup)
-- **Apple Developer Program** (99 $/Jahr) für den App Store
-- **Google Play Console** (einmalig 25 $) für den Play Store
+## App Stores (später)
 
-```bash
-npx eas-cli@latest login
-npx eas-cli@latest build --platform all --profile production
-npx eas-cli@latest submit --platform ios       # bzw. android
-```
-
-Vorher in `app.json` die Platzhalter `com.example.tagebuch` (`ios.bundleIdentifier`,
-`android.package`) durch eine eigene, eindeutige Kennung ersetzen, z. B. `de.deinname.tagebuch`.
+Die Store-Builds laufen über [EAS](https://docs.expo.dev/eas/) und brauchen dafür ein Expo-Konto.
+Siehe `eas.json`. Vorher in `app.json` die Platzhalter `com.example.tagebuch` ersetzen.
 
 ## Aufbau
 

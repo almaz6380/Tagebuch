@@ -1,6 +1,9 @@
 import { ScrollViewStyleReset, useServerDocumentContext } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
 
+// Must match experiments.baseUrl in app.json (GitHub Pages serves the app under /Tagebuch).
+const BASE = '/Tagebuch';
+
 // Web-only document shell used for the static export.
 export default function Root({ children }: PropsWithChildren) {
   const { htmlAttributes, bodyAttributes, headNodes, bodyNodes } = useServerDocumentContext();
@@ -14,8 +17,8 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Tagebuch" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="apple-touch-icon" href="/icon-192.png" />
+        <link rel="manifest" href={`${BASE}/manifest.json`} />
+        <link rel="apple-touch-icon" href={`${BASE}/icon-192.png`} />
         <ScrollViewStyleReset />
         <style dangerouslySetInnerHTML={{ __html: 'body{background-color:#F5EFE3}' }} />
         <script dangerouslySetInnerHTML={{ __html: swRegistration }} />
@@ -30,8 +33,9 @@ export default function Root({ children }: PropsWithChildren) {
 }
 
 const swRegistration = `
+var base = '${BASE}/';
 if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('/sw.js').catch(function () {});
+    navigator.serviceWorker.register(base + 'sw.js', { scope: base }).catch(function () {});
   });
 }`;

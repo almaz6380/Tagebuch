@@ -1,6 +1,7 @@
 // Generates dist/sw.js after `expo export -p web`: precaches the whole static
 // build so the PWA works offline. A new build gets a new cache name, which
-// replaces the old cache on activation.
+// replaces the old cache on activation. Paths are relative to sw.js, so the
+// worker works under any base URL (e.g. /Tagebuch on GitHub Pages).
 import { readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 
@@ -14,8 +15,8 @@ function walk(dir) {
 }
 
 const files = walk(dist)
-  .map((f) => '/' + relative(dist, f).split(sep).join('/'))
-  .filter((f) => f !== '/sw.js' && !f.endsWith('.map'));
+  .map((f) => relative(dist, f).split(sep).join('/'))
+  .filter((f) => f !== 'sw.js' && !f.endsWith('.map'));
 
 const version = Date.now().toString(36);
 
@@ -41,8 +42,9 @@ self.addEventListener('fetch', (event) => {
     // Pages: network first so updates arrive, cached copy when offline.
     event.respondWith(
       fetch(req).catch(async () => {
-        const path = new URL(req.url).pathname.replace(/\\/$/, '') || '/index';
-        return (await caches.match(path + '.html')) || (await caches.match(req)) || caches.match('/index.html');
+        const scope = new URL(self.registration.scope).pathname;
+        const page = new URL(req.url).pathname.slice(scope.length).replace(/\\/$/, '') || 'index';
+        return (await caches.match(page + '.html')) || (await caches.match(req)) || caches.match('index.html');
       }),
     );
     return;
