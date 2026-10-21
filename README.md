@@ -27,11 +27,17 @@ Prüfen: `npm run typecheck` und `npm run lint`.
 
 ## Web-App
 
-**Live:** https://almaz6380.github.io/Tagebuch/
+Gehostet auf **Cloudflare Pages**, das bei jedem Push auf `claude/tagebuch-app` automatisch baut.
 
-Jeder Push auf `main` oder `claude/tagebuch-app` baut die App über GitHub Actions
-(`.github/workflows/deploy.yml`) und veröffentlicht sie auf GitHub Pages.
-Einmalig nötig: **Settings → Pages → Source: „GitHub Actions“**.
+Einrichtung (einmalig) unter dash.cloudflare.com → Workers & Pages → Create → Pages → Connect to Git:
+
+| Einstellung | Wert |
+|---|---|
+| Repository | `almaz6380/Tagebuch` |
+| Production branch | `claude/tagebuch-app` |
+| Framework preset | None |
+| Build command | `npm run build:web` |
+| Build output directory | `dist` |
 
 Auf dem Handy die Seite öffnen und „Zum Home-Bildschirm“ wählen, dann läuft sie wie eine App,
 auch offline.

@@ -47,8 +47,7 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true,
-      "baseUrl": "/Tagebuch"
+      "typedRoutes": true
     }
   }
 }

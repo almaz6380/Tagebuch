@@ -1,8 +1,8 @@
 import { ScrollViewStyleReset, useServerDocumentContext } from 'expo-router/html';
 import type { PropsWithChildren } from 'react';
 
-// Must match experiments.baseUrl in app.json (GitHub Pages serves the app under /Tagebuch).
-const BASE = '/Tagebuch';
+// Path prefix the app is served under; must match experiments.baseUrl in app.json if one is set.
+const BASE = '';
 
 // Web-only document shell used for the static export.
 export default function Root({ children }: PropsWithChildren) {

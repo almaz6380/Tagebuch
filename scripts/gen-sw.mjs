@@ -1,7 +1,7 @@
 // Generates dist/sw.js after `expo export -p web`: precaches the whole static
 // build so the PWA works offline. A new build gets a new cache name, which
 // replaces the old cache on activation. Paths are relative to sw.js, so the
-// worker works under any base URL (e.g. /Tagebuch on GitHub Pages).
+// worker works at the domain root and under a sub path alike.
 import { readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, sep } from 'node:path';
 
@@ -16,7 +16,8 @@ function walk(dir) {
 
 const files = walk(dist)
   .map((f) => relative(dist, f).split(sep).join('/'))
-  .filter((f) => f !== 'sw.js' && !f.endsWith('.map'));
+  // _headers is Cloudflare config and is never served.
+  .filter((f) => f !== 'sw.js' && f !== '_headers' && !f.endsWith('.map'));
 
 const version = Date.now().toString(36);
 
