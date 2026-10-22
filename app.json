@@ -58,6 +58,14 @@
           "color": "#8C5A3C",
           "enableRemoteNotifications": false
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Tagebuch braucht Zugriff auf deine Fotos, damit du Bilder zu Einträgen hinzufügen kannst.",
+          "cameraPermission": "Tagebuch braucht die Kamera, damit du Fotos für deine Einträge aufnehmen kannst.",
+          "microphonePermission": false
+        }
       ]
     ],
     "experiments": {

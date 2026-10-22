@@ -6,13 +6,17 @@ Ein schönes, privates Tagebuch für **Web (PWA)**, **iOS** und **Android** aus 
 ## Funktionen
 
 - ✍️ Einträge schreiben, bearbeiten und löschen, mit Titel, Datum und liniertem Notizbuch-Editor
+- 📷 Fotos pro Eintrag (Galerie, auf dem Handy auch Kamera), automatisch verkleinert
+- 💡 Schreibimpulse: Frage des Tages, ~40 weitere Fragen und die Vorlagen „Dankbarkeit“ und „Abendrückblick“
+- 💾 Entwürfe werden beim Tippen automatisch gesichert und nach einem Absturz wiederhergestellt
+- 🗑️ Papierkorb: Gelöschte Einträge bleiben 30 Tage wiederherstellbar
 - 😄 Stimmung pro Tag in 5 Stufen
 - 📅 Kalenderansicht mit Stimmungsfarben und Monatsübersicht
 - 🔎 Suche (Volltext ohne Unterscheidung von Groß-/Kleinschreibung) mit Filter nach Tags und Stimmung
 - 🏷️ Tags mit Vorschlägen
 - 🔒 PIN-Schutz: sperrt beim Öffnen und auf dem Handy auch beim Wechsel in den Hintergrund
 - 🎨 Vier Stile: **Papier** (Standard), Minimal, Verspielt, Nacht
-- 📦 Sichern und Wiederherstellen als JSON-Datei, mit Erinnerung, wenn das letzte Backup älter als 14 Tage ist
+- 📦 Sichern und Wiederherstellen als JSON-Datei (inklusive Fotos), mit Erinnerung, wenn das letzte Backup älter als 14 Tage ist
 - 🔔 Tägliche Erinnerung zum Schreiben zur Wunschzeit (iOS/Android)
 - 🕰️ Rückblick: „An diesem Tag“ (vor einem Monat / vor Jahren), Schreib-Serie, Stimmungsverlauf der letzten 30 Tage, häufigste Tags
 - 👤 Entsperren mit Face ID / Fingerabdruck (iOS/Android, zusätzlich zur PIN)
@@ -58,6 +62,7 @@ Siehe `eas.json`. Vorher in `app.json` die Platzhalter `com.example.tagebuch` er
 src/app/          Bildschirme (Expo Router)
   (tabs)/         Einträge, Kalender, Rückblick, Suche, Einstellungen
   entry.tsx       Editor (?id=… zum Bearbeiten, ?date=… für einen bestimmten Tag)
+  trash.tsx       Papierkorb
 src/db/           Speicherung: SQLite (iOS/Android) bzw. IndexedDB (Web)
 src/theme/        Stile und Stimmungen
 src/components/   UI-Bausteine

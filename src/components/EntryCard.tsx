@@ -5,6 +5,7 @@ import type { Entry } from '@/db/types';
 import { parseISODate } from '@/lib/dates';
 import { useTheme } from '@/theme/ThemeProvider';
 import { moodInfo } from '@/theme/themes';
+import { Photo } from './Photo';
 import { Card, T } from './Themed';
 import { TagChip } from './TagChip';
 
@@ -36,6 +37,12 @@ export function EntryCard({ entry }: { entry: Entry }) {
               {entry.body}
             </T>
           )}
+          {entry.photos.length > 0 && (
+            <View style={styles.photos}>
+              <Photo id={entry.photos[0]} style={[styles.thumb, { borderRadius: theme.radius }]} />
+              {entry.photos.length > 1 && <T variant="muted">+{entry.photos.length - 1}</T>}
+            </View>
+          )}
           {entry.tags.length > 0 && (
             <View style={styles.tags}>
               {entry.tags.map((t) => (
@@ -54,5 +61,7 @@ const styles = StyleSheet.create({
   dateCol: { width: 52, alignItems: 'center', borderRightWidth: 1, paddingRight: 12 },
   mood: { fontSize: 20, marginTop: 6 },
   content: { flex: 1, minWidth: 0 },
+  photos: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 10 },
+  thumb: { width: 96, height: 72 },
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 10 },
 });

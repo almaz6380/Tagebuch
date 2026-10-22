@@ -1,4 +1,5 @@
 import Feather from '@expo/vector-icons/Feather';
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -16,7 +17,7 @@ import { themeOrder, themes, type Theme } from '@/theme/themes';
 
 export default function SettingsScreen() {
   const { theme, setThemeName } = useTheme();
-  const { entries } = useEntries();
+  const { entries, trash } = useEntries();
   const { backup, restore } = useBackup();
   const lastBackup = useLastBackup();
 
@@ -61,6 +62,15 @@ export default function SettingsScreen() {
             <Button label={`${entries.length} sichern`} disabled={!entries.length} onPress={backup} style={{ flex: 1 }} />
             <Button kind="ghost" label="Wiederherstellen" onPress={restore} style={{ flex: 1 }} />
           </View>
+          <Pressable
+            onPress={() => router.push('/trash')}
+            accessibilityRole="button"
+            style={[styles.toggleRow, { borderTopColor: theme.colors.border }]}>
+            <Feather name="trash-2" size={20} color={theme.colors.accent} />
+            <T style={{ flex: 1, fontFamily: theme.fonts.uiBold }}>Papierkorb</T>
+            <T variant="muted">{trash.length}</T>
+            <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
+          </Pressable>
         </Card>
       </ScrollView>
     </Screen>
