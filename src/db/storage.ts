@@ -9,6 +9,8 @@ type Row = {
   body: string;
   mood: number | null;
   tags: string;
+  photos: string;
+  deleted_at: number | null;
   created_at: number;
   updated_at: number;
 };
@@ -31,6 +33,11 @@ function db() {
       );
       CREATE INDEX IF NOT EXISTS entries_date ON entries(date);
     `);
+    // Columns added after the first release.
+    const columns = await database.getAllAsync<{ name: string }>('PRAGMA table_info(entries)');
+    const has = (name: string) => columns.some((c) => c.name === name);
+    if (!has('photos')) await database.execAsync(`ALTER TABLE entries ADD COLUMN photos TEXT NOT NULL DEFAULT '[]'`);
+    if (!has('deleted_at')) await database.execAsync('ALTER TABLE entries ADD COLUMN deleted_at INTEGER');
     return database;
   });
   return dbPromise;
@@ -45,6 +52,8 @@ export async function loadAll(): Promise<Entry[]> {
     body: r.body,
     mood: r.mood,
     tags: JSON.parse(r.tags) as string[],
+    photos: JSON.parse(r.photos) as string[],
+    deletedAt: r.deleted_at,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
   }));
@@ -52,14 +61,16 @@ export async function loadAll(): Promise<Entry[]> {
 
 export async function put(e: Entry): Promise<void> {
   await (await db()).runAsync(
-    `INSERT OR REPLACE INTO entries (id, date, title, body, mood, tags, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT OR REPLACE INTO entries (id, date, title, body, mood, tags, photos, deleted_at, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     e.id,
     e.date,
     e.title,
     e.body,
     e.mood,
     JSON.stringify(e.tags),
+    JSON.stringify(e.photos),
+    e.deletedAt,
     e.createdAt,
     e.updatedAt,
   );

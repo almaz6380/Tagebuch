@@ -1,21 +1,34 @@
 import Feather from '@expo/vector-icons/Feather';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MoodPicker } from '@/components/MoodPicker';
+import { Photo, PhotoViewer } from '@/components/Photo';
+import { PromptCard } from '@/components/PromptCard';
 import { RuledLines } from '@/components/RuledLines';
 import { TagChip } from '@/components/TagChip';
 import { Button, Card, T } from '@/components/Themed';
-import { useEntries } from '@/db/EntriesProvider';
+import { TRASH_DAYS, useEntries } from '@/db/EntriesProvider';
+import { deletePhoto } from '@/db/photos';
 import type { Entry } from '@/db/types';
-import { confirm } from '@/lib/confirm';
+import { confirm, notify } from '@/lib/confirm';
 import { formatLong, shiftDays, todayISO } from '@/lib/dates';
+import { clearDraft, loadDraft, saveDraft } from '@/lib/drafts';
+import type { DraftData } from '@/lib/draftTypes';
+import { pickPhotos } from '@/lib/pickPhotos';
 import { useTheme } from '@/theme/ThemeProvider';
 
 const LINE = 30;
 const BODY_PADDING_TOP = 6;
+const DRAFT_DELAY_MS = 800;
+
+type Fields = Omit<DraftData, 'savedAt'>;
+
+function sameFields(a: Fields, b: Fields) {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
 
 function normalizeTag(raw: string) {
   return raw.trim().replace(/^#+/, '').replace(/\s+/g, '-').toLowerCase();
@@ -36,30 +49,132 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   const insets = useSafeAreaInsets();
   const { save, remove, allTags } = useEntries();
 
-  const [date, setDate] = useState(existing?.date ?? initialDate ?? todayISO());
-  const [title, setTitle] = useState(existing?.title ?? '');
-  const [body, setBody] = useState(existing?.body ?? '');
-  const [mood, setMood] = useState<number | null>(existing?.mood ?? null);
-  const [tags, setTags] = useState<string[]>(existing?.tags ?? []);
+
+  // Values when the editor opened; never changes for this form instance.
+  const [baseline] = useState<Fields>(() => ({
+    date: existing?.date ?? initialDate ?? todayISO(),
+    title: existing?.title ?? '',
+    body: existing?.body ?? '',
+    mood: existing?.mood ?? null,
+    tags: existing?.tags ?? [],
+    photos: existing?.photos ?? [],
+  }));
+  const draftKey = existing?.id ?? 'new';
+
+  const [date, setDate] = useState(baseline.date);
+  const [title, setTitle] = useState(baseline.title);
+  const [body, setBody] = useState(baseline.body);
+  const [mood, setMood] = useState<number | null>(baseline.mood);
+  const [tags, setTags] = useState<string[]>(baseline.tags);
+  const [photos, setPhotos] = useState<string[]>(baseline.photos);
   const [tagDraft, setTagDraft] = useState('');
   const [bodyHeight, setBodyHeight] = useState(LINE * 10);
+  const [viewing, setViewing] = useState<number | null>(null);
+  const [addingPhotos, setAddingPhotos] = useState(false);
+  // Draft handling: don't autosave until a stored draft had the chance to load.
+  const [draftReady, setDraftReady] = useState(false);
+  const [restored, setRestored] = useState(false);
+
+  const fields: Fields = { date, title, body, mood, tags, photos };
+  const dirty = !sameFields(fields, baseline);
+  /** Photos stored during this edit that the saved entry doesn't know about. */
+  const unsavedPhotos = (list: string[]) => list.filter((p) => !baseline.photos.includes(p));
+
+  const apply = (f: Fields) => {
+    setDate(f.date);
+    setTitle(f.title);
+    setBody(f.body);
+    setMood(f.mood);
+    setTags(f.tags);
+    setPhotos(f.photos);
+  };
+
+  useEffect(() => {
+    loadDraft(draftKey).then((draft) => {
+      if (draft && draft.savedAt > (existing?.updatedAt ?? 0)) {
+        const { savedAt: _, ...rest } = draft;
+        if (!sameFields(rest, baseline)) {
+          apply(rest);
+          setRestored(true);
+        }
+      }
+      setDraftReady(true);
+    });
+    // Only on open.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fieldsKey = JSON.stringify(fields);
+  useEffect(() => {
+    if (!draftReady) return;
+    if (!dirty) {
+      clearDraft(draftKey);
+      return;
+    }
+    const t = setTimeout(() => saveDraft(draftKey, { ...fields, savedAt: Date.now() }), DRAFT_DELAY_MS);
+    return () => clearTimeout(t);
+    // fieldsKey captures every field.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fieldsKey, draftReady]);
 
   const close = () => (router.canGoBack() ? router.back() : router.replace('/'));
+
+  const discardChanges = async () => {
+    await clearDraft(draftKey);
+    await Promise.all(unsavedPhotos(photos).map((p) => deletePhoto(p).catch(() => {})));
+  };
+
+  const onCancel = async () => {
+    if (dirty && !(await confirm('Änderungen verwerfen?', 'Was du seit dem letzten Speichern geschrieben hast, geht verloren.', 'Verwerfen'))) {
+      return;
+    }
+    await discardChanges();
+    close();
+  };
+
+  const onDiscardDraft = async () => {
+    await discardChanges();
+    apply(baseline);
+    setRestored(false);
+  };
 
   const onSave = async () => {
     const pending = normalizeTag(tagDraft);
     const finalTags = pending && !tags.includes(pending) ? [...tags, pending] : tags;
-    if (!title.trim() && !body.trim() && mood == null) return close();
-    await save({ id: existing?.id, date, title: title.trim(), body, mood, tags: finalTags });
+    if (!title.trim() && !body.trim() && mood == null && !photos.length) {
+      await discardChanges();
+      return close();
+    }
+    await save({ id: existing?.id, date, title: title.trim(), body, mood, tags: finalTags, photos });
+    await clearDraft(draftKey);
     close();
   };
 
   const onDelete = async () => {
     if (!existing) return;
-    if (await confirm('Eintrag löschen?', 'Das kann nicht rückgängig gemacht werden.', 'Löschen')) {
+    if (await confirm('In den Papierkorb legen?', `Du kannst den Eintrag ${TRASH_DAYS} Tage lang wiederherstellen.`, 'Löschen')) {
+      await discardChanges();
       await remove(existing.id);
       close();
     }
+  };
+
+  const addPhotos = async (source: 'library' | 'camera') => {
+    setAddingPhotos(true);
+    try {
+      const ids = await pickPhotos(source);
+      setPhotos((prev) => [...prev, ...ids]);
+    } catch (err) {
+      notify('Foto nicht möglich', err instanceof Error ? err.message : 'Das Foto konnte nicht hinzugefügt werden.');
+    } finally {
+      setAddingPhotos(false);
+    }
+  };
+
+  const removePhoto = (id: string) => {
+    setPhotos((prev) => prev.filter((p) => p !== id));
+    // Saved photos are only deleted once the entry is saved without them.
+    if (!baseline.photos.includes(id)) deletePhoto(id).catch(() => {});
   };
 
   const addTag = (raw: string) => {
@@ -76,7 +191,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
       style={{ flex: 1, backgroundColor: colors.background }}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={[styles.topBar, { paddingTop: insets.top + 8, borderBottomColor: colors.border }]}>
-        <Pressable onPress={close} hitSlop={12} accessibilityRole="button">
+        <Pressable onPress={onCancel} hitSlop={12} accessibilityRole="button">
           <T style={{ color: colors.textMuted }}>Abbrechen</T>
         </Pressable>
         <View style={styles.dateNav}>
@@ -96,6 +211,15 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        {restored && (
+          <View style={[styles.banner, { backgroundColor: colors.surfaceAlt, borderRadius: theme.radius + 4 }]}>
+            <Feather name="rotate-ccw" size={16} color={colors.accent} />
+            <T style={{ flex: 1, fontSize: 14 }}>Entwurf wiederhergestellt</T>
+            <Pressable onPress={onDiscardDraft} accessibilityRole="button" hitSlop={8}>
+              <T style={{ color: colors.accent, fontFamily: fonts.uiBold, fontSize: 14 }}>Verwerfen</T>
+            </Pressable>
+          </View>
+        )}
         <TextInput
           value={title}
           onChangeText={setTitle}
@@ -137,6 +261,55 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
           </View>
         )}
 
+        <View style={styles.photoRow}>
+          {photos.map((p, i) => (
+            <View key={p}>
+              <Pressable onPress={() => setViewing(i)} accessibilityRole="imagebutton" accessibilityLabel={`Foto ${i + 1} ansehen`}>
+                <Photo id={p} style={[styles.thumb, { borderRadius: theme.radius }]} />
+              </Pressable>
+              <Pressable
+                onPress={() => removePhoto(p)}
+                accessibilityRole="button"
+                accessibilityLabel={`Foto ${i + 1} entfernen`}
+                hitSlop={8}
+                style={[styles.removePhoto, { backgroundColor: colors.text }]}>
+                <Feather name="x" size={12} color={colors.background} />
+              </Pressable>
+            </View>
+          ))}
+          <Pressable
+            onPress={() => addPhotos('library')}
+            disabled={addingPhotos}
+            accessibilityRole="button"
+            accessibilityLabel="Foto hinzufügen"
+            style={[styles.addPhoto, { borderColor: colors.border, borderRadius: theme.radius, opacity: addingPhotos ? 0.5 : 1 }]}>
+            <Feather name="image" size={20} color={colors.accent} />
+            <T variant="muted">{addingPhotos ? '…' : 'Foto'}</T>
+          </Pressable>
+          {Platform.OS !== 'web' && (
+            <Pressable
+              onPress={() => addPhotos('camera')}
+              disabled={addingPhotos}
+              accessibilityRole="button"
+              accessibilityLabel="Foto aufnehmen"
+              style={[styles.addPhoto, { borderColor: colors.border, borderRadius: theme.radius, opacity: addingPhotos ? 0.5 : 1 }]}>
+              <Feather name="camera" size={20} color={colors.accent} />
+              <T variant="muted">Kamera</T>
+            </Pressable>
+          )}
+        </View>
+
+        {!body.trim() && (
+          <PromptCard
+            date={date}
+            onUsePrompt={(prompt) => setBody(`${prompt}\n`)}
+            onUseTemplate={(t) => {
+              setBody(t.text);
+              if (!title.trim()) setTitle(t.label);
+            }}
+          />
+        )}
+
         <View
           style={[
             styles.page,
@@ -173,6 +346,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
           <Button label="Speichern" onPress={onSave} style={{ flex: 2 }} />
         </View>
       </ScrollView>
+      {viewing != null && <PhotoViewer ids={photos} start={viewing} onClose={() => setViewing(null)} />}
     </KeyboardAvoidingView>
   );
 }
@@ -190,6 +364,28 @@ const styles = StyleSheet.create({
   scroll: { padding: 20, paddingBottom: 60, width: '100%', maxWidth: 720, alignSelf: 'center' },
   title: { paddingVertical: 6, outlineWidth: 0 },
   tagRow: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 16 },
+  banner: { flexDirection: 'row', alignItems: 'center', gap: 10, padding: 12, marginBottom: 8 },
+  photoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginTop: 16 },
+  thumb: { width: 76, height: 76 },
+  removePhoto: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addPhoto: {
+    width: 76,
+    height: 76,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
   tagInput: { minWidth: 80, fontSize: 14, paddingVertical: 4, outlineWidth: 0 },
   page: { marginTop: 16, borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
   body: {

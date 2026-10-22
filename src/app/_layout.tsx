@@ -72,6 +72,7 @@ function AppShell() {
         }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="entry" options={{ animation: 'slide_from_bottom' }} />
+        <Stack.Screen name="trash" />
       </Stack>
       {locked && <LockScreen />}
     </>

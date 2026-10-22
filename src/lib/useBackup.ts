@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 
 import { useEntries } from '@/db/EntriesProvider';
-import { markBackedUp, parseBackup } from './backup';
+import { writePhotoBase64 } from '@/db/photos';
+import { buildBackup, markBackedUp, parseBackup } from './backup';
 import { notify } from './confirm';
-import { exportEntries } from './exportEntries';
+import { exportBackup } from './exportEntries';
 import { pickBackupFile } from './pickBackupFile';
 
 /** Export and restore actions with user-facing feedback. */
@@ -12,7 +13,7 @@ export function useBackup() {
 
   const backup = useCallback(async () => {
     try {
-      await exportEntries(entries);
+      await exportBackup(await buildBackup(entries));
       await markBackedUp();
     } catch (err) {
       console.error('Export fehlgeschlagen', err);
@@ -31,7 +32,9 @@ export function useBackup() {
     }
     if (text == null) return;
     try {
-      const { added, updated, unchanged } = await importEntries(parseBackup(text));
+      const backup = parseBackup(text);
+      for (const [id, data] of Object.entries(backup.photos)) await writePhotoBase64(id, data);
+      const { added, updated, unchanged } = await importEntries(backup.entries);
       const parts = [`${added} neu`, `${updated} aktualisiert`];
       if (unchanged) parts.push(`${unchanged} schon vorhanden`);
       notify('Import abgeschlossen', `Einträge: ${parts.join(', ')}.`);
