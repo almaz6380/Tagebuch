@@ -32,13 +32,17 @@ Prüfen: `npm run typecheck` und `npm run lint`.
 
 Gehostet auf **Cloudflare Pages** (`https://tagebuch-c5j.pages.dev`).
 
+**Automatisch:** Die GitHub Action `.github/workflows/ci.yml` prüft jeden Pull Request (Lint und
+Typecheck). Nach jedem Merge auf `main` veröffentlicht sie die App bei Cloudflare. Dafür
+müssen im Repo unter *Settings → Secrets and variables → Actions* zwei Secrets angelegt sein:
+`CLOUDFLARE_API_TOKEN` (Berechtigung „Cloudflare Pages: Edit“) und `CLOUDFLARE_ACCOUNT_ID`.
+Unter *Actions → CI → Run workflow* lässt sich ein Deploy auch von Hand starten.
+
+**Von Hand:** Mit denselben zwei Werten als Umgebungsvariablen:
+
 ```bash
 npm run deploy   # baut die App und lädt sie per Wrangler zu Cloudflare hoch
 ```
-
-Dafür müssen in der Umgebung `CLOUDFLARE_API_TOKEN` (Berechtigung „Cloudflare Pages: Edit“) und
-`CLOUDFLARE_ACCOUNT_ID` gesetzt sein. Beim allerersten Mal legt man das Projekt einmal an:
-`npx wrangler@4 pages project create tagebuch --production-branch main`.
 
 Auf dem Handy die Seite öffnen und „Zum Home-Bildschirm“ wählen, dann läuft sie wie eine App,
 auch offline.
