@@ -2,9 +2,11 @@ import * as Crypto from 'expo-crypto';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AppState, Platform } from 'react-native';
 
+import { authenticate, biometricLabel } from './biometrics';
 import { getItem, removeItem, setItem } from './kv';
 
 const PIN_KEY = 'tagebuch.pin';
+const BIOMETRIC_KEY = 'tagebuch.biometric';
 
 // The PIN is an access lock for the app UI; the entries themselves are not encrypted.
 async function hashPin(pin: string, salt: string) {
@@ -22,6 +24,11 @@ type LockContextValue = {
   unlock: (pin: string) => Promise<boolean>;
   setPin: (pin: string) => Promise<void>;
   clearPin: () => Promise<void>;
+  /** "Face ID", "Fingerabdruck" … or null if the device has no biometrics set up. */
+  biometricName: string | null;
+  biometricEnabled: boolean;
+  setBiometricEnabled: (on: boolean) => Promise<void>;
+  unlockWithBiometrics: () => Promise<boolean>;
 };
 
 const LockContext = createContext<LockContextValue | null>(null);
@@ -30,11 +37,15 @@ export function LockProvider({ children }: { children: ReactNode }) {
   const [stored, setStored] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [biometricName, setBiometricName] = useState<string | null>(null);
+  const [biometricOn, setBiometricOn] = useState(false);
 
   useEffect(() => {
-    getItem(PIN_KEY).then((value) => {
+    Promise.all([getItem(PIN_KEY), getItem(BIOMETRIC_KEY), biometricLabel().catch(() => null)]).then(([value, bio, name]) => {
       setStored(value);
       setLocked(!!value);
+      setBiometricOn(bio === '1');
+      setBiometricName(name);
       setReady(true);
     });
   }, []);
@@ -69,13 +80,43 @@ export function LockProvider({ children }: { children: ReactNode }) {
 
   const clearPin = useCallback(async () => {
     await removeItem(PIN_KEY);
+    await removeItem(BIOMETRIC_KEY);
     setStored(null);
+    setBiometricOn(false);
     setLocked(false);
   }, []);
 
+  const setBiometricEnabled = useCallback(async (on: boolean) => {
+    // Confirm with a scan before turning it on, so it's known to work.
+    if (on && !(await authenticate())) return;
+    if (on) await setItem(BIOMETRIC_KEY, '1');
+    else await removeItem(BIOMETRIC_KEY);
+    setBiometricOn(on);
+  }, []);
+
+  const biometricEnabled = biometricOn && !!biometricName && !!stored;
+
+  const unlockWithBiometrics = useCallback(async () => {
+    if (!biometricEnabled) return false;
+    const ok = await authenticate();
+    if (ok) setLocked(false);
+    return ok;
+  }, [biometricEnabled]);
+
   const value = useMemo(
-    () => ({ ready, hasPin: !!stored, locked, unlock, setPin, clearPin }),
-    [ready, stored, locked, unlock, setPin, clearPin],
+    () => ({
+      ready,
+      hasPin: !!stored,
+      locked,
+      unlock,
+      setPin,
+      clearPin,
+      biometricName,
+      biometricEnabled,
+      setBiometricEnabled,
+      unlockWithBiometrics,
+    }),
+    [ready, stored, locked, unlock, setPin, clearPin, biometricName, biometricEnabled, setBiometricEnabled, unlockWithBiometrics],
   );
 
   return <LockContext.Provider value={value}>{children}</LockContext.Provider>;

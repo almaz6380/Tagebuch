@@ -10,6 +10,8 @@ type EntriesContextValue = {
   get: (id: string) => Entry | undefined;
   save: (entry: Omit<Entry, 'id' | 'createdAt' | 'updatedAt'> & { id?: string }) => Promise<Entry>;
   remove: (id: string) => Promise<void>;
+  /** Merge a backup: new entries are added, existing ones only replaced if the backup is newer. */
+  importEntries: (list: Entry[]) => Promise<{ added: number; updated: number; unchanged: number }>;
   allTags: string[];
 };
 
@@ -56,14 +58,35 @@ export function EntriesProvider({ children }: { children: ReactNode }) {
     setEntries((prev) => prev.filter((e) => e.id !== id));
   }, []);
 
+  const importEntries = useCallback<EntriesContextValue['importEntries']>(
+    async (list) => {
+      const byId = new Map(entries.map((e) => [e.id, e]));
+      const changed: Entry[] = [];
+      let added = 0;
+      let updated = 0;
+      for (const e of list) {
+        const existing = byId.get(e.id);
+        if (existing && existing.updatedAt >= e.updatedAt) continue;
+        if (existing) updated++;
+        else added++;
+        byId.set(e.id, e);
+        changed.push(e);
+      }
+      for (const e of changed) await storage.put(e);
+      if (changed.length) setEntries(sortEntries([...byId.values()]));
+      return { added, updated, unchanged: list.length - changed.length };
+    },
+    [entries],
+  );
+
   const allTags = useMemo(
     () => [...new Set(entries.flatMap((e) => e.tags))].sort((a, b) => a.localeCompare(b, 'de')),
     [entries],
   );
 
   const value = useMemo(
-    () => ({ entries, loaded, get, save, remove, allTags }),
-    [entries, loaded, get, save, remove, allTags],
+    () => ({ entries, loaded, get, save, remove, importEntries, allTags }),
+    [entries, loaded, get, save, remove, importEntries, allTags],
   );
 
   return <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>;

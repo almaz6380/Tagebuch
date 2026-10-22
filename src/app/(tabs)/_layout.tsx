@@ -10,8 +10,9 @@ type IconName = ComponentProps<typeof Feather>['name'];
 const tabs: { name: string; title: string; icon: IconName }[] = [
   { name: 'index', title: 'Einträge', icon: 'book-open' },
   { name: 'calendar', title: 'Kalender', icon: 'calendar' },
+  { name: 'review', title: 'Rückblick', icon: 'trending-up' },
   { name: 'search', title: 'Suche', icon: 'search' },
-  { name: 'settings', title: 'Stil & PIN', icon: 'settings' },
+  { name: 'settings', title: 'Einstellungen', icon: 'settings' },
 ];
 
 export default function TabLayout() {

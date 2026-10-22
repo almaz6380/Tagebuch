@@ -44,6 +44,20 @@
           "image": "./assets/splash-icon.png",
           "imageWidth": 160
         }
+      ],
+      "expo-sharing",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Tagebuch nutzt Face ID, um dein Tagebuch zu entsperren."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#8C5A3C",
+          "enableRemoteNotifications": false
+        }
       ]
     ],
     "experiments": {

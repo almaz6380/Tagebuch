@@ -10,3 +10,9 @@ export function confirm(title: string, message: string, confirmLabel: string): P
     ]),
   );
 }
+
+/** Simple message dialog that also works on web. */
+export function notify(title: string, message: string) {
+  if (Platform.OS === 'web') window.alert(`${title}\n\n${message}`);
+  else Alert.alert(title, message);
+}

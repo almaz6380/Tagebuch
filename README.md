@@ -12,7 +12,10 @@ Ein schönes, privates Tagebuch für **Web (PWA)**, **iOS** und **Android** aus 
 - 🏷️ Tags mit Vorschlägen
 - 🔒 PIN-Schutz: sperrt beim Öffnen und auf dem Handy auch beim Wechsel in den Hintergrund
 - 🎨 Vier Stile: **Papier** (Standard), Minimal, Verspielt, Nacht
-- 📦 Export aller Einträge als JSON
+- 📦 Sichern und Wiederherstellen als JSON-Datei, mit Erinnerung, wenn das letzte Backup älter als 14 Tage ist
+- 🔔 Tägliche Erinnerung zum Schreiben zur Wunschzeit (iOS/Android)
+- 🕰️ Rückblick: „An diesem Tag“ (vor einem Monat / vor Jahren), Schreib-Serie, Stimmungsverlauf der letzten 30 Tage, häufigste Tags
+- 👤 Entsperren mit Face ID / Fingerabdruck (iOS/Android, zusätzlich zur PIN)
 - 📴 Funktioniert offline, alle Daten bleiben **nur lokal** auf dem Gerät
 
 ## Loslegen
@@ -49,7 +52,7 @@ Siehe `eas.json`. Vorher in `app.json` die Platzhalter `com.example.tagebuch` er
 
 ```
 src/app/          Bildschirme (Expo Router)
-  (tabs)/         Einträge, Kalender, Suche, Stil & PIN
+  (tabs)/         Einträge, Kalender, Rückblick, Suche, Einstellungen
   entry.tsx       Editor (?id=… zum Bearbeiten, ?date=… für einen bestimmten Tag)
 src/db/           Speicherung: SQLite (iOS/Android) bzw. IndexedDB (Web)
 src/theme/        Stile und Stimmungen
@@ -63,4 +66,5 @@ scripts/gen-sw.mjs  erzeugt den Service Worker nach dem Web-Export
 - Die PIN wird nur als gesalzener SHA-256-Hash gespeichert, nativ im Schlüsselbund bzw. Keystore.
   Sie schützt den Zugang zur App. Die Einträge selbst sind **nicht verschlüsselt**.
 - Wer das Gerät oder den Browser wechselt bzw. Browserdaten löscht, verliert die Einträge.
-  Exportiere sie deshalb regelmäßig unter „Stil & PIN → Daten“.
+  Sichere sie deshalb regelmäßig unter „Einstellungen → Daten“. Mit „Wiederherstellen“ lassen sie
+  sich auf jedem Gerät wieder einspielen; vorhandene Einträge werden dabei nur durch neuere ersetzt.

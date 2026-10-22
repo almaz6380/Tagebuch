@@ -8,7 +8,9 @@ import { EntryCard } from '@/components/EntryCard';
 import { Screen, T } from '@/components/Themed';
 import { useEntries } from '@/db/EntriesProvider';
 import type { Entry } from '@/db/types';
-import { formatLong, formatMonthYear, shiftDays, todayISO } from '@/lib/dates';
+import { BackupReminder } from '@/components/BackupReminder';
+import { formatLong, formatMonthYear, todayISO } from '@/lib/dates';
+import { currentStreak, onThisDay } from '@/lib/stats';
 import { useTheme } from '@/theme/ThemeProvider';
 
 type Row = { type: 'month'; key: string; label: string } | { type: 'entry'; key: string; entry: Entry };
@@ -18,19 +20,6 @@ function greeting() {
   if (h < 11) return 'Guten Morgen';
   if (h < 18) return 'Schön, dass du da bist';
   return 'Guten Abend';
-}
-
-/** Consecutive days with an entry, ending today (or yesterday). */
-function streak(entries: Entry[]) {
-  const days = new Set(entries.map((e) => e.date));
-  let day = todayISO();
-  if (!days.has(day)) day = shiftDays(day, -1);
-  let n = 0;
-  while (days.has(day)) {
-    n++;
-    day = shiftDays(day, -1);
-  }
-  return n;
 }
 
 export default function EntriesScreen() {
@@ -51,7 +40,8 @@ export default function EntriesScreen() {
     return out;
   }, [entries]);
 
-  const days = streak(entries);
+  const days = currentStreak(entries);
+  const memories = useMemo(() => onThisDay(entries), [entries]);
 
   return (
     <Screen>
@@ -71,6 +61,25 @@ export default function EntriesScreen() {
                 <Stat value={days} label={days === 1 ? 'Tag in Folge' : 'Tage in Folge'} />
               </View>
             )}
+            {memories.length > 0 && (
+              <Pressable
+                accessibilityRole="button"
+                onPress={() => router.push('/review')}
+                style={({ pressed }) => [
+                  styles.memory,
+                  { borderColor: theme.colors.accent, borderRadius: theme.radius + 4, opacity: pressed ? 0.8 : 1 },
+                ]}>
+                <Feather name="clock" size={18} color={theme.colors.accent} />
+                <View style={{ flex: 1 }}>
+                  <T style={{ fontFamily: theme.fonts.uiBold }}>An diesem Tag</T>
+                  <T variant="muted" numberOfLines={1}>
+                    {memories[0].label}: {memories[0].entries[0].title || 'Ohne Titel'}
+                  </T>
+                </View>
+                <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
+              </Pressable>
+            )}
+            <BackupReminder />
           </View>
         }
         ListEmptyComponent={
@@ -131,6 +140,7 @@ const styles = StyleSheet.create({
   header: { marginBottom: 12 },
   stats: { flexDirection: 'row', gap: 10, marginTop: 16 },
   stat: { flexDirection: 'row', alignItems: 'baseline', gap: 6, paddingHorizontal: 14, paddingVertical: 8 },
+  memory: { flexDirection: 'row', alignItems: 'center', gap: 12, borderWidth: 1, padding: 12, marginTop: 14 },
   month: { marginTop: 16, marginBottom: 10 },
   empty: { paddingVertical: 60, paddingHorizontal: 24 },
   fab: {
