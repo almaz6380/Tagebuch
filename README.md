@@ -27,7 +27,7 @@ Prüfen: `npm run typecheck` und `npm run lint`.
 
 ## Web-App
 
-Gehostet auf **Cloudflare Pages** (`https://tagebuch.pages.dev`).
+Gehostet auf **Cloudflare Pages** (`https://tagebuch-c5j.pages.dev`).
 
 ```bash
 npm run deploy   # baut die App und lädt sie per Wrangler zu Cloudflare hoch
