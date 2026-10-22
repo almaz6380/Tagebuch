@@ -41,7 +41,8 @@
     "web": "expo start --web",
     "build:web": "expo export -p web && node scripts/gen-sw.mjs",
     "typecheck": "tsc --noEmit",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "deploy": "npm run build:web && npx -y wrangler@4 pages deploy dist --project-name tagebuch --branch main"
   },
   "private": true
 }

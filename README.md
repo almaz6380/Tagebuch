@@ -27,22 +27,18 @@ Prüfen: `npm run typecheck` und `npm run lint`.
 
 ## Web-App
 
-Gehostet auf **Cloudflare Pages**, das bei jedem Push auf `claude/tagebuch-app` automatisch baut.
+Gehostet auf **Cloudflare Pages** (`https://tagebuch.pages.dev`).
 
-Einrichtung (einmalig) unter dash.cloudflare.com → Workers & Pages → Create → Pages → Connect to Git:
+```bash
+npm run deploy   # baut die App und lädt sie per Wrangler zu Cloudflare hoch
+```
 
-| Einstellung | Wert |
-|---|---|
-| Repository | `almaz6380/Tagebuch` |
-| Production branch | `claude/tagebuch-app` |
-| Framework preset | None |
-| Build command | `npm run build:web` |
-| Build output directory | `dist` |
+Dafür müssen in der Umgebung `CLOUDFLARE_API_TOKEN` (Berechtigung „Cloudflare Pages: Edit“) und
+`CLOUDFLARE_ACCOUNT_ID` gesetzt sein. Beim allerersten Mal legt man das Projekt einmal an:
+`npx wrangler@4 pages project create tagebuch --production-branch main`.
 
 Auf dem Handy die Seite öffnen und „Zum Home-Bildschirm“ wählen, dann läuft sie wie eine App,
 auch offline.
-
-Lokal bauen: `npm run build:web` erzeugt `dist/` inklusive Service Worker.
 
 ## App Stores (später)
 
