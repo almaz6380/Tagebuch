@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "name": "Tagebuch – Mein Journal",
+  "copyright": "© 2026 Josef Gallab",
+  "urls": {
+    "privacy": "https://tagebuch-c5j.pages.dev/datenschutz",
+    "support": "https://tagebuch-c5j.pages.dev/support",
+    "marketing": "https://tagebuch-c5j.pages.dev"
+  },
+  "description": "Dein privates Tagebuch – schön wie ein Notizbuch aus Papier, sicher auf deinem Handy.\n\nHalte fest, was dich bewegt: in ein paar Zeilen am Abend, mit Foto vom Tag oder mit einer Frage, die dich zum Nachdenken bringt. Alles bleibt auf deinem Gerät. Kein Konto, keine Cloud, keine Werbung.\n\nSCHREIBEN, WIE ES DIR GEFÄLLT\n• Linierter Notizbuch-Editor mit Titel und Datum\n• Fotos zu jedem Eintrag, direkt aus der Galerie oder mit der Kamera\n• Stimmung des Tages in fünf Stufen\n• Tags, um Einträge zu ordnen\n• Entwürfe werden beim Tippen automatisch gesichert\n\nNIE WIEDER EIN LEERES BLATT\n• Jeden Tag eine neue Frage als Schreibimpuls\n• Über 40 weitere Fragen zum Durchblättern\n• Vorlagen für Dankbarkeit und den Abendrückblick\n\nZURÜCKBLICKEN\n• „An diesem Tag“: Was hast du vor einem Monat oder vor einem Jahr geschrieben?\n• Schreib-Serie und längste Serie\n• Stimmungsverlauf der letzten 30 Tage\n• Kalender mit Stimmungsfarben und Volltextsuche\n\nDRAN BLEIBEN\n• Tägliche Erinnerung zu deiner Wunschzeit\n\nPRIVAT UND SICHER\n• Alle Einträge bleiben nur auf deinem Gerät\n• PIN-Sperre, auf Wunsch mit Face ID oder Fingerabdruck\n• Sicherung als Datei, Wiederherstellen auf jedem Gerät\n• Papierkorb: Gelöschtes bleibt 30 Tage wiederherstellbar\n\nVIER STILE\nPapier, Minimal, Verspielt oder Nacht – such dir aus, wie dein Tagebuch aussehen soll.",
+  "apple": {
+    "subtitle": "Privat schreiben mit Fotos",
+    "keywords": "journal,notizbuch,dankbarkeit,stimmung,gefühle,erinnerungen,privat,notizen,tagebuchapp,mood,diary",
+    "promotionalText": "Dein privates Tagebuch mit Fotos, Schreibimpulsen und Stimmungsverlauf – ohne Konto, ohne Werbung. Alles bleibt auf deinem Gerät.",
+    "primaryCategory": "LIFESTYLE",
+    "secondaryCategory": "PRODUCTIVITY",
+    "ageRating": {
+      "advertising": false,
+      "alcoholTobaccoOrDrugUseOrReferences": "NONE",
+      "contests": "NONE",
+      "gambling": false,
+      "gamblingSimulated": "NONE",
+      "gunsOrOtherWeapons": "NONE",
+      "healthOrWellnessTopics": false,
+      "lootBox": false,
+      "medicalOrTreatmentInformation": "NONE",
+      "messagingAndChat": false,
+      "parentalControls": false,
+      "profanityOrCrudeHumor": "NONE",
+      "ageAssurance": false,
+      "sexualContentGraphicAndNudity": "NONE",
+      "sexualContentOrNudity": "NONE",
+      "horrorOrFearThemes": "NONE",
+      "matureOrSuggestiveThemes": "NONE",
+      "unrestrictedWebAccess": false,
+      "userGeneratedContent": false,
+      "violenceCartoonOrFantasy": "NONE",
+      "violenceRealisticProlongedGraphicOrSadistic": "NONE",
+      "violenceRealistic": "NONE"
+    }
+  },
+  "google": {
+    "title": "Tagebuch – Mein Journal",
+    "shortDescription": "Privates Tagebuch mit Fotos, Impulsen & Stimmung – ohne Konto, ohne Werbung"
+  },
+  "review": {
+    "firstName": "Josef",
+    "lastName": "Gallab",
+    "email": "63almaz80@gmail.com",
+    "phone": "+436604277435",
+    "notes": "Kein Login nötig, die App funktioniert komplett offline. Alle Einträge werden nur lokal auf dem Gerät gespeichert, es gibt keinen Server, keine Werbung und kein Tracking.\n\nZum Ausprobieren: Unten rechts auf „Schreiben“ tippen. Ein leerer Eintrag zeigt einen Schreibimpuls; Fotos lassen sich über „Foto“ bzw. „Kamera“ hinzufügen.\n\nOptional: Unter Einstellungen → Sicherheit kann eine 4-stellige PIN gesetzt werden; danach lässt sich das Entsperren mit Face ID einschalten. Die tägliche Erinnerung (lokale Mitteilung) wird unter Einstellungen → Erinnerung eingeschaltet."
+  }
+}

@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# store signing + API keys (written by scripts/store-credentials.sh, never committed)
+/.secrets/
+/credentials.json
+__pycache__/
