@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """App Store Connect for the Tagebuch app: bundle ID, signing profile, store texts, screenshots, review.
 
-Needs ASC_KEY_ID, ASC_ISSUER_ID and ASC_KEY_P8 (the .p8 file, base64) in the environment.
+Needs ASC_KEY_ID, ASC_ISSUER_ID and ASC_KEY_P8 (the .p8 file, base64) in the environment;
+`profil` also IOS_CERT_PASSWORD for the .p12.
 Writing commands only change something with --ausfuehren; without it they print what they would do.
 
   python3 scripts/asc.py status
   python3 scripts/asc.py bundle --ausfuehren          # register io.github.almaz6380.tagebuch
-  python3 scripts/asc.py profil --ausfuehren          # App Store profile -> .secrets/profile.mobileprovision
+  python3 scripts/asc.py profil --p12 cert.p12 --ausgabe x.mobileprovision --ausfuehren
+  python3 scripts/asc.py warten --build 7              # until Apple has processed the upload
   python3 scripts/asc.py metadaten --ausfuehren       # texts, URLs, categories, age rating, screenshots
   python3 scripts/asc.py einreichen --build 1 --ausfuehren
 """
@@ -22,7 +24,6 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SECRETS = ROOT / '.secrets'
 STORE = ROOT / 'store'
 BUNDLE_ID = 'io.github.almaz6380.tagebuch'
 BASE = 'https://api.appstoreconnect.apple.com'
@@ -143,9 +144,9 @@ def p12_serial(p12: Path, password: str) -> str:
 
 
 def cmd_profil(args):
-    p12 = SECRETS / 'dist-cert.p12'
+    p12 = Path(args.p12)
     if not p12.exists():
-        sys.exit('Fehlt: .secrets/dist-cert.p12 – zuerst scripts/store-credentials.sh laufen lassen.')
+        sys.exit(f'Fehlt: {p12}')
     serial = p12_serial(p12, os.environ['IOS_CERT_PASSWORD']).lstrip('0')
     certs = get('/v1/certificates?filter[certificateType]=DISTRIBUTION,IOS_DISTRIBUTION&fields[certificates]=serialNumber,name,expirationDate')['data']
     cert = next((c for c in certs if c['attributes']['serialNumber'].upper().lstrip('0') == serial), None)
@@ -173,9 +174,10 @@ def cmd_profil(args):
             },
         }
     })
-    SECRETS.mkdir(exist_ok=True)
-    (SECRETS / 'profile.mobileprovision').write_bytes(base64.b64decode(created['data']['attributes']['profileContent']))
-    print('Profil angelegt: .secrets/profile.mobileprovision')
+    out = Path(args.ausgabe)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(base64.b64decode(created['data']['attributes']['profileContent']))
+    print(f'Profil „{name}“ angelegt: {out}')
 
 
 # ---------------------------------------------------------------- store texts + screenshots
@@ -320,6 +322,22 @@ def cmd_metadaten(args):
     upload_screenshots(version['id'], True)
 
 
+def cmd_warten(args):
+    app = require_app()
+    deadline = time.time() + args.minuten * 60
+    while True:
+        builds = get(f"/v1/builds?filter[app]={app['id']}&filter[version]={args.build}&fields[builds]=processingState")['data']
+        state = builds[0]['attributes']['processingState'] if builds else 'NOCH_NICHT_DA'
+        print(f'Build {args.build}: {state}', flush=True)
+        if state == 'VALID':
+            return
+        if state in ('FAILED', 'INVALID'):
+            sys.exit(f'Apple hat Build {args.build} abgelehnt ({state}) – Details in App Store Connect.')
+        if time.time() > deadline:
+            sys.exit(f'Build {args.build} nach {args.minuten} min noch nicht verarbeitet.')
+        time.sleep(60)
+
+
 # ---------------------------------------------------------------- submit for review
 
 def cmd_einreichen(args):
@@ -362,13 +380,20 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('status')
-    for name in ('bundle', 'profil', 'metadaten'):
+    for name in ('bundle', 'metadaten'):
         sub.add_parser(name).add_argument('--ausfuehren', action='store_true')
+    p = sub.add_parser('profil')
+    p.add_argument('--p12', required=True)
+    p.add_argument('--ausgabe', required=True)
+    p.add_argument('--ausfuehren', action='store_true')
+    p = sub.add_parser('warten')
+    p.add_argument('--build', required=True)
+    p.add_argument('--minuten', type=int, default=45)
     p = sub.add_parser('einreichen')
     p.add_argument('--build', required=True)
     p.add_argument('--ausfuehren', action='store_true')
     args = parser.parse_args()
-    {'status': cmd_status, 'bundle': cmd_bundle, 'profil': cmd_profil,
+    {'status': cmd_status, 'bundle': cmd_bundle, 'profil': cmd_profil, 'warten': cmd_warten,
      'metadaten': cmd_metadaten, 'einreichen': cmd_einreichen}[args.cmd](args)
 
 

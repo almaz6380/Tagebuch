@@ -40,7 +40,6 @@ yarn-error.*
 /ios
 /android
 
-# store signing + API keys (written by scripts/store-credentials.sh, never committed)
+# store signing + API keys (local runs of the release scripts, never committed)
 /.secrets/
-/credentials.json
 __pycache__/

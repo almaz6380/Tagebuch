@@ -1,0 +1,103 @@
+# Builds the Android App Bundle, sets the Play store listing (texts, graphics,
+# screenshots from store/) and releases it. Started by hand only.
+#
+# Secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON
+name: Android Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload:
+        description: 'Zu Google Play hochladen? (aus = nur bauen)'
+        type: boolean
+        default: true
+      track:
+        description: 'Track (production, oder closed/internal für Tests)'
+        type: choice
+        default: production
+        options: [production, alpha, internal]
+      notes:
+        description: 'Was ist neu'
+        type: string
+        default: 'Erste Version: dein privates Tagebuch mit Fotos, Schreibimpulsen und Stimmungsverlauf.'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Abhängigkeiten
+        run: |
+          npm ci
+          python3 -m venv "$RUNNER_TEMP/venv"
+          "$RUNNER_TEMP/venv/bin/pip" install --quiet pyjwt cryptography
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
+
+      - name: Prüfungen
+        run: npm run lint && npm run typecheck
+
+      - name: Versionsnummern
+        run: |
+          node -e "
+            const fs = require('fs');
+            const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+            app.expo.android.versionCode = Number(process.env.GITHUB_RUN_NUMBER);
+            fs.writeFileSync('app.json', JSON.stringify(app, null, 2));
+            console.log('Version', app.expo.version, 'versionCode', app.expo.android.versionCode);
+          "
+
+      - name: Natives Projekt erzeugen
+        run: CI=1 npx expo prebuild -p android --clean
+
+      - name: Signaturschlüssel bereitstellen
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$KEYSTORE_B64" | tr -cd 'A-Za-z0-9+/=' | base64 -d > android/upload.keystore
+          # Read by plugins/withReleaseSigning.js; paths are relative to android/.
+          cat > android/keystore.properties <<EOF
+          storeFile=upload.keystore
+          storePassword=$STORE_PASSWORD
+          keyAlias=upload
+          keyPassword=$STORE_PASSWORD
+          EOF
+
+      - name: AAB bauen
+        run: cd android && ./gradlew --no-daemon bundleRelease
+
+      - name: Signatur prüfen
+        run: |
+          # A bundle signed with the debug key would be rejected by Play.
+          keytool -printcert -jarfile android/app/build/outputs/bundle/release/app-release.aab | tee "$RUNNER_TEMP/cert.txt"
+          if grep -q 'CN=Android Debug' "$RUNNER_TEMP/cert.txt"; then echo "ABBRUCH: mit Debug-Schlüssel signiert"; exit 1; fi
+
+      - name: Store-Eintrag und Release
+        if: ${{ inputs.upload }}
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          NOTES: ${{ inputs.notes }}
+        run: |
+          python3 scripts/play.py eintrag --ausfuehren
+          python3 scripts/play.py release --aab android/app/build/outputs/bundle/release/app-release.aab \
+            --track "${{ inputs.track }}" --notes "$NOTES" --ausfuehren
+
+      - name: Schlüssel aufräumen
+        if: always()
+        run: rm -f android/upload.keystore android/keystore.properties
