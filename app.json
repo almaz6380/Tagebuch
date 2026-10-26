@@ -72,7 +72,8 @@
           "cameraPermission": "Tagebuch braucht die Kamera, damit du Fotos für deine Einträge aufnehmen kannst.",
           "microphonePermission": false
         }
-      ]
+      ],
+      "./plugins/withReleaseSigning"
     ],
     "experiments": {
       "typedRoutes": true

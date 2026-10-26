@@ -53,25 +53,25 @@ auch offline.
 
 ## App Stores
 
-App-ID `io.github.almaz6380.tagebuch`, Store-Name „Tagebuch – Mein Journal“. Builds laufen über
-[EAS](https://docs.expo.dev/eas/) mit lokalen Signierdaten (das Apple-Team hat bereits die maximale Zahl
-an Distributionszertifikaten, deshalb wird das vorhandene als `.p12` verwendet).
+App-ID `io.github.almaz6380.tagebuch`, Store-Name „Tagebuch – Mein Journal“. Gebaut wird wie bei den
+anderen Apps auf GitHubs Rechnern, ohne eigenen Mac und ohne Expo-Konto. Die Workflows erzeugen die
+nativen Projekte mit `npx expo prebuild` und starten nur von Hand (*Actions → … → Run workflow*):
 
-```bash
-bash scripts/store-credentials.sh            # .secrets/ + credentials.json aus der Umgebung
-npx eas-cli@latest build -p all --profile production --non-interactive
-npx eas-cli@latest submit -p ios --latest --non-interactive
-python3 scripts/asc.py metadaten --ausfuehren   # Texte, Altersfreigabe, Screenshots
-python3 scripts/asc.py einreichen --build <nr> --ausfuehren
-python3 scripts/play.py eintrag --ausfuehren
-python3 scripts/play.py release --aab <datei>.aab --ausfuehren
-```
+- **iOS Release** (`.github/workflows/ios-release.yml`): bauen, signieren, zu App Store Connect hochladen,
+  dann Texte, Screenshots und Altersfreigabe setzen und direkt zur Prüfung einreichen.
+- **Android Release** (`.github/workflows/android-release.yml`): App-Bundle bauen, Store-Eintrag setzen,
+  Release auf den gewählten Track.
 
-Umgebungsvariablen: `EXPO_TOKEN`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8`, `PLAY_SERVICE_ACCOUNT_JSON`,
-`IOS_CERT_P12_BASE64`, `IOS_CERT_PASSWORD`, optional `ANDROID_KEYSTORE_BASE64`/`ANDROID_KEYSTORE_PASSWORD`.
-Alle Skripte sind ohne `--ausfuehren` reine Probeläufe.
+Build-Nummer bzw. versionCode ist jeweils die Laufnummer des Workflows. Die Android-Release-Signierung
+steckt im Config-Plugin `plugins/withReleaseSigning.js`.
 
-Store-Texte stehen für beide Stores in `store/texte.json`, Screenshots erzeugt
+Secrets im Repo (*Settings → Secrets and variables → Actions*): `ASC_KEY_ID`, `ASC_ISSUER_ID`,
+`ASC_KEY_P8_BASE64`, `IOS_CERT_P12_BASE64`, `IOS_CERT_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`,
+`ANDROID_KEYSTORE_BASE64`, `ANDROID_KEYSTORE_PASSWORD`.
+
+Die Skripte gehen auch von Hand (ohne `--ausfuehren` reine Probeläufe): `scripts/asc.py` (Bundle-ID,
+Profil, Metadaten, Einreichen) und `scripts/play.py` (Store-Eintrag, Release).
+Store-Texte für beide Stores stehen in `store/texte.json`, Screenshots erzeugt
 `scripts/store-screenshots.mjs`, Play-Grafiken `scripts/play-graphics.py`. Was nur in der Play Console
 geht (Datensicherheit, Einstufung), steht zum Abtippen in `store/google-play.md`.
 Rechtstexte: `public/datenschutz.html`, `public/impressum.html`, `public/support.html`.
