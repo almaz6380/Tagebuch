@@ -1,7 +1,8 @@
 import Feather from '@expo/vector-icons/Feather';
+import Constants from 'expo-constants';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PIN_LENGTH, PinDots, PinPad } from '@/components/PinPad';
 import { Button, Card, Screen, T } from '@/components/Themed';
@@ -72,10 +73,37 @@ export default function SettingsScreen() {
             <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
           </Pressable>
         </Card>
+
+        <T variant="label" style={styles.section}>
+          Über
+        </T>
+        <Card style={{ paddingVertical: 4 }}>
+          {ABOUT_LINKS.map((l, i) => (
+            <Pressable
+              key={l.path}
+              onPress={() => Linking.openURL(`${SITE}${l.path}`)}
+              accessibilityRole="link"
+              style={[styles.linkRow, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.colors.border }]}>
+              <Feather name={l.icon} size={18} color={theme.colors.accent} />
+              <T style={{ flex: 1 }}>{l.label}</T>
+              <Feather name="external-link" size={16} color={theme.colors.textMuted} />
+            </Pressable>
+          ))}
+        </Card>
+        <T variant="muted" style={{ textAlign: 'center', marginTop: 16 }}>
+          Tagebuch {Constants.expoConfig?.version ?? ''}
+        </T>
       </ScrollView>
     </Screen>
   );
 }
+
+const SITE = 'https://tagebuch-c5j.pages.dev';
+const ABOUT_LINKS = [
+  { path: '/support', label: 'Hilfe & Kontakt', icon: 'help-circle' },
+  { path: '/datenschutz', label: 'Datenschutz', icon: 'shield' },
+  { path: '/impressum', label: 'Impressum', icon: 'info' },
+] as const;
 
 /** Mini page rendered in the preview theme's own colors and fonts. */
 function ThemePreview({ preview, active, onPress }: { preview: Theme; active: boolean; onPress: () => void }) {
@@ -312,6 +340,7 @@ const styles = StyleSheet.create({
   miniPage: { flex: 1, padding: 10, borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
   miniLine: { position: 'absolute', left: 0, right: 0, height: 1 },
   miniDot: { position: 'absolute', right: 10, bottom: 10, width: 18, height: 18, borderRadius: 9 },
+  linkRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
   toggleRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 14, paddingTop: 14, borderTopWidth: StyleSheet.hairlineWidth },
   toggle: { width: 46, height: 28, borderRadius: 14, padding: 3 },
   knob: { width: 22, height: 22, borderRadius: 11, backgroundColor: '#fff' },

@@ -51,10 +51,30 @@ npm run deploy   # baut die App und lädt sie per Wrangler zu Cloudflare hoch
 Auf dem Handy die Seite öffnen und „Zum Home-Bildschirm“ wählen, dann läuft sie wie eine App,
 auch offline.
 
-## App Stores (später)
+## App Stores
 
-Die Store-Builds laufen über [EAS](https://docs.expo.dev/eas/) und brauchen dafür ein Expo-Konto.
-Siehe `eas.json`. Vorher in `app.json` die Platzhalter `com.example.tagebuch` ersetzen.
+App-ID `io.github.almaz6380.tagebuch`, Store-Name „Tagebuch – Mein Journal“. Builds laufen über
+[EAS](https://docs.expo.dev/eas/) mit lokalen Signierdaten (das Apple-Team hat bereits die maximale Zahl
+an Distributionszertifikaten, deshalb wird das vorhandene als `.p12` verwendet).
+
+```bash
+bash scripts/store-credentials.sh            # .secrets/ + credentials.json aus der Umgebung
+npx eas-cli@latest build -p all --profile production --non-interactive
+npx eas-cli@latest submit -p ios --latest --non-interactive
+python3 scripts/asc.py metadaten --ausfuehren   # Texte, Altersfreigabe, Screenshots
+python3 scripts/asc.py einreichen --build <nr> --ausfuehren
+python3 scripts/play.py eintrag --ausfuehren
+python3 scripts/play.py release --aab <datei>.aab --ausfuehren
+```
+
+Umgebungsvariablen: `EXPO_TOKEN`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `ASC_KEY_P8`, `PLAY_SERVICE_ACCOUNT_JSON`,
+`IOS_CERT_P12_BASE64`, `IOS_CERT_PASSWORD`, optional `ANDROID_KEYSTORE_BASE64`/`ANDROID_KEYSTORE_PASSWORD`.
+Alle Skripte sind ohne `--ausfuehren` reine Probeläufe.
+
+Store-Texte stehen für beide Stores in `store/texte.json`, Screenshots erzeugt
+`scripts/store-screenshots.mjs`, Play-Grafiken `scripts/play-graphics.py`. Was nur in der Play Console
+geht (Datensicherheit, Einstufung), steht zum Abtippen in `store/google-play.md`.
+Rechtstexte: `public/datenschutz.html`, `public/impressum.html`, `public/support.html`.
 
 ## Aufbau
 
