@@ -1,8 +1,9 @@
 import Feather from '@expo/vector-icons/Feather';
-import { Tabs } from 'expo-router/js-tabs';
+import { BottomTabBar, Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { AdBanner } from '@/components/AdBanner';
 import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
@@ -15,6 +16,8 @@ const tabs: { name: 'index' | 'calendar' | 'review' | 'search' | 'settings'; ico
   { name: 'search', icon: 'search' },
   { name: 'settings', icon: 'settings' },
 ];
+// Banner only on the browsing screens, never in the settings.
+const BANNER_TABS = new Set(['index', 'calendar', 'review', 'search']);
 const titleKey = { index: 'entries', calendar: 'calendar', review: 'review', search: 'search', settings: 'settings' } as const;
 
 export default function TabLayout() {
@@ -24,6 +27,12 @@ export default function TabLayout() {
   const insets = useSafeAreaInsets();
   return (
     <Tabs
+      tabBar={(props) => (
+        <>
+          {BANNER_TABS.has(props.state.routes[props.state.index].name) && <AdBanner />}
+          <BottomTabBar {...props} />
+        </>
+      )}
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: colors.accent,

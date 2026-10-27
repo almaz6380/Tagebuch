@@ -6,6 +6,7 @@ Everything happens in one Play "edit"; without --ausfuehren it is validated but 
 
   python3 scripts/play.py status
   python3 scripts/play.py eintrag --ausfuehren                     # texts, icon, feature graphic, screenshots (all locales)
+  python3 scripts/play.py produkt --ausfuehren                     # one-time product "Remove ads"
   python3 scripts/play.py release --aab app.aab --ausfuehren        # upload + release to production
 """
 import argparse
@@ -126,8 +127,44 @@ def cmd_eintrag(args):
     finish(edit, args.ausfuehren)
 
 
+def cmd_produkt(args):
+    """One-time product "Remove ads". Play takes EU prices net of VAT, so 2.49 € ends up as 2.99 €;
+    other currencies are converted by Play. Needs the payments profile (exists from Mahjong)."""
+    t = texts()
+    iap = t['iap']
+    sku = iap['productId']
+    body = {
+        'packageName': PACKAGE, 'sku': sku, 'status': 'active', 'purchaseType': 'managedUser',
+        'defaultLanguage': t['primaryLocale'],
+        'defaultPrice': {'priceMicros': str(round(float(iap['playPriceEurNet']) * 1_000_000)), 'currency': 'EUR'},
+        'listings': {lang: {'title': l['name'], 'description': l['description']} for lang, l in iap['locales'].items()},
+    }
+    existing = call('GET', f'{API}/inappproducts/{sku}', fatal=False)
+    if not args.ausfuehren:
+        state = 'fehlt' if existing.get('_error') == 404 else existing.get('status', existing.get('_error'))
+        print(f"Probelauf: Produkt {sku} ({state}) – würde {iap['playPriceEurNet']} € netto und Texte {list(iap['locales'])} setzen.")
+        return
+    if existing.get('_error') == 404:
+        call('POST', f'{API}/inappproducts?autoConvertMissingPrices=true', body)
+        print(f'Produkt {sku} angelegt und aktiv.')
+    elif existing.get('_error'):
+        sys.exit(f"Produkt nicht lesbar ({existing['_error']}): {existing['_detail'][:600]}")
+    else:
+        call('PUT', f'{API}/inappproducts/{sku}?autoConvertMissingPrices=true', body)
+        print(f'Produkt {sku} aktualisiert.')
+
+
+def assert_live_ads():
+    """Google's sample IDs are fine for testing but must never reach the store."""
+    for f in (ROOT / 'app.json', ROOT / 'src' / 'ads' / 'config.ts'):
+        if '3940256099942544' in f.read_text():
+            sys.exit(f'{f.relative_to(ROOT)} enthält noch Googles Beispiel-IDs – erst die echten AdMob-IDs eintragen.')
+
+
 def cmd_release(args):
     t = texts()
+    if args.ausfuehren and args.track == 'production':
+        assert_live_ads()
     edit = new_edit()
     aab = Path(args.aab)
     print(f'Lade {aab.name} hoch ({aab.stat().st_size // 1024} KB) …')
@@ -151,6 +188,7 @@ def main():
     sub = p.add_subparsers(dest='cmd', required=True)
     sub.add_parser('status')
     sub.add_parser('eintrag').add_argument('--ausfuehren', action='store_true')
+    sub.add_parser('produkt').add_argument('--ausfuehren', action='store_true')
     r = sub.add_parser('release')
     r.add_argument('--aab', required=True)
     r.add_argument('--track', default='production')
@@ -158,7 +196,7 @@ def main():
     r.add_argument('--notes', default='')
     r.add_argument('--ausfuehren', action='store_true')
     args = p.parse_args()
-    {'status': cmd_status, 'eintrag': cmd_eintrag, 'release': cmd_release}[args.cmd](args)
+    {'status': cmd_status, 'eintrag': cmd_eintrag, 'produkt': cmd_produkt, 'release': cmd_release}[args.cmd](args)
 
 
 if __name__ == '__main__':

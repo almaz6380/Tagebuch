@@ -10,10 +10,12 @@ import { useEffect } from 'react';
 import { Platform, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { initAds, loadAdFree } from '@/ads/ads';
 import { LockScreen } from '@/components/LockScreen';
 import { EntriesProvider } from '@/db/EntriesProvider';
 import { initI18n } from '@/i18n';
 import { LockProvider, useLock } from '@/lib/LockProvider';
+import { initPurchases } from '@/lib/purchases';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 
 if (Platform.OS !== 'web') SplashScreen.preventAutoHideAsync();
@@ -61,6 +63,16 @@ function AppShell() {
     document.body.style.backgroundColor = theme.colors.background;
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme.colors.background);
   }, [theme]);
+
+  // Ads and the purchase start once the journal is open: the consent form never
+  // covers the lock screen, and the tracking prompt still comes right at launch.
+  useEffect(() => {
+    if (!ready || locked) return;
+    loadAdFree().then((adFree) => {
+      initPurchases(adFree);
+      initAds();
+    });
+  }, [ready, locked]);
 
   // Don't show any entries before we know whether a PIN is required.
   if (!ready) return <View style={{ flex: 1, backgroundColor: theme.colors.background }} />;

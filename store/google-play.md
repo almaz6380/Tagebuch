@@ -17,7 +17,11 @@ Store-Eintrag (Texte, Grafiken, Screenshots) setzt `scripts/play.py` automatisch
 Alle Funktionen sind ohne besondere Zugriffsrechte verfügbar (kein Login).
 
 ## Anzeigen
-Nein, meine App enthält keine Anzeigen.
+**Ja, meine App enthält Anzeigen** (Google AdMob: Banner und Interstitial).
+
+## Werbe-ID
+- Verwendet die App eine Werbe-ID? **Ja**
+- Zweck: **Werbung oder Marketing**
 
 ## Einstufung des Inhalts (IARC-Fragebogen)
 - E-Mail: 63almaz80@gmail.com
@@ -25,7 +29,7 @@ Nein, meine App enthält keine Anzeigen.
 - Gewalt, Sexualität, Sprache, Drogen, Glücksspiel: überall **Nein**
 - Interaktion zwischen Nutzern / Teilen von Inhalten mit anderen: **Nein** (alles bleibt lokal)
 - Teilt Standort: **Nein**
-- Digitale Käufe: **Nein**
+- Digitale Käufe: **Ja** (einmaliger Kauf „Werbung entfernen“)
 Ergebnis: USK 0 / PEGI 3 / „Jedes Alter“.
 
 ## Zielgruppe und Inhalte
@@ -33,9 +37,21 @@ Ergebnis: USK 0 / PEGI 3 / „Jedes Alter“.
 - App spricht Kinder nicht gezielt an: **Ja, bestätigen**
 
 ## Datensicherheit
-- Erhebt oder teilt die App erforderliche Nutzerdaten? **Nein**
-  - Begründung: Alle Daten (Einträge, Fotos, Einstellungen) werden ausschließlich lokal auf dem Gerät gespeichert und nie übertragen. Daten, die nur auf dem Gerät verarbeitet werden, gelten bei Google nicht als „erhoben“.
-- Damit entfallen Verschlüsselung und Löschanfrage-Fragen.
+Einträge, Fotos und Einstellungen bleiben nur auf dem Gerät und zählen nicht als „erhoben“.
+Was durch die Werbung (AdMob-SDK) und den Kauf (Play Billing) entsteht, muss angegeben werden:
+
+- Erhebt oder teilt die App erforderliche Nutzerdaten? **Ja**
+- Werden alle Daten bei der Übertragung verschlüsselt? **Ja**
+- Können Nutzer das Löschen ihrer Daten beantragen? **Nein** (wir speichern selbst nichts; Werbe-ID zurücksetzen geht in den Geräteeinstellungen)
+- Datentypen:
+  | Typ | Erhoben | Geteilt | Verarbeitung | Erforderlich? | Zwecke |
+  |---|---|---|---|---|---|
+  | **Geräte- oder andere IDs** | Ja | Ja | nicht flüchtig | erforderlich | Werbung oder Marketing, Analysen, Betrugsprävention/Sicherheit |
+  | **App-Aktivität → App-Interaktionen** | Ja | Ja | nicht flüchtig | erforderlich | Werbung oder Marketing, Analysen |
+  | **App-Informationen und -Leistung → Absturzprotokolle, Diagnose** | Ja | Ja | nicht flüchtig | erforderlich | Analysen, Betrugsprävention/Sicherheit |
+  | **Ungefährer Standort** | Ja | Ja | nicht flüchtig | erforderlich | Werbung oder Marketing (aus der IP-Adresse) |
+  | **Finanzdaten → Kaufverlauf** | Ja | Nein | nicht flüchtig | erforderlich | App-Funktionen |
+  (Das sind die Angaben, die Google für das AdMob-SDK selbst empfiehlt.)
 
 ## Gesundheits-Apps
 Keine Gesundheitsfunktionen → **Nein**, bzw. „Meine App hat keine Gesundheitsfunktionen“.

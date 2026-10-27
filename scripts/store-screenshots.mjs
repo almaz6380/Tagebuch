@@ -230,7 +230,7 @@ const fonts =
   (await fontFace('Inter', 'node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf', 400)) +
   (await fontFace('Inter', 'node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf', 600));
 
-for (const [locale, L] of Object.entries(LOCALES)) {
+for (const [locale, L] of process.env.ONLY_IAP ? [] : Object.entries(LOCALES)) {
   const entries = sampleEntries(L);
   for (const device of DEVICES) {
     const dir = join(OUT, device.dir, locale);
@@ -284,5 +284,21 @@ for (const [locale, L] of Object.entries(LOCALES)) {
     }
     await ctx.close();
   }
+}
+// Review screenshot for Apple's in-app purchase: the plain settings screen with the purchase.
+{
+  const ctx = await browser.newContext({ viewport: { width: 430, height: 932 }, deviceScaleFactor: 3 });
+  const page = await ctx.newPage();
+  await seed(page, sampleEntries(LOCALES['en-US']), photoBase64, 'paper', 'en');
+  await page.goto(`${BASE}/settings?storeshot`);
+  await page.waitForTimeout(2000);
+  await page
+    .getByText('Remove ads', { exact: true })
+    .first()
+    .evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: 'store/iap-review.png' });
+  console.log('store/iap-review.png');
+  await ctx.close();
 }
 await browser.close();

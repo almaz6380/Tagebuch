@@ -4,6 +4,8 @@ import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { adsSupported, showAdPrivacyOptions } from '@/ads/ads';
+import { useAdState } from '@/ads/state';
 import { PIN_LENGTH, PinDots, PinPad } from '@/components/PinPad';
 import { Button, Card, Screen, T } from '@/components/Themed';
 import { useEntries } from '@/db/EntriesProvider';
@@ -13,6 +15,7 @@ import { confirm, notify } from '@/lib/confirm';
 import { getItem, removeItem, setItem } from '@/lib/kv';
 import { useLock } from '@/lib/LockProvider';
 import { cancelDailyReminder, reminderSupported, scheduleDailyReminder } from '@/lib/reminder';
+import { buyNoAds, loadPrice, restoreNoAds } from '@/lib/purchases';
 import { useBackup } from '@/lib/useBackup';
 import { LANG_NAMES, LANGS, setLanguage, useI18n, type Lang, type LangPref } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
@@ -78,6 +81,15 @@ export default function SettingsScreen() {
             <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
           </Pressable>
         </Card>
+
+        {adsSupported && (
+          <>
+            <T variant="label" style={styles.section}>
+              {t.settings.ads}
+            </T>
+            <AdSettings />
+          </>
+        )}
 
         <T variant="label" style={styles.section}>
           {t.settings.about}
@@ -247,6 +259,57 @@ function Toggle({ on }: { on: boolean }) {
     <View style={[styles.toggle, { backgroundColor: on ? theme.colors.accent : theme.colors.surfaceAlt }]}>
       <View style={[styles.knob, { alignSelf: on ? 'flex-end' : 'flex-start' }]} />
     </View>
+  );
+}
+
+function AdSettings() {
+  const { theme } = useTheme();
+  const { t } = useI18n();
+  const { adFree, privacyOptions } = useAdState();
+  const [price, setPrice] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (adFree === false) loadPrice().then(setPrice);
+  }, [adFree]);
+
+  const buy = async () => {
+    setBusy(true);
+    const result = await buyNoAds();
+    setBusy(false);
+    if (result === 'bought') notify(t.settings.purchaseThanksTitle, t.settings.purchaseThanksBody);
+    else if (result === 'failed') notify(t.settings.purchaseFailedTitle, t.settings.purchaseFailedBody);
+  };
+
+  const restore = async () => {
+    setBusy(true);
+    const found = await restoreNoAds();
+    setBusy(false);
+    if (found) notify(t.settings.purchaseThanksTitle, t.settings.purchaseThanksBody);
+    else notify(t.settings.restoreNoneTitle, t.settings.restoreNoneBody);
+  };
+
+  return (
+    <Card>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <Feather name={adFree ? 'heart' : 'slash'} size={22} color={theme.colors.accent} />
+        <View style={{ flex: 1 }}>
+          <T style={{ fontFamily: theme.fonts.uiBold }}>{adFree ? t.settings.adFreeTitle : t.settings.removeAdsTitle}</T>
+          <T variant="muted">{adFree ? t.settings.adFreeBody : t.settings.removeAdsBody}</T>
+        </View>
+      </View>
+      {!adFree && (
+        <Button label={t.settings.removeAdsButton(price)} disabled={busy} onPress={buy} style={{ marginTop: 14 }} />
+      )}
+      {/* Apple requires restoring to be possible at any time. */}
+      <Button kind="ghost" label={t.settings.restorePurchases} disabled={busy} onPress={restore} style={{ marginTop: 10 }} />
+      {privacyOptions && !adFree && (
+        <Pressable onPress={showAdPrivacyOptions} accessibilityRole="button" style={[styles.linkRow, { marginTop: 4 }]}>
+          <Feather name="sliders" size={18} color={theme.colors.accent} />
+          <T style={{ flex: 1 }}>{t.settings.adPrivacy}</T>
+        </Pressable>
+      )}
+    </Card>
   );
 }
 

@@ -22,14 +22,15 @@ module.exports = function withReleaseSigning(config) {
     if (gradle.includes("rootProject.file('keystore.properties')")) return cfg;
 
     const debugBlock = /(signingConfigs\s*\{\s*debug\s*\{[^}]*\})/;
-    const releaseUsesDebug = /(release\s*\{[^}]*?)signingConfig signingConfigs\.debug/;
+    // Newer templates write `signingConfig = signingConfigs.debug`.
+    const releaseUsesDebug = /(release\s*\{[^}]*?)signingConfig\s*=?\s*signingConfigs\.debug/;
     if (!debugBlock.test(gradle) || !releaseUsesDebug.test(gradle)) {
       throw new Error('withReleaseSigning: build.gradle template changed, signing config not found');
     }
     gradle = gradle.replace(debugBlock, `$1${RELEASE_CONFIG}`);
     gradle = gradle.replace(
       releaseUsesDebug,
-      "$1signingConfig rootProject.file('keystore.properties').exists() ? signingConfigs.release : signingConfigs.debug",
+      "$1signingConfig = rootProject.file('keystore.properties').exists() ? signingConfigs.release : signingConfigs.debug",
     );
     cfg.modResults.contents = gradle;
     return cfg;

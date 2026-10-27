@@ -10,6 +10,7 @@ Writing commands only change something with --ausfuehren; without it they print 
   python3 scripts/asc.py profil --p12 cert.p12 --ausgabe x.mobileprovision --ausfuehren
   python3 scripts/asc.py warten --build 7              # until Apple has processed the upload
   python3 scripts/asc.py metadaten --ausfuehren       # texts, URLs, categories, age rating, screenshots (all locales)
+  python3 scripts/asc.py iap --ausfuehren             # in-app purchase "Remove ads" (texts, price, screenshot)
   python3 scripts/asc.py einreichen --build 1 --ausfuehren
 """
 import argparse
@@ -359,6 +360,121 @@ def cmd_warten(args):
         time.sleep(60)
 
 
+# ---------------------------------------------------------------- in-app purchase
+
+def all_territories():
+    out, path = [], '/v1/territories?limit=200'
+    while path:
+        page = get(path)
+        out += [t['id'] for t in page['data']]
+        nxt = page.get('links', {}).get('next')
+        path = nxt.replace(BASE, '') if nxt else None
+    return out
+
+
+def upload_review_screenshot(iap_id: str, image: Path):
+    blob = image.read_bytes()
+    shot = call('POST', '/v1/inAppPurchaseAppStoreReviewScreenshots', {'data': {
+        'type': 'inAppPurchaseAppStoreReviewScreenshots',
+        'attributes': {'fileName': image.name, 'fileSize': len(blob)},
+        'relationships': {'inAppPurchaseV2': {'data': {'type': 'inAppPurchases', 'id': iap_id}}},
+    }})['data']
+    for op in shot['attributes']['uploadOperations']:
+        req = urllib.request.Request(op['url'], data=blob[op['offset']:op['offset'] + op['length']], method=op['method'])
+        for h in op['requestHeaders']:
+            req.add_header(h['name'], h['value'])
+        urllib.request.urlopen(req).read()
+    call('PATCH', f"/v1/inAppPurchaseAppStoreReviewScreenshots/{shot['id']}", {'data': {
+        'type': 'inAppPurchaseAppStoreReviewScreenshots', 'id': shot['id'],
+        'attributes': {'uploaded': True, 'sourceFileChecksum': hashlib.md5(blob).hexdigest()},
+    }})
+
+
+def cmd_iap(args):
+    """Creates the non-consumable "Remove ads" with texts, price, availability and review screenshot.
+    Each part is skipped if it already exists, so the command can be run again."""
+    t = store_texts()
+    iap = t['iap']
+    app = require_app()
+    image = STORE / 'iap-review.png'
+    existing = get(f"/v1/apps/{app['id']}/inAppPurchasesV2?limit=50&fields[inAppPurchases]=productId,state")['data']
+    item = next((p for p in existing if p['attributes']['productId'] == iap['productId']), None)
+    if not args.ausfuehren:
+        state = item['attributes']['state'] if item else 'fehlt'
+        print(f"Probelauf: Kauf {iap['productId']} ({state}) – würde Texte {list(iap['locales'])}, "
+              f"Preis {iap['priceEur']} €, alle Länder und den Prüf-Screenshot {image.name} setzen.")
+        return
+    if not item:
+        item = call('POST', '/v2/inAppPurchases', {'data': {
+            'type': 'inAppPurchases',
+            'attributes': {'name': iap['referenceName'], 'productId': iap['productId'],
+                           'inAppPurchaseType': 'NON_CONSUMABLE', 'reviewNote': iap['reviewNote'],
+                           'familySharable': False},
+            'relationships': {'app': {'data': {'type': 'apps', 'id': app['id']}}},
+        }})['data']
+        print('Kauf angelegt:', iap['productId'])
+    iap_id = item['id']
+
+    locs = {l['attributes']['locale']: l for l in get(f'/v2/inAppPurchases/{iap_id}/inAppPurchaseLocalizations')['data']}
+    for locale, l in iap['locales'].items():
+        attrs = {'name': l['name'], 'description': l['description']}
+        if locale in locs:
+            lid = locs[locale]['id']
+            call('PATCH', f'/v1/inAppPurchaseLocalizations/{lid}', {'data': {
+                'type': 'inAppPurchaseLocalizations', 'id': lid, 'attributes': attrs}})
+        else:
+            call('POST', '/v1/inAppPurchaseLocalizations', {'data': {
+                'type': 'inAppPurchaseLocalizations', 'attributes': {'locale': locale, **attrs},
+                'relationships': {'inAppPurchaseV2': {'data': {'type': 'inAppPurchases', 'id': iap_id}}},
+            }})
+    print('Texte gesetzt:', ', '.join(iap['locales']))
+
+    schedule = get(f'/v2/inAppPurchases/{iap_id}/iapPriceSchedule')
+    if not schedule.get('data'):
+        points = get(f"/v2/inAppPurchases/{iap_id}/pricePoints?filter[territory]=DEU&limit=200&fields[inAppPurchasePricePoints]=customerPrice")
+        point = next((p for p in points['data'] if p['attributes']['customerPrice'] == iap['priceEur']), None)
+        if not point:
+            sys.exit(f"Kein Preispunkt {iap['priceEur']} € in Deutschland gefunden.")
+        call('POST', '/v1/inAppPurchasePriceSchedules', {
+            'data': {'type': 'inAppPurchasePriceSchedules', 'relationships': {
+                'inAppPurchase': {'data': {'type': 'inAppPurchases', 'id': iap_id}},
+                'baseTerritory': {'data': {'type': 'territories', 'id': 'DEU'}},
+                'manualPrices': {'data': [{'type': 'inAppPurchasePrices', 'id': '${price}'}]},
+            }},
+            'included': [{'type': 'inAppPurchasePrices', 'id': '${price}', 'attributes': {'startDate': None},
+                          'relationships': {
+                              'inAppPurchaseV2': {'data': {'type': 'inAppPurchases', 'id': iap_id}},
+                              'inAppPurchasePricePoint': {'data': {'type': 'inAppPurchasePricePoints', 'id': point['id']}},
+                          }}],
+        })
+        print(f"Preis gesetzt: {iap['priceEur']} € (Basis Deutschland, andere Länder rechnet Apple um).")
+
+    if not get(f'/v2/inAppPurchases/{iap_id}/inAppPurchaseAvailability').get('data'):
+        call('POST', '/v1/inAppPurchaseAvailabilities', {'data': {
+            'type': 'inAppPurchaseAvailabilities', 'attributes': {'availableInNewTerritories': True},
+            'relationships': {
+                'inAppPurchase': {'data': {'type': 'inAppPurchases', 'id': iap_id}},
+                'availableTerritories': {'data': [{'type': 'territories', 'id': t} for t in all_territories()]},
+            },
+        }})
+        print('Verfügbarkeit: alle Länder.')
+
+    if not get(f'/v2/inAppPurchases/{iap_id}/appStoreReviewScreenshot').get('data'):
+        if not image.exists():
+            sys.exit(f'Prüf-Screenshot fehlt: {image}')
+        upload_review_screenshot(iap_id, image)
+        print('Prüf-Screenshot hochgeladen.')
+    state = get(f'/v2/inAppPurchases/{iap_id}?fields[inAppPurchases]=state')['data']['attributes']['state']
+    print(f'Zustand: {state} (READY_TO_SUBMIT = fertig; der erste Kauf geht zusammen mit der App-Version in die Prüfung).')
+
+
+def assert_live_ads():
+    """Google's sample IDs are fine for testing but must never reach the store."""
+    for f in (ROOT / 'app.json', ROOT / 'src' / 'ads' / 'config.ts'):
+        if '3940256099942544' in f.read_text():
+            sys.exit(f'{f.relative_to(ROOT)} enthält noch Googles Beispiel-IDs – erst die echten AdMob-IDs eintragen.')
+
+
 # ---------------------------------------------------------------- submit for review
 
 def cmd_einreichen(args):
@@ -371,6 +487,7 @@ def cmd_einreichen(args):
     state = build['attributes']['processingState']
     if state != 'VALID':
         sys.exit(f'Build {args.build} ist noch nicht fertig verarbeitet ({state}). In ein paar Minuten erneut versuchen.')
+    assert_live_ads()
     version = editable_version(app['id'], t['version'], args.ausfuehren)
     if not args.ausfuehren:
         print(f"Probelauf: würde Build {args.build} an Version {t['version']} hängen und zur Prüfung senden.")
@@ -391,17 +508,53 @@ def cmd_einreichen(args):
                 'appStoreVersion': {'data': {'type': 'appStoreVersions', 'id': version['id']}},
             },
         }})
+    attach_iap(app['id'], sub['id'], t['iap']['productId'])
     call('PATCH', f"/v1/reviewSubmissions/{sub['id']}", {
         'data': {'type': 'reviewSubmissions', 'id': sub['id'], 'attributes': {'submitted': True}}
     })
     print(f"Zur Prüfung eingereicht: Version {t['version']}, Build {args.build} (reviewSubmission {sub['id']}).")
 
 
+def attach_iap(app_id: str, sub_id: str, product_id: str):
+    """Apple only reviews the FIRST purchase of an app together with a version. Without it the
+    reviewer finds a buy button that can't work (Mahjong Royale was rejected for that, 2.1(b)).
+    So the purchase goes into the same submission, as Mahjong's asc-iap-mit-version.py does."""
+    item = next((p for p in get(f'/v1/apps/{app_id}/inAppPurchasesV2?limit=50&fields[inAppPurchases]=productId,state')['data']
+                 if p['attributes']['productId'] == product_id), None)
+    if not item:
+        sys.exit(f'Kauf {product_id} fehlt – zuerst: python3 scripts/asc.py iap --ausfuehren')
+    state = item['attributes']['state']
+    if state in ('APPROVED', 'WAITING_FOR_REVIEW', 'IN_REVIEW'):
+        return
+    if state != 'READY_TO_SUBMIT':
+        sys.exit(f'Kauf {product_id} ist im Zustand {state} – Texte, Preis oder Prüf-Screenshot fehlen (asc.py iap).')
+    items = get(f'/v1/reviewSubmissions/{sub_id}/items?limit=50')['data']
+    if any((i.get('relationships') or {}).get('inAppPurchaseVersion', {}).get('data') for i in items):
+        return
+    try:
+        version = call('POST', '/v1/inAppPurchaseVersions', {'data': {
+            'type': 'inAppPurchaseVersions',
+            'relationships': {'inAppPurchase': {'data': {'type': 'inAppPurchases', 'id': item['id']}}},
+        }})['data']
+        call('POST', '/v1/reviewSubmissionItems', {'data': {
+            'type': 'reviewSubmissionItems',
+            'relationships': {
+                'reviewSubmission': {'data': {'type': 'reviewSubmissions', 'id': sub_id}},
+                'inAppPurchaseVersion': {'data': {'type': 'inAppPurchaseVersions', 'id': version['id']}},
+            },
+        }})
+        print(f'Kauf {product_id} hängt an der Einreichung.')
+    except SystemExit as e:
+        sys.exit(f'{e}\n\nDen Kauf konnte die API nicht anhängen. In App Store Connect auf der Versionsseite unter '
+                 '„In-App-Käufe und Abonnements“ den Kauf hinzufügen, dann diesen Schritt wiederholen. '
+                 'Nicht ohne den Kauf einreichen.')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = parser.add_subparsers(dest='cmd', required=True)
     sub.add_parser('status')
-    for name in ('bundle', 'metadaten'):
+    for name in ('bundle', 'metadaten', 'iap'):
         sub.add_parser(name).add_argument('--ausfuehren', action='store_true')
     p = sub.add_parser('profil')
     p.add_argument('--p12', required=True)
@@ -415,7 +568,7 @@ def main():
     p.add_argument('--ausfuehren', action='store_true')
     args = parser.parse_args()
     {'status': cmd_status, 'bundle': cmd_bundle, 'profil': cmd_profil, 'warten': cmd_warten,
-     'metadaten': cmd_metadaten, 'einreichen': cmd_einreichen}[args.cmd](args)
+     'metadaten': cmd_metadaten, 'iap': cmd_iap, 'einreichen': cmd_einreichen}[args.cmd](args)
 
 
 if __name__ == '__main__':

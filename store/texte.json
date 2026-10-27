@@ -7,10 +7,10 @@
       "name": "Daily Journal – Private Diary",
       "subtitle": "Write privately, with photos",
       "keywords": "notebook,gratitude,mood,tracker,feelings,memories,notes,prompts,reflection,log,writing,selfcare,photo",
-      "promotionalText": "Your private journal with photos, writing prompts and a mood history – no account, no ads. Everything stays on your device.",
-      "description": "Your private journal – as lovely as a paper notebook, safe on your phone.\n\nCapture what moves you: a few lines in the evening, a photo of the day or a question that makes you think. Everything stays on your device. No account, no cloud, no ads.\n\nWRITE THE WAY YOU LIKE\n• Lined notebook editor with title and date\n• Photos for every entry, from your gallery or the camera\n• Mood of the day in five levels\n• Tags to organize your entries\n• Drafts are saved automatically as you type\n\nNEVER A BLANK PAGE AGAIN\n• A new question every day as a writing prompt\n• Over 40 more questions to browse\n• Templates for gratitude and an evening review\n\nLOOK BACK\n• “On this day”: what did you write a month or a year ago?\n• Writing streak and longest streak\n• Mood history of the last 30 days\n• Calendar with mood colors and full-text search\n\nSTAY ON TRACK\n• Daily reminder at the time you choose\n\nPRIVATE AND SECURE\n• All entries stay on your device only\n• PIN lock, optionally with Face ID or fingerprint\n• Back up to a file, restore on any device\n• Trash: deleted entries can be restored for 30 days\n\nFOUR STYLES\nPaper, Minimal, Playful or Night – choose how your journal looks.\n\nAvailable in English and German.",
+      "promotionalText": "Your private journal with photos, writing prompts and a mood history – no account, no cloud. Your entries stay on your device.",
+      "description": "Your private journal – as lovely as a paper notebook, safe on your phone.\n\nCapture what moves you: a few lines in the evening, a photo of the day or a question that makes you think. Everything stays on your device. No account, no cloud.\n\nWRITE THE WAY YOU LIKE\n• Lined notebook editor with title and date\n• Photos for every entry, from your gallery or the camera\n• Mood of the day in five levels\n• Tags to organize your entries\n• Drafts are saved automatically as you type\n\nNEVER A BLANK PAGE AGAIN\n• A new question every day as a writing prompt\n• Over 40 more questions to browse\n• Templates for gratitude and an evening review\n\nLOOK BACK\n• “On this day”: what did you write a month or a year ago?\n• Writing streak and longest streak\n• Mood history of the last 30 days\n• Calendar with mood colors and full-text search\n\nSTAY ON TRACK\n• Daily reminder at the time you choose\n\nPRIVATE AND SECURE\n• All entries stay on your device only\n• PIN lock, optionally with Face ID or fingerprint\n• Back up to a file, restore on any device\n• Trash: deleted entries can be restored for 30 days\n\nFOUR STYLES\nPaper, Minimal, Playful or Night – choose how your journal looks.\n\nFREE WITH ADS\nThe app is free and shows ads. A one-time purchase removes them for good – no subscription. Your entries are never used for advertising.\n\nAvailable in English and German.",
       "googleTitle": "Daily Journal – Private Diary",
-      "shortDescription": "Private diary with photos, prompts & mood tracking – no account, no ads",
+      "shortDescription": "Private diary with photos, prompts & mood tracking – no account, no cloud",
       "urls": {
         "privacy": "https://tagebuch-c5j.pages.dev/privacy",
         "support": "https://tagebuch-c5j.pages.dev/help",
@@ -22,10 +22,10 @@
       "name": "Tagebuch – Mein Journal",
       "subtitle": "Privat schreiben mit Fotos",
       "keywords": "journal,notizbuch,dankbarkeit,stimmung,gefühle,erinnerungen,privat,notizen,tagebuchapp,mood,diary",
-      "promotionalText": "Dein privates Tagebuch mit Fotos, Schreibimpulsen und Stimmungsverlauf – ohne Konto, ohne Werbung. Alles bleibt auf deinem Gerät.",
-      "description": "Dein privates Tagebuch – schön wie ein Notizbuch aus Papier, sicher auf deinem Handy.\n\nHalte fest, was dich bewegt: in ein paar Zeilen am Abend, mit Foto vom Tag oder mit einer Frage, die dich zum Nachdenken bringt. Alles bleibt auf deinem Gerät. Kein Konto, keine Cloud, keine Werbung.\n\nSCHREIBEN, WIE ES DIR GEFÄLLT\n• Linierter Notizbuch-Editor mit Titel und Datum\n• Fotos zu jedem Eintrag, direkt aus der Galerie oder mit der Kamera\n• Stimmung des Tages in fünf Stufen\n• Tags, um Einträge zu ordnen\n• Entwürfe werden beim Tippen automatisch gesichert\n\nNIE WIEDER EIN LEERES BLATT\n• Jeden Tag eine neue Frage als Schreibimpuls\n• Über 40 weitere Fragen zum Durchblättern\n• Vorlagen für Dankbarkeit und den Abendrückblick\n\nZURÜCKBLICKEN\n• „An diesem Tag“: Was hast du vor einem Monat oder vor einem Jahr geschrieben?\n• Schreib-Serie und längste Serie\n• Stimmungsverlauf der letzten 30 Tage\n• Kalender mit Stimmungsfarben und Volltextsuche\n\nDRAN BLEIBEN\n• Tägliche Erinnerung zu deiner Wunschzeit\n\nPRIVAT UND SICHER\n• Alle Einträge bleiben nur auf deinem Gerät\n• PIN-Sperre, auf Wunsch mit Face ID oder Fingerabdruck\n• Sicherung als Datei, Wiederherstellen auf jedem Gerät\n• Papierkorb: Gelöschtes bleibt 30 Tage wiederherstellbar\n\nVIER STILE\nPapier, Minimal, Verspielt oder Nacht – such dir aus, wie dein Tagebuch aussehen soll.\n\nAuf Deutsch und Englisch.",
+      "promotionalText": "Dein privates Tagebuch mit Fotos, Schreibimpulsen und Stimmungsverlauf – ohne Konto, ohne Cloud. Deine Einträge bleiben auf deinem Gerät.",
+      "description": "Dein privates Tagebuch – schön wie ein Notizbuch aus Papier, sicher auf deinem Handy.\n\nHalte fest, was dich bewegt: in ein paar Zeilen am Abend, mit Foto vom Tag oder mit einer Frage, die dich zum Nachdenken bringt. Alles bleibt auf deinem Gerät. Kein Konto, keine Cloud.\n\nSCHREIBEN, WIE ES DIR GEFÄLLT\n• Linierter Notizbuch-Editor mit Titel und Datum\n• Fotos zu jedem Eintrag, direkt aus der Galerie oder mit der Kamera\n• Stimmung des Tages in fünf Stufen\n• Tags, um Einträge zu ordnen\n• Entwürfe werden beim Tippen automatisch gesichert\n\nNIE WIEDER EIN LEERES BLATT\n• Jeden Tag eine neue Frage als Schreibimpuls\n• Über 40 weitere Fragen zum Durchblättern\n• Vorlagen für Dankbarkeit und den Abendrückblick\n\nZURÜCKBLICKEN\n• „An diesem Tag“: Was hast du vor einem Monat oder vor einem Jahr geschrieben?\n• Schreib-Serie und längste Serie\n• Stimmungsverlauf der letzten 30 Tage\n• Kalender mit Stimmungsfarben und Volltextsuche\n\nDRAN BLEIBEN\n• Tägliche Erinnerung zu deiner Wunschzeit\n\nPRIVAT UND SICHER\n• Alle Einträge bleiben nur auf deinem Gerät\n• PIN-Sperre, auf Wunsch mit Face ID oder Fingerabdruck\n• Sicherung als Datei, Wiederherstellen auf jedem Gerät\n• Papierkorb: Gelöschtes bleibt 30 Tage wiederherstellbar\n\nVIER STILE\nPapier, Minimal, Verspielt oder Nacht – such dir aus, wie dein Tagebuch aussehen soll.\n\nKOSTENLOS MIT WERBUNG\nDie App ist kostenlos und zeigt Werbung. Ein einmaliger Kauf entfernt sie für immer – ohne Abo. Deine Einträge werden nie für Werbung verwendet.\n\nAuf Deutsch und Englisch.",
       "googleTitle": "Tagebuch – Mein Journal",
-      "shortDescription": "Privates Tagebuch mit Fotos, Impulsen & Stimmung – ohne Konto, ohne Werbung",
+      "shortDescription": "Privates Tagebuch mit Fotos, Impulsen & Stimmung – ohne Konto, ohne Cloud",
       "urls": {
         "privacy": "https://tagebuch-c5j.pages.dev/datenschutz",
         "support": "https://tagebuch-c5j.pages.dev/support",
@@ -38,7 +38,7 @@
     "primaryCategory": "LIFESTYLE",
     "secondaryCategory": "PRODUCTIVITY",
     "ageRating": {
-      "advertising": false,
+      "advertising": true,
       "alcoholTobaccoOrDrugUseOrReferences": "NONE",
       "contests": "NONE",
       "gambling": false,
@@ -67,6 +67,23 @@
     "lastName": "Gallab",
     "email": "63almaz80@gmail.com",
     "phone": "+436604277435",
-    "notes": "No login needed; the app works fully offline. All entries are stored only locally on the device. There is no server, no advertising and no tracking.\n\nTo try it: tap “Write” at the bottom right. An empty entry shows a writing prompt; photos can be added with “Photo” or “Camera”.\n\nOptional: under Settings → Security a 4-digit PIN can be set; after that, unlocking with Face ID can be turned on. The daily reminder (local notification) is turned on under Settings → Reminder.\n\nThe app follows the device language (English or German); it can also be changed under Settings → Language."
+    "notes": "No login needed; all journal features work offline. All entries are stored only locally on the device. There is no server. The app shows Google AdMob ads (banner and occasionally an interstitial after saving an entry); in the EEA a Google consent form appears first, then the App Tracking Transparency prompt.\n\nTo try it: tap “Write” at the bottom right. An empty entry shows a writing prompt; photos can be added with “Photo” or “Camera”.\n\nOptional: under Settings → Security a 4-digit PIN can be set; after that, unlocking with Face ID can be turned on. The daily reminder (local notification) is turned on under Settings → Reminder.\n\nThe app follows the device language (English or German); it can also be changed under Settings → Language.\n\nIn-app purchase “Remove ads” (non-consumable): Settings → Ads → Remove ads. “Restore purchase” is in the same place."
+  },
+  "iap": {
+    "productId": "io.github.almaz6380.tagebuch.noads",
+    "referenceName": "Remove ads",
+    "priceEur": "2.99",
+    "playPriceEurNet": "2.49",
+    "locales": {
+      "en-US": {
+        "name": "Remove ads",
+        "description": "No ads, forever. One-time purchase."
+      },
+      "de-DE": {
+        "name": "Werbung entfernen",
+        "description": "Für immer ohne Werbung. Einmaliger Kauf."
+      }
+    },
+    "reviewNote": "Unlocks an ad-free app. Find it under Settings → Ads → Remove ads."
   }
 }
