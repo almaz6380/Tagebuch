@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Tagebuch",
+    "NSFaceIDUsageDescription": "Tagebuch nutzt Face ID, um dein Tagebuch zu entsperren.",
+    "NSPhotoLibraryUsageDescription": "Tagebuch braucht Zugriff auf deine Fotos, damit du Bilder zu Einträgen hinzufügen kannst.",
+    "NSCameraUsageDescription": "Tagebuch braucht die Kamera, damit du Fotos für deine Einträge aufnehmen kannst."
+  },
+  "android": {
+    "app_name": "Tagebuch"
+  }
+}

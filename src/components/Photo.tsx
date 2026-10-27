@@ -4,6 +4,7 @@ import { Image, Modal, Pressable, StyleSheet, View, type ImageStyle, type StyleP
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { photoUri } from '@/db/photos';
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
 function usePhotoUri(id: string) {
@@ -30,6 +31,7 @@ export function Photo({ id, style }: { id: string; style?: StyleProp<ImageStyle>
 /** Full-screen photo view, with arrows to flip through several. */
 export function PhotoViewer({ ids, start, onClose }: { ids: string[]; start: number; onClose: () => void }) {
   const insets = useSafeAreaInsets();
+  const { t } = useI18n();
   const [current, setCurrent] = useState(start);
   const id = ids[current];
   const uri = usePhotoUri(id ?? '');
@@ -37,11 +39,11 @@ export function PhotoViewer({ ids, start, onClose }: { ids: string[]; start: num
   return (
     <Modal visible={!!id} transparent animationType="fade" onRequestClose={onClose}>
       <View style={styles.backdrop}>
-        {uri && <Image source={{ uri }} style={styles.full} resizeMode="contain" accessibilityLabel="Foto" />}
+        {uri && <Image source={{ uri }} style={styles.full} resizeMode="contain" accessibilityLabel={t.photoViewer.photo} />}
         <Pressable
           onPress={onClose}
           accessibilityRole="button"
-          accessibilityLabel="Schließen"
+          accessibilityLabel={t.photoViewer.close}
           hitSlop={12}
           style={[styles.close, { top: insets.top + 12 }]}>
           <Feather name="x" size={26} color="#fff" />
@@ -50,7 +52,7 @@ export function PhotoViewer({ ids, start, onClose }: { ids: string[]; start: num
           <View style={[styles.nav, { bottom: insets.bottom + 24 }]}>
             <Pressable
               onPress={() => setCurrent((c) => (c - 1 + ids.length) % ids.length)}
-              accessibilityLabel="Vorheriges Foto"
+              accessibilityLabel={t.photoViewer.prev}
               hitSlop={12}>
               <Feather name="chevron-left" size={30} color="#fff" />
             </Pressable>
@@ -59,7 +61,7 @@ export function PhotoViewer({ ids, start, onClose }: { ids: string[]; start: num
                 <View key={p} style={[styles.dot, { opacity: i === current ? 1 : 0.4 }]} />
               ))}
             </View>
-            <Pressable onPress={() => setCurrent((c) => (c + 1) % ids.length)} accessibilityLabel="Nächstes Foto" hitSlop={12}>
+            <Pressable onPress={() => setCurrent((c) => (c + 1) % ids.length)} accessibilityLabel={t.photoViewer.next} hitSlop={12}>
               <Feather name="chevron-right" size={30} color="#fff" />
             </Pressable>
           </View>

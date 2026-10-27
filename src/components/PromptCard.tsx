@@ -2,7 +2,8 @@ import Feather from '@expo/vector-icons/Feather';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { PROMPTS, promptIndexFor, TEMPLATES } from '@/lib/prompts';
+import { useI18n } from '@/i18n';
+import { promptIndexFor, TEMPLATE_KEYS } from '@/lib/prompts';
 import { useTheme } from '@/theme/ThemeProvider';
 import { Card, T } from './Themed';
 
@@ -14,43 +15,44 @@ export function PromptCard({
 }: {
   date: string;
   onUsePrompt: (prompt: string) => void;
-  onUseTemplate: (template: (typeof TEMPLATES)[number]) => void;
+  onUseTemplate: (template: { label: string; text: string }) => void;
 }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const [index, setIndex] = useState(() => promptIndexFor(date));
-  const prompt = PROMPTS[index];
+  const prompt = t.prompts[index];
 
   return (
     <Card style={{ marginTop: 16 }}>
       <View style={styles.header}>
         <Feather name="feather" size={16} color={theme.colors.accent} />
-        <T variant="label">Impuls</T>
+        <T variant="label">{t.prompt.title}</T>
       </View>
       <T variant="body" style={{ marginTop: 8 }}>
         {prompt}
       </T>
       <View style={styles.actions}>
         <Pressable onPress={() => onUsePrompt(prompt)} accessibilityRole="button" hitSlop={8}>
-          <T style={{ color: theme.colors.accent, fontFamily: theme.fonts.uiBold }}>Übernehmen</T>
+          <T style={{ color: theme.colors.accent, fontFamily: theme.fonts.uiBold }}>{t.prompt.use}</T>
         </Pressable>
         <Pressable
-          onPress={() => setIndex((i) => (i + 1) % PROMPTS.length)}
+          onPress={() => setIndex((i) => (i + 1) % t.prompts.length)}
           accessibilityRole="button"
           hitSlop={8}
           style={styles.next}>
           <Feather name="refresh-cw" size={14} color={theme.colors.textMuted} />
-          <T variant="muted">Anderer Impuls</T>
+          <T variant="muted">{t.prompt.another}</T>
         </Pressable>
       </View>
       <View style={[styles.templates, { borderTopColor: theme.colors.border }]}>
-        <T variant="muted">Vorlage:</T>
-        {TEMPLATES.map((t) => (
+        <T variant="muted">{t.prompt.template}</T>
+        {TEMPLATE_KEYS.map((key) => (
           <Pressable
-            key={t.key}
-            onPress={() => onUseTemplate(t)}
+            key={key}
+            onPress={() => onUseTemplate(t.templates[key])}
             accessibilityRole="button"
             style={[styles.chip, { backgroundColor: theme.colors.surfaceAlt }]}>
-            <T style={{ fontSize: 13 }}>{t.label}</T>
+            <T style={{ fontSize: 13 }}>{t.templates[key].label}</T>
           </Pressable>
         ))}
       </View>

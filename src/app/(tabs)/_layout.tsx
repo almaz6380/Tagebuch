@@ -3,20 +3,23 @@ import { Tabs } from 'expo-router/js-tabs';
 import type { ComponentProps } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
 type IconName = ComponentProps<typeof Feather>['name'];
 
-const tabs: { name: string; title: string; icon: IconName }[] = [
-  { name: 'index', title: 'Einträge', icon: 'book-open' },
-  { name: 'calendar', title: 'Kalender', icon: 'calendar' },
-  { name: 'review', title: 'Rückblick', icon: 'trending-up' },
-  { name: 'search', title: 'Suche', icon: 'search' },
-  { name: 'settings', title: 'Einstellungen', icon: 'settings' },
+const tabs: { name: 'index' | 'calendar' | 'review' | 'search' | 'settings'; icon: IconName }[] = [
+  { name: 'index', icon: 'book-open' },
+  { name: 'calendar', icon: 'calendar' },
+  { name: 'review', icon: 'trending-up' },
+  { name: 'search', icon: 'search' },
+  { name: 'settings', icon: 'settings' },
 ];
+const titleKey = { index: 'entries', calendar: 'calendar', review: 'review', search: 'search', settings: 'settings' } as const;
 
 export default function TabLayout() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { colors, fonts } = theme;
   const insets = useSafeAreaInsets();
   return (
@@ -35,13 +38,13 @@ export default function TabLayout() {
         tabBarLabelStyle: { fontFamily: fonts.ui, fontSize: 11, lineHeight: 15 },
         sceneStyle: { backgroundColor: colors.background },
       }}>
-      {tabs.map((t) => (
+      {tabs.map((tab) => (
         <Tabs.Screen
-          key={t.name}
-          name={t.name}
+          key={tab.name}
+          name={tab.name}
           options={{
-            title: t.title,
-            tabBarIcon: ({ color, size }) => <Feather name={t.icon} color={color as string} size={size - 2} />,
+            title: t.tabs[titleKey[tab.name]],
+            tabBarIcon: ({ color, size }) => <Feather name={tab.icon} color={color as string} size={size - 2} />,
           }}
         />
       ))}

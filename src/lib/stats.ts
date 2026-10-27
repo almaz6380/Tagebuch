@@ -1,4 +1,5 @@
 import type { Entry } from '@/db/types';
+import type { Messages } from '@/i18n';
 import { parseISODate, shiftDays, toISODate, todayISO } from './dates';
 
 /** Consecutive days with an entry, ending today (or yesterday). */
@@ -27,7 +28,12 @@ export function longestStreak(entries: Entry[]) {
   return best;
 }
 
-export type Memory = { label: string; entries: Entry[] };
+/** `yearsAgo` 0 means one month ago. */
+export type Memory = { yearsAgo: number; entries: Entry[] };
+
+export function memoryLabel(m: Memory, t: Messages) {
+  return m.yearsAgo === 0 ? t.review.monthAgo : t.review.yearsAgo(m.yearsAgo);
+}
 
 /** Entries from one month ago and from the same day in earlier years, closest first. */
 export function onThisDay(entries: Entry[], today = todayISO()): Memory[] {
@@ -39,7 +45,7 @@ export function onThisDay(entries: Entry[], today = todayISO()): Memory[] {
   if (monthAgo.getDate() === t.getDate()) {
     const iso = toISODate(monthAgo);
     const list = entries.filter((e) => e.date === iso);
-    if (list.length) out.push({ label: 'Vor einem Monat', entries: list });
+    if (list.length) out.push({ yearsAgo: 0, entries: list });
   }
 
   const md = today.slice(5);
@@ -49,8 +55,7 @@ export function onThisDay(entries: Entry[], today = todayISO()): Memory[] {
     if (e.date.slice(5) === md && year < t.getFullYear()) byYear.set(year, [...(byYear.get(year) ?? []), e]);
   }
   for (const [year, list] of [...byYear].sort((a, b) => b[0] - a[0])) {
-    const ago = t.getFullYear() - year;
-    out.push({ label: ago === 1 ? 'Vor einem Jahr' : `Vor ${ago} Jahren`, entries: list });
+    out.push({ yearsAgo: t.getFullYear() - year, entries: list });
   }
   return out;
 }

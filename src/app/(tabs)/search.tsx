@@ -8,6 +8,7 @@ import { Screen, T } from '@/components/Themed';
 import { useEntries } from '@/db/EntriesProvider';
 import { useTheme } from '@/theme/ThemeProvider';
 import { moods } from '@/theme/themes';
+import { useI18n } from '@/i18n';
 
 // Case- and accent-insensitive ("Mädchen" matches "madchen").
 const fold = (s: string) => s.toLocaleLowerCase('de').normalize('NFD').replace(/[̀-ͯ]/g, '');
@@ -16,6 +17,7 @@ export default function SearchScreen() {
   const { theme } = useTheme();
   const { colors, fonts } = theme;
   const { entries, allTags } = useEntries();
+  const { t } = useI18n();
   const [query, setQuery] = useState('');
   const [activeTags, setActiveTags] = useState<string[]>([]);
   const [mood, setMood] = useState<number | null>(null);
@@ -45,7 +47,7 @@ export default function SearchScreen() {
         keyboardShouldPersistTaps="handled"
         ListHeaderComponent={
           <View style={{ marginBottom: 16 }}>
-            <T variant="display">Suche</T>
+            <T variant="display">{t.search.title}</T>
             <View
               style={[
                 styles.searchBox,
@@ -55,7 +57,7 @@ export default function SearchScreen() {
               <TextInput
                 value={query}
                 onChangeText={setQuery}
-                placeholder="Wonach suchst du?"
+                placeholder={t.search.placeholder}
                 placeholderTextColor={colors.textMuted}
                 style={[styles.input, { fontFamily: fonts.ui, color: colors.text }]}
                 autoCorrect={false}
@@ -63,18 +65,18 @@ export default function SearchScreen() {
             </View>
 
             <T variant="label" style={styles.section}>
-              Stimmung
+              {t.search.mood}
             </T>
             <View style={styles.wrap}>
               {moods.map((m) => (
-                <TagChipLike key={m.value} label={`${m.emoji} ${m.label}`} active={mood === m.value} onPress={() => setMood(mood === m.value ? null : m.value)} />
+                <TagChipLike key={m.value} label={`${m.emoji} ${t.moods[m.value]}`} active={mood === m.value} onPress={() => setMood(mood === m.value ? null : m.value)} />
               ))}
             </View>
 
             {allTags.length > 0 && (
               <>
                 <T variant="label" style={styles.section}>
-                  Tags
+                  {t.search.tags}
                 </T>
                 <View style={styles.wrap}>
                   {allTags.map((t) => (
@@ -86,7 +88,7 @@ export default function SearchScreen() {
 
             {filtering && (
               <T variant="muted" style={{ marginTop: 20 }}>
-                {results.length === 0 ? 'Nichts gefunden.' : `${results.length} Treffer`}
+                {results.length === 0 ? t.search.none : t.search.hits(results.length)}
               </T>
             )}
           </View>

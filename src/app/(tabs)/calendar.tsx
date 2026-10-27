@@ -7,13 +7,15 @@ import { EntryCard } from '@/components/EntryCard';
 import { Button, Card, Screen, T } from '@/components/Themed';
 import { useEntries } from '@/db/EntriesProvider';
 import type { Entry } from '@/db/types';
-import { formatLong, MONTHS, monthGrid, todayISO, WEEKDAYS_SHORT } from '@/lib/dates';
+import { useI18n } from '@/i18n';
+import { formatLong, formatMonthYear, monthGrid, todayISO, toISODate, weekdaysShort } from '@/lib/dates';
 import { useTheme } from '@/theme/ThemeProvider';
 import { moodInfo, moods } from '@/theme/themes';
 
 export default function CalendarScreen() {
   const { theme } = useTheme();
   const { colors, fonts } = theme;
+  const { t } = useI18n();
   const { entries } = useEntries();
   const today = todayISO();
   const [cursor, setCursor] = useState(() => {
@@ -45,23 +47,23 @@ export default function CalendarScreen() {
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <T variant="display">Kalender</T>
+        <T variant="display">{t.calendar.title}</T>
 
         <Card style={{ marginTop: 16 }}>
           <View style={styles.monthNav}>
-            <Pressable onPress={() => move(-1)} hitSlop={12} accessibilityLabel="Vorheriger Monat">
+            <Pressable onPress={() => move(-1)} hitSlop={12} accessibilityLabel={t.calendar.prevMonth}>
               <Feather name="chevron-left" size={22} color={colors.text} />
             </Pressable>
             <T variant="title" style={{ fontSize: theme.name === 'paper' ? 28 : 18 }}>
-              {MONTHS[cursor.month]} {cursor.year}
+              {formatMonthYear(toISODate(new Date(cursor.year, cursor.month, 1)))}
             </T>
-            <Pressable onPress={() => move(1)} hitSlop={12} accessibilityLabel="Nächster Monat">
+            <Pressable onPress={() => move(1)} hitSlop={12} accessibilityLabel={t.calendar.nextMonth}>
               <Feather name="chevron-right" size={22} color={colors.text} />
             </Pressable>
           </View>
 
           <View style={styles.grid}>
-            {WEEKDAYS_SHORT.map((w) => (
+            {weekdaysShort().map((w) => (
               <View key={w} style={styles.cell}>
                 <T variant="label" style={{ fontSize: 10 }}>
                   {w}
@@ -128,10 +130,10 @@ export default function CalendarScreen() {
             <EntryCard entry={e} />
           </View>
         ))}
-        {dayEntries.length === 0 && <T variant="muted">An diesem Tag hast du noch nichts geschrieben.</T>}
+        {dayEntries.length === 0 && <T variant="muted">{t.calendar.nothing}</T>}
         <Button
           kind="ghost"
-          label={dayEntries.length ? 'Weiteren Eintrag schreiben' : 'Eintrag für diesen Tag schreiben'}
+          label={dayEntries.length ? t.calendar.another : t.calendar.first}
           onPress={() => router.push({ pathname: '/entry', params: { date: selected } })}
           style={{ marginTop: 14 }}
         />

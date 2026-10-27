@@ -2,7 +2,7 @@ import * as Crypto from 'expo-crypto';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { AppState, Platform } from 'react-native';
 
-import { authenticate, biometricLabel } from './biometrics';
+import { authenticate, biometricKind, type BiometricKind } from './biometrics';
 import { getItem, removeItem, setItem } from './kv';
 
 const PIN_KEY = 'tagebuch.pin';
@@ -24,8 +24,8 @@ type LockContextValue = {
   unlock: (pin: string) => Promise<boolean>;
   setPin: (pin: string) => Promise<void>;
   clearPin: () => Promise<void>;
-  /** "Face ID", "Fingerabdruck" … or null if the device has no biometrics set up. */
-  biometricName: string | null;
+  /** Face ID, fingerprint … or null if the device has no biometrics set up. */
+  biometricName: BiometricKind | null;
   biometricEnabled: boolean;
   setBiometricEnabled: (on: boolean) => Promise<void>;
   unlockWithBiometrics: () => Promise<boolean>;
@@ -37,11 +37,11 @@ export function LockProvider({ children }: { children: ReactNode }) {
   const [stored, setStored] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
   const [locked, setLocked] = useState(false);
-  const [biometricName, setBiometricName] = useState<string | null>(null);
+  const [biometricName, setBiometricName] = useState<BiometricKind | null>(null);
   const [biometricOn, setBiometricOn] = useState(false);
 
   useEffect(() => {
-    Promise.all([getItem(PIN_KEY), getItem(BIOMETRIC_KEY), biometricLabel().catch(() => null)]).then(([value, bio, name]) => {
+    Promise.all([getItem(PIN_KEY), getItem(BIOMETRIC_KEY), biometricKind().catch(() => null)]).then(([value, bio, name]) => {
       setStored(value);
       setLocked(!!value);
       setBiometricOn(bio === '1');

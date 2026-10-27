@@ -2,6 +2,7 @@ import { ImageManipulator, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 
 import { addPhoto } from '@/db/photos';
+import { getMessages } from '@/i18n';
 
 const MAX_SIZE = 1600;
 
@@ -9,7 +10,7 @@ const MAX_SIZE = 1600;
 export async function pickPhotos(source: 'library' | 'camera'): Promise<string[]> {
   if (source === 'camera') {
     const { granted } = await ImagePicker.requestCameraPermissionsAsync();
-    if (!granted) throw new Error('Ohne Kamera-Zugriff kann kein Foto aufgenommen werden.');
+    if (!granted) throw new Error(getMessages().entry.cameraDenied);
   }
   const result =
     source === 'camera'

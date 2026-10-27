@@ -10,20 +10,22 @@ import { useEntries } from '@/db/EntriesProvider';
 import type { Entry } from '@/db/types';
 import { BackupReminder } from '@/components/BackupReminder';
 import { formatLong, formatMonthYear, todayISO } from '@/lib/dates';
-import { currentStreak, onThisDay } from '@/lib/stats';
+import { currentStreak, memoryLabel, onThisDay } from '@/lib/stats';
+import { useI18n, type Messages } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
 type Row = { type: 'month'; key: string; label: string } | { type: 'entry'; key: string; entry: Entry };
 
-function greeting() {
+function greeting(t: Messages) {
   const h = new Date().getHours();
-  if (h < 11) return 'Guten Morgen';
-  if (h < 18) return 'Schön, dass du da bist';
-  return 'Guten Abend';
+  if (h < 11) return t.home.morning;
+  if (h < 18) return t.home.day;
+  return t.home.evening;
 }
 
 export default function EntriesScreen() {
   const { theme } = useTheme();
+  const { t, lang } = useI18n();
   const { entries, loaded } = useEntries();
 
   const rows = useMemo(() => {
@@ -38,7 +40,9 @@ export default function EntriesScreen() {
       out.push({ type: 'entry', key: e.id, entry: e });
     }
     return out;
-  }, [entries]);
+    // lang: month headers are formatted in the app language.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entries, lang]);
 
   const days = currentStreak(entries);
   const memories = useMemo(() => onThisDay(entries), [entries]);
@@ -53,12 +57,12 @@ export default function EntriesScreen() {
           <View style={styles.header}>
             <T variant="muted">{formatLong(todayISO())}</T>
             <T variant="display" style={{ marginTop: 2 }}>
-              {greeting()}
+              {greeting(t)}
             </T>
             {entries.length > 0 && (
               <View style={styles.stats}>
-                <Stat value={entries.length} label={entries.length === 1 ? 'Eintrag' : 'Einträge'} />
-                <Stat value={days} label={days === 1 ? 'Tag in Folge' : 'Tage in Folge'} />
+                <Stat value={entries.length} label={t.home.entries(entries.length)} />
+                <Stat value={days} label={t.home.streak(days)} />
               </View>
             )}
             {memories.length > 0 && (
@@ -71,9 +75,9 @@ export default function EntriesScreen() {
                 ]}>
                 <Feather name="clock" size={18} color={theme.colors.accent} />
                 <View style={{ flex: 1 }}>
-                  <T style={{ fontFamily: theme.fonts.uiBold }}>An diesem Tag</T>
+                  <T style={{ fontFamily: theme.fonts.uiBold }}>{t.home.onThisDay}</T>
                   <T variant="muted" numberOfLines={1}>
-                    {memories[0].label}: {memories[0].entries[0].title || 'Ohne Titel'}
+                    {memoryLabel(memories[0], t)}: {memories[0].entries[0].title || t.untitled}
                   </T>
                 </View>
                 <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
@@ -86,10 +90,10 @@ export default function EntriesScreen() {
           loaded ? (
             <View style={styles.empty}>
               <T variant="title" style={{ textAlign: 'center' }}>
-                Deine erste Seite wartet
+                {t.home.emptyTitle}
               </T>
               <T variant="body" style={{ textAlign: 'center', color: theme.colors.textMuted, marginTop: 8 }}>
-                Halte fest, was dich heute bewegt hat, egal ob groß oder klein.
+                {t.home.emptyBody}
               </T>
             </View>
           ) : undefined
@@ -108,7 +112,7 @@ export default function EntriesScreen() {
       />
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel="Neuer Eintrag"
+        accessibilityLabel={t.home.newEntry}
         onPress={() => router.push('/entry')}
         style={({ pressed }) => [
           styles.fab,
@@ -119,7 +123,7 @@ export default function EntriesScreen() {
           },
         ]}>
         <Feather name="edit-3" size={20} color={theme.colors.accentText} />
-        <T style={{ color: theme.colors.accentText, fontFamily: theme.fonts.uiBold }}>Schreiben</T>
+        <T style={{ color: theme.colors.accentText, fontFamily: theme.fonts.uiBold }}>{t.home.write}</T>
       </Pressable>
     </Screen>
   );
