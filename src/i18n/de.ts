@@ -186,6 +186,8 @@ export const de = {
     restoreNoneBody: 'Mit diesem Store-Konto wurde „Werbung entfernen“ noch nicht gekauft.',
     language: 'Sprache',
     languageSystem: 'System',
+    restartTitle: 'Bitte App neu starten',
+    restartBody: 'Die Leserichtung der neuen Sprache gilt ab dem nächsten Start der App.',
     about: 'Über',
     dataInfo:
       'Deine Einträge liegen nur auf diesem Gerät. Sichere sie regelmäßig als Datei, zum Beispiel in iCloud, Google Drive oder per Mail. Mit „Wiederherstellen“ holst du sie auf jedem Gerät zurück.',

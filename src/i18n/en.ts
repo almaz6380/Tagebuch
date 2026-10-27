@@ -185,6 +185,8 @@ export const en: Messages = {
     restoreNoneBody: '“Remove ads” hasn’t been bought with this store account yet.',
     language: 'Language',
     languageSystem: 'System',
+    restartTitle: 'Please restart the app',
+    restartBody: 'The reading direction of the new language applies from the next app start.',
     about: 'About',
     dataInfo:
       'Your entries only live on this device. Back them up regularly as a file, for example to iCloud, Google Drive or by email. With “Restore” you get them back on any device.',

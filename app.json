@@ -17,7 +17,19 @@
         "CFBundleDevelopmentRegion": "en",
         "CFBundleLocalizations": [
           "en",
-          "de"
+          "de",
+          "es",
+          "fr",
+          "it",
+          "pt-BR",
+          "nl",
+          "pl",
+          "tr",
+          "ru",
+          "ja",
+          "ko",
+          "zh-Hans",
+          "ar"
         ],
         "CFBundleAllowMixedLocalizations": true
       }
@@ -166,7 +178,19 @@
     },
     "locales": {
       "en": "./locales/en.json",
-      "de": "./locales/de.json"
+      "de": "./locales/de.json",
+      "es": "./locales/es.json",
+      "fr": "./locales/fr.json",
+      "it": "./locales/it.json",
+      "pt-BR": "./locales/pt.json",
+      "nl": "./locales/nl.json",
+      "pl": "./locales/pl.json",
+      "tr": "./locales/tr.json",
+      "ru": "./locales/ru.json",
+      "ja": "./locales/ja.json",
+      "ko": "./locales/ko.json",
+      "zh-Hans": "./locales/zh.json",
+      "ar": "./locales/ar.json"
     }
   }
 }

@@ -1,7 +1,7 @@
 # Google Play Console – Antworten zum Abtippen
 
 Diese Formulare lassen sich nicht per API ausfüllen. Alles unter **App-Inhalte** (linkes Menü → *Richtlinien und Programme → App-Inhalte*).
-Store-Eintrag (Texte, Grafiken, Screenshots) setzt `scripts/play.py` automatisch.
+Store-Eintrag (Texte, Grafiken, Screenshots) setzt `scripts/play.py` automatisch, in allen 14 Sprachen aus `store/locales/*.json`.
 
 ## App anlegen
 - **App-Name:** Daily Journal – Private Diary (deutscher Eintrag „Tagebuch – Mein Journal“ legt `scripts/play.py eintrag` an)

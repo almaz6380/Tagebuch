@@ -7,7 +7,8 @@
 // Writes store/screenshots/iphone-69/<locale>/*.png (1290×2796, App Store 6.9")
 // and store/screenshots/play/<locale>/*.png (1080×2160, Play phones need ≤ 2:1),
 // for every store language.
-import { mkdir, readFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
+import { mkdir, readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 // Playwright isn't a project dependency; point PLAYWRIGHT at an installed copy if needed.
@@ -15,6 +16,9 @@ const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
 
 const BASE = process.env.BASE ?? 'http://localhost:4321';
 const OUT = 'store/screenshots';
+// Caveat and Inter have no CJK or Arabic letters; the browser picks the Noto
+// variant that matches <html lang> (fonts-noto-cjk, fonts-noto-core).
+const FALLBACK = "'Noto Sans Arabic','Noto Sans CJK JP',sans-serif";
 
 const DEVICES = [
   {
@@ -35,86 +39,16 @@ const SHOTS = [
   { file: '6-night', path: '/', theme: 'dark' },
 ];
 
-const LOCALES = {
-  'en-US': {
-    lang: 'en',
-    captions: [
-      ['Your private journal', 'As lovely as paper – safe on your phone'],
-      ['Photos for every day', 'With mood, tags and notebook lines'],
-      ['A prompt every day', 'Never stare at a blank page again'],
-      ['Look back', '“On this day”, writing streak and mood history'],
-      ['Moods at a glance', 'Calendar with mood colors'],
-      ['Styles, PIN & Face ID', 'Everything stays on your device'],
-    ],
-    today: [
-      'Sunset by the sea',
-      'Today was one of those days you want to hold on to. We drove to the coast on a whim and watched the sun sink into the water.\n\nWhat I’m grateful for: this moment, and that I didn’t miss it.',
-      ['vacation', 'grateful'],
-    ],
-    year: ['First day in the new flat', 'Boxes everywhere, but it already feels like home.', ['home']],
-    month: ['Concert in the park', 'Live music under the open sky – goosebumps.', ['music']],
-    texts: [
-      [
-        'Long walk by the lake',
-        'An hour by the water after work. The air smelled of autumn and for a moment everything was completely still.',
-        4,
-        ['nature', 'exercise'],
-      ],
-      [
-        'Coffee with Lena',
-        'We talked about everything that’s on our minds. I’m so glad she’s in my life.',
-        5,
-        ['friends'],
-      ],
-      ['Tough week', 'Far too many meetings. Tonight it’s just tea, a blanket and a good book.', 2, ['work']],
-      ['New recipe', 'Tried pumpkin soup with ginger – making that more often from now on.', 4, ['cooking']],
-      ['Small win', 'The presentation went better than expected. Proud of myself!', 5, ['work']],
-      ['Rainy day', 'Spent the whole afternoon reading and listening to music.', 3, ['calm']],
-      ['Family dinner', 'Grandma told stories from the old days again.', 4, ['family']],
-    ],
-  },
-  'de-DE': {
-    lang: 'de',
-    captions: [
-      ['Dein privates Tagebuch', 'Schön wie Papier – sicher auf deinem Handy'],
-      ['Fotos zu jedem Tag', 'Mit Stimmung, Tags und Notizbuch-Linien'],
-      ['Jeden Tag ein Impuls', 'Nie mehr vor einem leeren Blatt sitzen'],
-      ['Zurückblicken', '„An diesem Tag“, Schreib-Serie und Stimmungsverlauf'],
-      ['Stimmung im Blick', 'Kalender mit Stimmungsfarben'],
-      ['Stile, PIN & Face ID', 'Alles bleibt nur auf deinem Gerät'],
-    ],
-    today: [
-      'Sonnenuntergang am Meer',
-      'Heute war einer dieser Tage, die man festhalten möchte. Wir sind spontan an die Küste gefahren und haben zugesehen, wie die Sonne ins Wasser sinkt.\n\nWofür ich dankbar bin: für diesen Moment und dafür, dass ich ihn nicht verpasst habe.',
-      ['urlaub', 'dankbar'],
-    ],
-    year: [
-      'Erster Tag in der neuen Wohnung',
-      'Überall Kartons, aber es fühlt sich schon nach Zuhause an.',
-      ['zuhause'],
-    ],
-    month: ['Konzert im Park', 'Live-Musik unter freiem Himmel – Gänsehaut.', ['musik']],
-    texts: [
-      [
-        'Lange Runde am See',
-        'Nach der Arbeit noch eine Stunde am Wasser. Die Luft roch nach Herbst und für einen Moment war alles ganz still.',
-        4,
-        ['natur', 'bewegung'],
-      ],
-      [
-        'Kaffee mit Lena',
-        'Wir haben über alles geredet, was uns gerade beschäftigt. Ich bin so froh, dass es sie gibt.',
-        5,
-        ['freunde'],
-      ],
-      ['Zähe Woche', 'Viel zu viele Termine. Heute Abend einfach Tee, Decke und ein gutes Buch.', 2, ['arbeit']],
-      ['Neues Rezept', 'Kürbissuppe mit Ingwer ausprobiert – wird ab jetzt öfter gekocht.', 4, ['kochen']],
-      ['Kleiner Erfolg', 'Die Präsentation lief besser als gedacht. Stolz auf mich!', 5, ['arbeit']],
-      ['Regentag', 'Den ganzen Nachmittag gelesen und Musik gehört.', 3, ['ruhe']],
-      ['Familienessen', 'Oma hat wieder Geschichten von früher erzählt.', 4, ['familie']],
-    ],
-  },
-};
+// One file per language with captions and sample entries (store/locales/<lang>.json).
+// ONLY=ja,ko renders just those languages.
+const only = process.env.ONLY?.split(',');
+const LOCALES = Object.fromEntries(
+  (await readdir('store/locales'))
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => JSON.parse(readFileSync(join('store/locales', f), 'utf8')))
+    .filter((l) => !only || only.includes(l.lang))
+    .map((l) => [l.lang, { ...l, ...l.screenshots }]),
+);
 
 const pad = (n) => String(n).padStart(2, '0');
 const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -230,9 +164,11 @@ const fonts =
   (await fontFace('Inter', 'node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf', 400)) +
   (await fontFace('Inter', 'node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf', 600));
 
-for (const [locale, L] of process.env.ONLY_IAP ? [] : Object.entries(LOCALES)) {
+for (const L of process.env.ONLY_IAP || process.env.ONLY_FEATURE ? [] : Object.values(LOCALES)) {
   const entries = sampleEntries(L);
   for (const device of DEVICES) {
+    // Each store has its own locale codes (Apple "ja", Play "ja-JP").
+    const locale = device.dir === 'play' ? L.playLocale : L.appleLocale;
     const dir = join(OUT, device.dir, locale);
     await mkdir(dir, { recursive: true });
     const ctx = await browser.newContext({
@@ -263,12 +199,12 @@ for (const [locale, L] of process.env.ONLY_IAP ? [] : Object.entries(LOCALES)) {
       const fg = dark ? '#ECE7DD' : '#2E2A24';
       const accent = dark ? '#D4B483' : '#8C5A3C';
       const s = device.width / 1290; // all sizes are designed for the iPhone canvas
-      await composer.setContent(`<!doctype html><html><head><style>${fonts}
+      await composer.setContent(`<!doctype html><html lang="${L.lang}" dir="${L.lang === 'ar' ? 'rtl' : 'ltr'}"><head><style>${fonts}
       html,body{margin:0;width:${device.width}px;height:${device.height}px;overflow:hidden;background:${bg};}
       body{display:flex;flex-direction:column;align-items:center;box-sizing:border-box;padding:${130 * s}px ${80 * s}px ${110 * s}px;}
       .cap{text-align:center;flex:none;}
-      h1{font-family:Caveat;font-weight:700;font-size:${140 * s}px;line-height:1.02;margin:0;color:${accent};}
-      p{font-family:Inter;font-weight:400;font-size:${50 * s}px;line-height:1.3;margin:${24 * s}px 0 0;color:${fg};opacity:.8;}
+      h1{font-family:Caveat,${FALLBACK};font-weight:700;font-size:${140 * s}px;line-height:1.02;margin:0;color:${accent};}
+      p{font-family:Inter,${FALLBACK};font-weight:400;font-size:${50 * s}px;line-height:1.3;margin:${24 * s}px 0 0;color:${fg};opacity:.8;}
       /* The phone takes whatever height the caption leaves, keeping its aspect ratio. */
       .phone{flex:1;min-height:0;width:100%;display:flex;justify-content:center;align-items:flex-start;margin-top:${80 * s}px;}
       .phone img{display:block;height:100%;max-width:${980 * s}px;object-fit:contain;box-sizing:border-box;
@@ -285,11 +221,34 @@ for (const [locale, L] of process.env.ONLY_IAP ? [] : Object.entries(LOCALES)) {
     await ctx.close();
   }
 }
+// Play feature graphic (1024×500) per language: icon, app name and subtitle on notebook paper.
+if (!process.env.ONLY_IAP) {
+  const page = await (await browser.newContext({ viewport: { width: 1024, height: 500 } })).newPage();
+  const icon = (await readFile('assets/icon.png')).toString('base64');
+  for (const L of Object.values(LOCALES)) {
+    const [name, ...rest] = L.store.name.split(' – ');
+    const rtl = L.lang === 'ar';
+    await page.setContent(`<!doctype html><html lang="${L.lang}" dir="${rtl ? 'rtl' : 'ltr'}"><head><style>${fonts}
+      html,body{margin:0;width:1024px;height:500px;overflow:hidden;}
+      body{background:#F5EFE3 repeating-linear-gradient(transparent 0 42px,#E3E8EE 42px 44px);
+        display:flex;align-items:center;gap:44px;padding:0 70px 0 110px;box-sizing:border-box;position:relative;}
+      body::before{content:'';position:absolute;top:0;bottom:0;${rtl ? 'right' : 'left'}:70px;width:3px;background:#E8B4A8;}
+      img{width:300px;height:300px;border-radius:66px;flex:none;box-shadow:0 12px 40px rgba(0,0,0,.18);}
+      h1{font-family:Caveat,${FALLBACK};font-weight:700;font-size:${name.length > 14 ? 68 : 96}px;line-height:1.05;margin:0;color:#8C5A3C;}
+      p{font-family:Inter,${FALLBACK};font-size:32px;line-height:1.3;margin:22px 0 0;color:#2E2A24;}
+    </style></head><body><img src="data:image/png;base64,${icon}"><div><h1>${name}</h1>
+      <p>${rest.length ? rest.join(' – ') + '<br>' : ''}${L.store.subtitle}</p></div></body></html>`);
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: `store/play/feature-1024x500-${L.playLocale}.png` });
+    console.log(`play/feature-1024x500-${L.playLocale}.png`);
+  }
+}
+
 // Review screenshot for Apple's in-app purchase: the plain settings screen with the purchase.
 {
   const ctx = await browser.newContext({ viewport: { width: 430, height: 932 }, deviceScaleFactor: 3 });
   const page = await ctx.newPage();
-  await seed(page, sampleEntries(LOCALES['en-US']), photoBase64, 'paper', 'en');
+  await seed(page, sampleEntries({ ...JSON.parse(readFileSync('store/locales/en.json', 'utf8')).screenshots }), photoBase64, 'paper', 'en');
   await page.goto(`${BASE}/settings?storeshot`);
   await page.waitForTimeout(2000);
   await page

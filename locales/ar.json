@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "يومياتي",
+    "NSFaceIDUsageDescription": "يستخدم «يومياتي» بصمة الوجه Face ID لفتح قفل يومياتك.",
+    "NSPhotoLibraryUsageDescription": "يحتاج «يومياتي» إلى الوصول إلى صورك لتتمكن من إضافتها إلى تدويناتك.",
+    "NSCameraUsageDescription": "يحتاج «يومياتي» إلى الكاميرا لتتمكن من التقاط صور لتدويناتك.",
+    "NSUserTrackingUsageDescription": "تتيح لنا موافقتك عرض إعلانات أكثر ملاءمة لك. لا تتم مشاركة تدويناتك أبدًا."
+  },
+  "android": {
+    "app_name": "يومياتي"
+  }
+}

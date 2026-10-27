@@ -1,0 +1,128 @@
+{
+  "lang": "pt",
+  "appleLocale": "pt-BR",
+  "playLocale": "pt-BR",
+  "store": {
+    "name": "Diário Pessoal – Meu Journal",
+    "subtitle": "Privado, com fotos e humor",
+    "keywords": "secreto,caderno,gratidão,emoções,sentimentos,memórias,anotações,notas,agenda,reflexão,autocuidado",
+    "promotionalText": "Seu diário pessoal com fotos, perguntas para inspirar e histórico de humor – sem conta, sem nuvem. Seus registros ficam no seu aparelho.",
+    "description": "Seu diário pessoal – bonito como um caderno de papel, seguro no seu celular.\n\nGuarde o que mexe com você: algumas linhas à noite, uma foto do dia ou uma pergunta que te faz pensar. Tudo fica no seu aparelho. Sem conta, sem nuvem.\n\nESCREVA DO SEU JEITO\n• Editor com pautas de caderno, título e data\n• Fotos em cada registro, da galeria ou direto da câmera\n• Humor do dia em cinco níveis\n• Tags para organizar seus registros\n• Rascunhos salvos automaticamente enquanto você digita\n\nNUNCA MAIS A PÁGINA EM BRANCO\n• Uma pergunta nova todo dia para inspirar a escrita\n• Mais de 40 perguntas para explorar\n• Modelos de gratidão e de balanço do dia\n\nOLHE PARA TRÁS\n• “Neste dia”: o que você escreveu há um mês ou há um ano?\n• Sequência de dias escrevendo e maior sequência\n• Histórico de humor dos últimos 30 dias\n• Calendário com as cores do humor e busca em todo o texto\n\nCRIE O HÁBITO\n• Lembrete diário no horário que você escolher\n\nPRIVADO E SEGURO\n• Todos os registros ficam só no seu aparelho\n• Bloqueio por PIN, se quiser com Face ID ou impressão digital\n• Backup em arquivo e restauração em qualquer aparelho\n• Lixeira: registros apagados podem ser recuperados por 30 dias\n\nQUATRO ESTILOS\nPapel, Minimalista, Divertido ou Noite – escolha a cara do seu diário.\n\nGRÁTIS COM ANÚNCIOS\nO app é gratuito e mostra anúncios. Uma compra única remove os anúncios para sempre – sem assinatura. Seus registros nunca são usados para publicidade.\n\nDisponível em 14 idiomas.",
+    "googleTitle": "Diário Pessoal – Meu Journal",
+    "shortDescription": "Diário privado com fotos, perguntas e humor – sem conta e sem nuvem",
+    "releaseNotes": "Primeira versão: seu diário pessoal com fotos, perguntas para inspirar a escrita e histórico de humor."
+  },
+  "iap": {
+    "name": "Remover anúncios",
+    "description": "Sem anúncios para sempre. Compra única."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Seu diário pessoal",
+        "Bonito como papel – seguro no seu celular"
+      ],
+      [
+        "Fotos de cada dia",
+        "Com humor, tags e pautas de caderno"
+      ],
+      [
+        "Uma pergunta por dia",
+        "Nunca mais trave na página em branco"
+      ],
+      [
+        "Olhe para trás",
+        "“Neste dia”, sequência e histórico de humor"
+      ],
+      [
+        "Seu humor num relance",
+        "Calendário com as cores do humor"
+      ],
+      [
+        "Estilos, PIN e Face ID",
+        "Tudo fica no seu aparelho"
+      ]
+    ],
+    "today": [
+      "Pôr do sol em Ubatuba",
+      "Hoje foi um daqueles dias que a gente quer guardar. Pegamos a estrada sem planejar e ficamos vendo o sol se pôr no mar.\n\nSou grata por este momento, e por não ter deixado ele passar.",
+      [
+        "viagem",
+        "gratidão"
+      ]
+    ],
+    "year": [
+      "Primeiro dia no apê novo",
+      "Caixa para todo lado, mas já tem cara de casa.",
+      [
+        "casa"
+      ]
+    ],
+    "month": [
+      "Show no Ibirapuera",
+      "Música ao vivo a céu aberto – arrepiei.",
+      [
+        "música"
+      ]
+    ],
+    "texts": [
+      [
+        "Caminhada na orla",
+        "Uma hora à beira-mar depois do trabalho. O vento estava fresquinho e, por um instante, tudo ficou em silêncio.",
+        4,
+        [
+          "natureza",
+          "exercício"
+        ]
+      ],
+      [
+        "Café com a Júlia",
+        "Conversamos sobre tudo o que anda na nossa cabeça. Que sorte ter ela na minha vida.",
+        5,
+        [
+          "amigos"
+        ]
+      ],
+      [
+        "Semana puxada",
+        "Reunião demais. Hoje à noite é só chá, cobertor e um bom livro.",
+        2,
+        [
+          "trabalho"
+        ]
+      ],
+      [
+        "Receita nova",
+        "Fiz escondidinho de mandioca com carne-seca – vou repetir com certeza.",
+        4,
+        [
+          "cozinha"
+        ]
+      ],
+      [
+        "Pequena vitória",
+        "A apresentação foi melhor do que eu esperava. Orgulho de mim!",
+        5,
+        [
+          "trabalho"
+        ]
+      ],
+      [
+        "Dia de chuva",
+        "Passei a tarde inteira lendo e ouvindo música.",
+        3,
+        [
+          "calma"
+        ]
+      ],
+      [
+        "Almoço de domingo",
+        "A vó contou de novo as histórias de quando era moça.",
+        4,
+        [
+          "família"
+        ]
+      ]
+    ]
+  }
+}

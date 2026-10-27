@@ -19,6 +19,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import store_locales
+
 ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / 'store'
 PACKAGE = 'io.github.almaz6380.tagebuch'
@@ -89,7 +91,11 @@ def upload_image(edit, lang, kind, path: Path):
 
 
 def texts():
-    return json.loads((STORE / 'texte.json').read_text())
+    """Shared texts plus one entry per language, keyed by this store's locale code."""
+    t = store_locales.load()
+    t['locales'] = {l['playLocale']: {**l['store'], 'urls': store_locales.legal_urls(l)} for l in t['langs']}
+    t['iap']['locales'] = {l['playLocale']: l['iap'] for l in t['langs']}
+    return t
 
 
 def cmd_status(_args):
@@ -115,8 +121,11 @@ def cmd_eintrag(args):
             'language': lang, 'title': l['googleTitle'],
             'shortDescription': l['shortDescription'], 'fullDescription': l['description'],
         })
-        upload_image(edit, lang, 'icon', STORE / 'play' / 'icon-512.png')
-        upload_image(edit, lang, 'featureGraphic', STORE / 'play' / f'feature-1024x500-{lang}.png')
+        # Icon and feature graphic allow one image each; clear first so a rerun replaces them.
+        for kind, image in (('icon', STORE / 'play' / 'icon-512.png'),
+                            ('featureGraphic', STORE / 'play' / f'feature-1024x500-{lang}.png')):
+            call('DELETE', f'{API}/edits/{edit}/listings/{lang}/{kind}')
+            upload_image(edit, lang, kind, image)
         call('DELETE', f'{API}/edits/{edit}/listings/{lang}/phoneScreenshots')
         shots = sorted((STORE / 'screenshots' / 'play' / lang).glob('*.png'))
         if not shots:

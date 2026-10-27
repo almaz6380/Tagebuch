@@ -81,6 +81,13 @@ export function topTags(entries: Entry[], limit = 6) {
   return [...counts].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'de')).slice(0, limit);
 }
 
+// Chinese and Japanese don't separate words with spaces; there each character counts.
+const CJK = /[\u3040-\u30ff\u3400-\u9fff\uf900-\ufaff]/g;
+
 export function wordCount(entries: Entry[]) {
-  return entries.reduce((n, e) => n + (e.body.match(/\S+/g)?.length ?? 0), 0);
+  return entries.reduce((n, e) => {
+    const cjk = e.body.match(CJK)?.length ?? 0;
+    const words = e.body.replace(CJK, ' ').match(/\S+/g)?.length ?? 0;
+    return n + cjk + words;
+  }, 0);
 }

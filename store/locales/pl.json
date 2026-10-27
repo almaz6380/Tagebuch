@@ -1,0 +1,128 @@
+{
+  "lang": "pl",
+  "appleLocale": "pl",
+  "playLocale": "pl-PL",
+  "store": {
+    "name": "Pamiętnik – Mój Dziennik",
+    "subtitle": "Prywatne notatki ze zdjęciami",
+    "keywords": "journal,wdzięczność,nastrój,emocje,uczucia,wspomnienia,notes,zeszyt,sekretny,refleksja,pisanie,diary",
+    "promotionalText": "Twój prywatny pamiętnik ze zdjęciami, pytaniami do pisania i historią nastroju – bez konta, bez chmury. Wpisy zostają na twoim urządzeniu.",
+    "description": "Twój prywatny pamiętnik – piękny jak papierowy zeszyt, bezpieczny w telefonie.\n\nZapisuj to, co cię porusza: kilka zdań wieczorem, zdjęcie z dnia albo pytanie, które skłania do refleksji. Wszystko zostaje na twoim urządzeniu. Bez konta, bez chmury.\n\nPISZ PO SWOJEMU\n• Edytor jak zeszyt w linie, z tytułem i datą\n• Zdjęcia do każdego wpisu – z galerii albo prosto z aparatu\n• Nastrój dnia w pięciu stopniach\n• Tagi do porządkowania wpisów\n• Szkice zapisują się automatycznie podczas pisania\n\nKONIEC Z PUSTĄ KARTKĄ\n• Codziennie nowe pytanie na dobry początek\n• Ponad 40 kolejnych pytań do przejrzenia\n• Szablony wdzięczności i podsumowania dnia\n\nWSPOMNIENIA\n• „Tego dnia”: co zapisało się w pamiętniku miesiąc albo rok temu?\n• Seria dni pisania i najdłuższa seria\n• Historia nastroju z ostatnich 30 dni\n• Kalendarz w kolorach nastroju i wyszukiwanie w całym tekście\n\nWYTRWAJ W NAWYKU\n• Codzienne przypomnienie o wybranej godzinie\n\nPRYWATNIE I BEZPIECZNIE\n• Wszystkie wpisy są tylko na twoim urządzeniu\n• Blokada PIN, a do tego Face ID lub odcisk palca\n• Kopia zapasowa w pliku, przywracanie na każdym urządzeniu\n• Kosz: usunięte wpisy można przywrócić przez 30 dni\n\nCZTERY STYLE\nPapier, Minimalny, Zabawny albo Noc – wybierz, jak ma wyglądać twój pamiętnik.\n\nZA DARMO Z REKLAMAMI\nAplikacja jest bezpłatna i wyświetla reklamy. Jednorazowy zakup usuwa je na zawsze – bez subskrypcji. Twoje wpisy nigdy nie są wykorzystywane do reklam.\n\nDostępna w 14 językach.",
+    "googleTitle": "Pamiętnik – Mój Dziennik",
+    "shortDescription": "Prywatny pamiętnik ze zdjęciami, pytaniami i nastrojem – bez konta i chmury",
+    "releaseNotes": "Pierwsza wersja: twój prywatny pamiętnik ze zdjęciami, pytaniami do pisania i historią nastroju."
+  },
+  "iap": {
+    "name": "Usuń reklamy",
+    "description": "Na zawsze bez reklam. Jednorazowo."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Twój prywatny pamiętnik",
+        "Piękny jak papier – bezpieczny w telefonie"
+      ],
+      [
+        "Zdjęcia z każdego dnia",
+        "Z nastrojem, tagami i liniami zeszytu"
+      ],
+      [
+        "Pytanie na każdy dzień",
+        "Koniec z pustą kartką"
+      ],
+      [
+        "Wspomnienia",
+        "„Tego dnia”, seria pisania i historia nastroju"
+      ],
+      [
+        "Nastrój w jednym spojrzeniu",
+        "Kalendarz w kolorach nastroju"
+      ],
+      [
+        "Style, PIN i Face ID",
+        "Wszystko zostaje na twoim urządzeniu"
+      ]
+    ],
+    "today": [
+      "Zachód słońca nad Bałtykiem",
+      "Dziś był jeden z tych dni, które chce się zatrzymać. Spontanicznie pojechaliśmy nad morze i patrzyliśmy, jak słońce chowa się w wodzie.\n\nZa co dziękuję: za tę chwilę i za to, że jej nie przegapiłam.",
+      [
+        "wakacje",
+        "wdzięczność"
+      ]
+    ],
+    "year": [
+      "Pierwszy dzień w nowym mieszkaniu",
+      "Wszędzie kartony, ale już czuć, że to dom.",
+      [
+        "dom"
+      ]
+    ],
+    "month": [
+      "Koncert w Łazienkach",
+      "Muzyka na żywo pod gołym niebem – ciarki.",
+      [
+        "muzyka"
+      ]
+    ],
+    "texts": [
+      [
+        "Długi spacer nad jeziorem",
+        "Godzina nad wodą po pracy. Pachniało jesienią i przez chwilę wszystko zupełnie ucichło.",
+        4,
+        [
+          "natura",
+          "ruch"
+        ]
+      ],
+      [
+        "Kawa z Kasią",
+        "Rozmawiałyśmy o wszystkim, co nam chodzi po głowie. Tak się cieszę, że ją mam.",
+        5,
+        [
+          "przyjaciele"
+        ]
+      ],
+      [
+        "Ciężki tydzień",
+        "Stanowczo za dużo spotkań. Dziś wieczorem tylko herbata, koc i dobra książka.",
+        2,
+        [
+          "praca"
+        ]
+      ],
+      [
+        "Nowy przepis",
+        "Pierwszy raz zrobiłam zupę dyniową z imbirem – na pewno powtórzę.",
+        4,
+        [
+          "gotowanie"
+        ]
+      ],
+      [
+        "Mały sukces",
+        "Prezentacja poszła lepiej, niż się spodziewałam. Jestem z siebie dumna!",
+        5,
+        [
+          "praca"
+        ]
+      ],
+      [
+        "Deszczowy dzień",
+        "Całe popołudnie z książką i muzyką.",
+        3,
+        [
+          "spokój"
+        ]
+      ],
+      [
+        "Niedzielny obiad",
+        "Babcia znowu opowiadała historie z dawnych lat.",
+        4,
+        [
+          "rodzina"
+        ]
+      ]
+    ]
+  }
+}

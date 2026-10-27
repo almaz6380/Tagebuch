@@ -17,7 +17,7 @@ import { useLock } from '@/lib/LockProvider';
 import { cancelDailyReminder, reminderSupported, scheduleDailyReminder } from '@/lib/reminder';
 import { buyNoAds, loadPrice, restoreNoAds } from '@/lib/purchases';
 import { useBackup } from '@/lib/useBackup';
-import { LANG_NAMES, LANGS, setLanguage, useI18n, type Lang, type LangPref } from '@/i18n';
+import { getMessages, LANG_NAMES, LANGS, needsRestartForDirection, setLanguage, useI18n, type Lang, type LangPref } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 import { themeOrder, themes, type Theme } from '@/theme/themes';
 
@@ -98,7 +98,7 @@ export default function SettingsScreen() {
           {ABOUT_LINKS.map((l, i) => (
             <Pressable
               key={l.key}
-              onPress={() => Linking.openURL(`${SITE}${l.path[lang]}`)}
+              onPress={() => Linking.openURL(`${SITE}${l.path[lang === 'de' ? 'de' : 'en']}`)}
               accessibilityRole="link"
               style={[styles.linkRow, i > 0 && { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: theme.colors.border }]}>
               <Feather name={l.icon} size={18} color={theme.colors.accent} />
@@ -116,7 +116,7 @@ export default function SettingsScreen() {
 }
 
 const SITE = 'https://tagebuch-c5j.pages.dev';
-// Legal pages exist in both languages (public/*.html).
+// Legal pages exist in German and English (public/*.html); other languages get the English ones.
 const ABOUT_LINKS = [
   { key: 'help', path: { de: '/support', en: '/help' }, icon: 'help-circle' },
   { key: 'privacy', path: { de: '/datenschutz', en: '/privacy' }, icon: 'shield' },
@@ -417,6 +417,8 @@ function LanguageSettings() {
             onPress={async () => {
               await setLanguage(o.value);
               await relabelReminder();
+              // Arabic flips the layout, which native apps only do at start.
+              if (needsRestartForDirection()) notify(getMessages().settings.restartTitle, getMessages().settings.restartBody);
             }}
             style={[
               styles.langChip,
