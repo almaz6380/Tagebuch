@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { maybeShowInterstitial } from '@/ads/ads';
 import { MoodPicker } from '@/components/MoodPicker';
 import { Photo, PhotoViewer } from '@/components/Photo';
 import { PromptCard } from '@/components/PromptCard';
@@ -150,6 +151,8 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
     await save({ id: existing?.id, date, title: title.trim(), body, mood, tags: finalTags, photos });
     await clearDraft(draftKey);
     close();
+    // Only after a finished entry, once the editor is gone.
+    maybeShowInterstitial();
   };
 
   const onDelete = async () => {
