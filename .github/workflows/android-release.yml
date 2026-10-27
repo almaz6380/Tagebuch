@@ -1,7 +1,8 @@
 # Builds the Android App Bundle, sets the Play store listing (texts, graphics,
 # screenshots from store/) and releases it. Started by hand only.
 #
-# Secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON
+# Secrets: ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, PLAY_SERVICE_ACCOUNT_JSON,
+# optional ANDROID_KEY_ALIAS (default "upload") and ANDROID_KEY_PASSWORD (default: keystore password)
 name: Android Release
 
 on:
@@ -68,6 +69,8 @@ jobs:
         env:
           KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           set -euo pipefail
           printf '%s' "$KEYSTORE_B64" | tr -cd 'A-Za-z0-9+/=' | base64 -d > android/upload.keystore
@@ -75,8 +78,8 @@ jobs:
           cat > android/keystore.properties <<EOF
           storeFile=upload.keystore
           storePassword=$STORE_PASSWORD
-          keyAlias=upload
-          keyPassword=$STORE_PASSWORD
+          keyAlias=${KEY_ALIAS:-upload}
+          keyPassword=${KEY_PASSWORD:-$STORE_PASSWORD}
           EOF
 
       - name: AAB bauen
