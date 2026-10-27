@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Günlük",
+    "NSFaceIDUsageDescription": "Günlük, günlüğünün kilidini açmak için Face ID’yi kullanır.",
+    "NSPhotoLibraryUsageDescription": "Kayıtlarına resim ekleyebilmen için Günlük’ün fotoğraflarına erişmesi gerekiyor.",
+    "NSCameraUsageDescription": "Kayıtların için fotoğraf çekebilmen için Günlük’ün kameraya erişmesi gerekiyor.",
+    "NSUserTrackingUsageDescription": "İznin sayesinde sana daha ilgili reklamlar gösterebiliriz. Günlük kayıtların asla paylaşılmaz."
+  },
+  "android": {
+    "app_name": "Günlük"
+  }
+}

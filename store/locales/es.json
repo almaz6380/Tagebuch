@@ -1,0 +1,128 @@
+{
+  "lang": "es",
+  "appleLocale": "es-ES",
+  "playLocale": "es-ES",
+  "store": {
+    "name": "Diario personal – Privado",
+    "subtitle": "Escribe en secreto, con fotos",
+    "keywords": "agenda,notas,gratitud,ánimo,emociones,recuerdos,cuaderno,íntimo,journal,reflexión,autocuidado,humor",
+    "promotionalText": "Tu diario privado con fotos, preguntas para escribir y la evolución de tu ánimo. Sin cuenta, sin nube: tus entradas se quedan en tu dispositivo.",
+    "description": "Tu diario personal: tan bonito como un cuaderno de papel, y seguro en tu móvil.\n\nGuarda lo que te mueve por dentro: unas líneas por la noche, la foto del día o una pregunta que te haga pensar. Todo se queda en tu dispositivo. Sin cuenta, sin nube.\n\nESCRIBE A TU MANERA\n• Editor con renglones de cuaderno, título y fecha\n• Fotos en cada entrada, desde la galería o la cámara\n• Estado de ánimo del día en cinco niveles\n• Etiquetas para ordenar tus entradas\n• Los borradores se guardan solos mientras escribes\n\nNUNCA MÁS UNA PÁGINA EN BLANCO\n• Una pregunta nueva cada día para inspirarte\n• Más de 40 preguntas más para explorar\n• Plantillas de gratitud y de repaso del día\n\nMIRA ATRÁS\n• “Un día como hoy”: ¿qué escribiste hace un mes o un año?\n• Racha de escritura y racha más larga\n• Evolución de tu ánimo en los últimos 30 días\n• Calendario con colores según el ánimo y búsqueda en todo el texto\n\nNO PIERDAS EL HILO\n• Recordatorio diario a la hora que elijas\n\nPRIVADO Y SEGURO\n• Todas tus entradas se quedan solo en tu dispositivo\n• Bloqueo con PIN, y si quieres con Face ID o huella dactilar\n• Copia de seguridad en un archivo, para restaurarla en cualquier dispositivo\n• Papelera: recupera las entradas eliminadas durante 30 días\n\nCUATRO ESTILOS\nPapel, Minimal, Alegre o Noche: tú decides cómo se ve tu diario.\n\nGRATIS CON ANUNCIOS\nLa app es gratuita y muestra anuncios. Con una única compra los quitas para siempre, sin suscripción. Tus entradas nunca se usan para publicidad.\n\nDisponible en 14 idiomas.",
+    "googleTitle": "Diario personal – Privado",
+    "shortDescription": "Diario íntimo con fotos, preguntas y ánimo del día. Sin cuenta, sin nube",
+    "releaseNotes": "Primera versión: tu diario privado con fotos, preguntas para escribir y la evolución de tu ánimo."
+  },
+  "iap": {
+    "name": "Quitar anuncios",
+    "description": "Sin anuncios, para siempre. Pago único."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Tu diario personal",
+        "Bonito como el papel, seguro en tu móvil"
+      ],
+      [
+        "Fotos para cada día",
+        "Con ánimo, etiquetas y renglones de cuaderno"
+      ],
+      [
+        "Una pregunta cada día",
+        "Nunca más una página en blanco"
+      ],
+      [
+        "Mira atrás",
+        "“Un día como hoy”, rachas y evolución del ánimo"
+      ],
+      [
+        "Tu ánimo de un vistazo",
+        "Calendario con los colores de tu ánimo"
+      ],
+      [
+        "Estilos, PIN y Face ID",
+        "Todo se queda en tu dispositivo"
+      ]
+    ],
+    "today": [
+      "Atardecer en Cádiz",
+      "Hoy ha sido uno de esos días que quieres guardar para siempre. Nos fuimos a la playa sin pensarlo y vimos cómo el sol se hundía en el mar.\n\nDoy gracias por este momento, y por no habérmelo perdido.",
+      [
+        "vacaciones",
+        "gratitud"
+      ]
+    ],
+    "year": [
+      "Primer día en el piso nuevo",
+      "Cajas por todas partes, pero ya se siente como casa.",
+      [
+        "casa"
+      ]
+    ],
+    "month": [
+      "Concierto en el Retiro",
+      "Música en directo al aire libre. Se me puso la piel de gallina.",
+      [
+        "música"
+      ]
+    ],
+    "texts": [
+      [
+        "Paseo largo por el río",
+        "Una hora junto al agua al salir del trabajo. Olía a otoño y por un momento todo estaba en calma.",
+        4,
+        [
+          "naturaleza",
+          "deporte"
+        ]
+      ],
+      [
+        "Café con Lucía",
+        "Hablamos de todo lo que nos ronda la cabeza. Qué suerte tenerla en mi vida.",
+        5,
+        [
+          "amigos"
+        ]
+      ],
+      [
+        "Semana dura",
+        "Demasiadas reuniones. Esta noche toca infusión, mantita y un buen libro.",
+        2,
+        [
+          "trabajo"
+        ]
+      ],
+      [
+        "Receta nueva",
+        "Probé una crema de calabaza con jengibre. Pienso repetir muy pronto.",
+        4,
+        [
+          "cocina"
+        ]
+      ],
+      [
+        "Pequeña victoria",
+        "La presentación salió mejor de lo que esperaba. ¡Qué orgullosa estoy!",
+        5,
+        [
+          "trabajo"
+        ]
+      ],
+      [
+        "Día de lluvia",
+        "Me pasé la tarde entera leyendo y escuchando música.",
+        3,
+        [
+          "calma"
+        ]
+      ],
+      [
+        "Comida familiar",
+        "La abuela volvió a contar historias de cuando era joven, con paella de por medio.",
+        4,
+        [
+          "familia"
+        ]
+      ]
+    ]
+  }
+}

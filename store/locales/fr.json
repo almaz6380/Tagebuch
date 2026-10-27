@@ -1,0 +1,128 @@
+{
+  "lang": "fr",
+  "appleLocale": "fr-FR",
+  "playLocale": "fr-FR",
+  "store": {
+    "name": "Journal intime – Mon carnet",
+    "subtitle": "Écris en privé, avec photos",
+    "keywords": "diary,gratitude,humeur,émotions,souvenirs,notes,agenda,bienêtre,écriture,réflexion,quotidien,secret",
+    "promotionalText": "Ton journal intime avec photos, questions d’écriture et suivi de ton humeur. Sans compte, sans cloud : tes pages restent sur ton appareil.",
+    "description": "Ton journal intime : aussi beau qu’un carnet en papier, en sécurité sur ton téléphone.\n\nGarde une trace de ce qui te touche : quelques lignes le soir, la photo du jour ou une question qui fait réfléchir. Tout reste sur ton appareil. Sans compte, sans cloud.\n\nÉCRIS COMME TU AIMES\n• Éditeur façon carnet à lignes, avec titre et date\n• Des photos pour chaque page, depuis ta galerie ou l’appareil photo\n• L’humeur du jour sur cinq niveaux\n• Des mots-clés pour classer tes pages\n• Les brouillons s’enregistrent tout seuls pendant que tu écris\n\nFINI LA PAGE BLANCHE\n• Une nouvelle question chaque jour pour t’inspirer\n• Plus de 40 autres questions à découvrir\n• Des modèles pour la gratitude et le bilan du soir\n\nREGARDE EN ARRIÈRE\n• « Ce jour-là » : qu’as-tu écrit il y a un mois ou un an ?\n• Série d’écriture et plus longue série\n• Évolution de ton humeur sur les 30 derniers jours\n• Calendrier aux couleurs de tes humeurs et recherche dans tout le texte\n\nGARDE LE RYTHME\n• Un rappel quotidien à l’heure de ton choix\n\nPRIVÉ ET SÉCURISÉ\n• Toutes tes pages restent uniquement sur ton appareil\n• Verrouillage par code PIN, avec Face ID ou empreinte digitale en option\n• Sauvegarde dans un fichier, restauration sur n’importe quel appareil\n• Corbeille : les pages supprimées sont récupérables pendant 30 jours\n\nQUATRE STYLES\nPapier, Minimal, Joyeux ou Nuit : choisis l’allure de ton journal.\n\nGRATUIT AVEC PUBLICITÉ\nL’app est gratuite et affiche des publicités. Un achat unique les supprime pour de bon, sans abonnement. Tes pages ne servent jamais à la publicité.\n\nDisponible en 14 langues.",
+    "googleTitle": "Journal intime – Mon carnet",
+    "shortDescription": "Journal intime avec photos, questions et humeur du jour. Sans compte ni cloud",
+    "releaseNotes": "Première version : ton journal intime avec photos, questions d’écriture et suivi de ton humeur."
+  },
+  "iap": {
+    "name": "Supprimer les pubs",
+    "description": "Plus de pubs, pour toujours. Achat unique."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Ton journal intime",
+        "Beau comme le papier, en sécurité sur ton téléphone"
+      ],
+      [
+        "Une photo par jour",
+        "Avec humeur, mots-clés et lignes de carnet"
+      ],
+      [
+        "Une question par jour",
+        "Fini l’angoisse de la page blanche"
+      ],
+      [
+        "Regarde en arrière",
+        "« Ce jour-là », séries et suivi de l’humeur"
+      ],
+      [
+        "Tes humeurs en un coup d’œil",
+        "Calendrier aux couleurs de tes humeurs"
+      ],
+      [
+        "Styles, PIN et Face ID",
+        "Tout reste sur ton appareil"
+      ]
+    ],
+    "today": [
+      "Coucher de soleil à Biarritz",
+      "Aujourd’hui, c’était une de ces journées qu’on voudrait garder pour toujours. On est partis à l’océan sur un coup de tête et on a regardé le soleil plonger dans l’eau.\n\nCe dont je suis reconnaissante : ce moment, et de ne pas l’avoir manqué.",
+      [
+        "vacances",
+        "gratitude"
+      ]
+    ],
+    "year": [
+      "Premier jour dans l’appart",
+      "Des cartons partout, mais on se sent déjà chez nous.",
+      [
+        "maison"
+      ]
+    ],
+    "month": [
+      "Concert au parc",
+      "De la musique live en plein air, j’en ai eu des frissons.",
+      [
+        "musique"
+      ]
+    ],
+    "texts": [
+      [
+        "Longue balade au bord du lac",
+        "Une heure au bord de l’eau après le boulot. Ça sentait l’automne et, l’espace d’un instant, tout était calme.",
+        4,
+        [
+          "nature",
+          "sport"
+        ]
+      ],
+      [
+        "Café avec Camille",
+        "On a parlé de tout ce qui nous trotte dans la tête. Quelle chance de l’avoir dans ma vie.",
+        5,
+        [
+          "amis"
+        ]
+      ],
+      [
+        "Semaine chargée",
+        "Beaucoup trop de réunions. Ce soir : tisane, plaid et un bon livre.",
+        2,
+        [
+          "travail"
+        ]
+      ],
+      [
+        "Nouvelle recette",
+        "Testé un velouté de potimarron au gingembre. À refaire très vite !",
+        4,
+        [
+          "cuisine"
+        ]
+      ],
+      [
+        "Petite victoire",
+        "La présentation s’est mieux passée que prévu. Fière de moi !",
+        5,
+        [
+          "travail"
+        ]
+      ],
+      [
+        "Jour de pluie",
+        "Tout l’après-midi à lire et à écouter de la musique.",
+        3,
+        [
+          "calme"
+        ]
+      ],
+      [
+        "Dîner en famille",
+        "Mamie nous a encore raconté ses histoires d’autrefois.",
+        4,
+        [
+          "famille"
+        ]
+      ]
+    ]
+  }
+}

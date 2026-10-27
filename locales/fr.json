@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Journal",
+    "NSFaceIDUsageDescription": "Journal utilise Face ID pour déverrouiller ton journal.",
+    "NSPhotoLibraryUsageDescription": "Journal a besoin d’accéder à tes photos pour que tu puisses en ajouter à tes pages.",
+    "NSCameraUsageDescription": "Journal a besoin de l’appareil photo pour que tu puisses prendre des photos pour tes pages.",
+    "NSUserTrackingUsageDescription": "Ton accord nous permet de t’afficher des publicités plus pertinentes. Tes pages de journal ne sont jamais partagées."
+  },
+  "android": {
+    "app_name": "Journal"
+  }
+}

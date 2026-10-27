@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Дневник",
+    "NSFaceIDUsageDescription": "«Дневник» использует Face ID, чтобы открывать твой дневник.",
+    "NSPhotoLibraryUsageDescription": "«Дневнику» нужен доступ к фото, чтобы добавлять снимки к записям.",
+    "NSCameraUsageDescription": "«Дневнику» нужна камера, чтобы делать фото для записей.",
+    "NSUserTrackingUsageDescription": "Твоё согласие позволит показывать более подходящую рекламу. Записи дневника никогда никому не передаются."
+  },
+  "android": {
+    "app_name": "Дневник"
+  }
+}

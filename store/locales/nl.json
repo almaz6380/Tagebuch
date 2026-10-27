@@ -1,0 +1,128 @@
+{
+  "lang": "nl",
+  "appleLocale": "nl-NL",
+  "playLocale": "nl-NL",
+  "store": {
+    "name": "Dagboek – Mijn Journal",
+    "subtitle": "Privé schrijven met foto’s",
+    "keywords": "notitieboek,dankbaarheid,stemming,gevoelens,herinneringen,notities,reflectie,zelfzorg,geheim,diary",
+    "promotionalText": "Je eigen dagboek met foto’s, schrijfvragen en stemmingsverloop – zonder account, zonder cloud. Je notities blijven op je apparaat.",
+    "description": "Je eigen dagboek – zo mooi als een papieren notitieboek, veilig op je telefoon.\n\nLeg vast wat je raakt: een paar regels ’s avonds, een foto van de dag of een vraag die je aan het denken zet. Alles blijft op je apparaat. Geen account, geen cloud.\n\nSCHRIJF ZOALS JIJ WILT\n• Notitieboek met lijntjes, titel en datum\n• Foto’s bij elke notitie, uit je galerij of met de camera\n• Stemming van de dag in vijf stappen\n• Tags om je notities te ordenen\n• Concepten worden tijdens het typen automatisch bewaard\n\nNOOIT MEER EEN LEEG VEL\n• Elke dag een nieuwe schrijfvraag\n• Meer dan 40 andere vragen om door te bladeren\n• Sjablonen voor dankbaarheid en een avondterugblik\n\nTERUGBLIKKEN\n• “Op deze dag”: wat schreef je een maand of een jaar geleden?\n• Schrijfreeks en langste reeks\n• Stemmingsverloop van de afgelopen 30 dagen\n• Kalender met stemmingskleuren en zoeken in alle tekst\n\nVOLHOUDEN\n• Dagelijkse herinnering op het tijdstip dat jij kiest\n\nPRIVÉ EN VEILIG\n• Al je notities blijven alleen op je apparaat\n• Pincodeslot, desgewenst met Face ID of vingerafdruk\n• Back-up als bestand, terugzetten op elk apparaat\n• Prullenbak: verwijderde notities kun je 30 dagen terugzetten\n\nVIER STIJLEN\nPapier, Minimaal, Speels of Nacht – kies zelf hoe je dagboek eruitziet.\n\nGRATIS MET ADVERTENTIES\nDe app is gratis en toont advertenties. Met een eenmalige aankoop verdwijnen ze voorgoed – geen abonnement. Je notities worden nooit voor advertenties gebruikt.\n\nBeschikbaar in 14 talen.",
+    "googleTitle": "Dagboek – Mijn Privé Journal",
+    "shortDescription": "Privé dagboek met foto’s, schrijfvragen & stemming – geen account, geen cloud",
+    "releaseNotes": "Eerste versie: je eigen dagboek met foto’s, schrijfvragen en stemmingsverloop."
+  },
+  "iap": {
+    "name": "Advertenties verwijderen",
+    "description": "Voorgoed zonder advertenties. Eenmalig."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Je eigen dagboek",
+        "Mooi als papier – veilig op je telefoon"
+      ],
+      [
+        "Foto’s bij elke dag",
+        "Met stemming, tags en lijntjes"
+      ],
+      [
+        "Elke dag een vraag",
+        "Nooit meer staren naar een leeg vel"
+      ],
+      [
+        "Terugblikken",
+        "“Op deze dag”, schrijfreeks en stemmingsverloop"
+      ],
+      [
+        "Stemming in één oogopslag",
+        "Kalender met stemmingskleuren"
+      ],
+      [
+        "Stijlen, pincode & Face ID",
+        "Alles blijft op je apparaat"
+      ]
+    ],
+    "today": [
+      "Zonsondergang in Zandvoort",
+      "Vandaag was zo’n dag die je wilt vasthouden. Spontaan naar de kust gereden en gekeken hoe de zon in zee zakte.\n\nWaar ik dankbaar voor ben: dit moment, en dat ik het niet heb gemist.",
+      [
+        "vakantie",
+        "dankbaar"
+      ]
+    ],
+    "year": [
+      "Eerste dag in het nieuwe huis",
+      "Overal dozen, maar het voelt nu al als thuis.",
+      [
+        "thuis"
+      ]
+    ],
+    "month": [
+      "Concert in het Vondelpark",
+      "Livemuziek onder de blote hemel – kippenvel.",
+      [
+        "muziek"
+      ]
+    ],
+    "texts": [
+      [
+        "Lange wandeling langs de plas",
+        "Een uur langs het water na het werk. Het rook naar herfst en even was alles helemaal stil.",
+        4,
+        [
+          "natuur",
+          "beweging"
+        ]
+      ],
+      [
+        "Koffie met Sanne",
+        "We hebben over alles gepraat wat ons bezighoudt. Zo blij dat ik haar heb.",
+        5,
+        [
+          "vrienden"
+        ]
+      ],
+      [
+        "Zware week",
+        "Veel te veel vergaderingen. Vanavond alleen thee, een dekentje en een goed boek.",
+        2,
+        [
+          "werk"
+        ]
+      ],
+      [
+        "Nieuw recept",
+        "Pompoensoep met gember geprobeerd – die ga ik vaker maken.",
+        4,
+        [
+          "koken"
+        ]
+      ],
+      [
+        "Kleine overwinning",
+        "De presentatie ging beter dan verwacht. Trots op mezelf!",
+        5,
+        [
+          "werk"
+        ]
+      ],
+      [
+        "Regendag",
+        "De hele middag gelezen en muziek geluisterd.",
+        3,
+        [
+          "rust"
+        ]
+      ],
+      [
+        "Eten bij mijn ouders",
+        "Oma vertelde weer verhalen van vroeger.",
+        4,
+        [
+          "familie"
+        ]
+      ]
+    ]
+  }
+}

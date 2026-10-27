@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Dagboek",
+    "NSFaceIDUsageDescription": "Dagboek gebruikt Face ID om je dagboek te ontgrendelen.",
+    "NSPhotoLibraryUsageDescription": "Dagboek heeft toegang tot je foto’s nodig, zodat je afbeeldingen aan je notities kunt toevoegen.",
+    "NSCameraUsageDescription": "Dagboek heeft de camera nodig, zodat je foto’s voor je notities kunt maken.",
+    "NSUserTrackingUsageDescription": "Met je toestemming kunnen we je relevantere advertenties tonen. Je dagboeknotities worden nooit gedeeld."
+  },
+  "android": {
+    "app_name": "Dagboek"
+  }
+}

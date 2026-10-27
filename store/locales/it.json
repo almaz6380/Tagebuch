@@ -1,0 +1,128 @@
+{
+  "lang": "it",
+  "appleLocale": "it",
+  "playLocale": "it-IT",
+  "store": {
+    "name": "Diario Personale – Privato",
+    "subtitle": "Il tuo quaderno, con foto",
+    "keywords": "segreto,journal,gratitudine,umore,emozioni,ricordi,note,agenda,scrittura,riflessione,benessere,diary",
+    "promotionalText": "Il tuo diario privato con foto, domande per scrivere e l’andamento dell’umore. Niente account, niente cloud: le tue pagine restano sul dispositivo.",
+    "description": "Il tuo diario personale: bello come un quaderno di carta, al sicuro sul tuo telefono.\n\nFissa ciò che ti emoziona: qualche riga la sera, la foto del giorno o una domanda che fa riflettere. Tutto resta sul tuo dispositivo. Niente account, niente cloud.\n\nSCRIVI COME PIACE A TE\n• Editor a righe come un quaderno, con titolo e data\n• Foto per ogni pagina, dalla galleria o dalla fotocamera\n• L’umore del giorno su cinque livelli\n• Tag per organizzare le tue pagine\n• Le bozze si salvano da sole mentre scrivi\n\nMAI PIÙ LA PAGINA BIANCA\n• Una nuova domanda ogni giorno per ispirarti\n• Oltre 40 altre domande da sfogliare\n• Modelli per la gratitudine e il bilancio della sera\n\nGUARDA INDIETRO\n• “Accadde oggi”: cosa hai scritto un mese o un anno fa?\n• Serie di scrittura e serie più lunga\n• Andamento dell’umore negli ultimi 30 giorni\n• Calendario con i colori dell’umore e ricerca in tutto il testo\n\nRESTA COSTANTE\n• Promemoria giornaliero all’ora che preferisci\n\nPRIVATO E SICURO\n• Tutte le pagine restano solo sul tuo dispositivo\n• Blocco con PIN, anche con Face ID o impronta digitale\n• Backup in un file, da ripristinare su qualsiasi dispositivo\n• Cestino: le pagine eliminate si recuperano per 30 giorni\n\nQUATTRO STILI\nCarta, Minimal, Allegro o Notte: scegli tu l’aspetto del tuo diario.\n\nGRATIS CON PUBBLICITÀ\nL’app è gratuita e mostra pubblicità. Con un acquisto unico la elimini per sempre, senza abbonamento. Le tue pagine non vengono mai usate a scopo pubblicitario.\n\nDisponibile in 14 lingue.",
+    "googleTitle": "Diario Personale – Privato",
+    "shortDescription": "Diario segreto con foto, domande e umore del giorno. Senza account né cloud",
+    "releaseNotes": "Prima versione: il tuo diario privato con foto, domande per scrivere e l’andamento dell’umore."
+  },
+  "iap": {
+    "name": "Rimuovi la pubblicità",
+    "description": "Niente pubblicità, per sempre. Una tantum."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Il tuo diario personale",
+        "Bello come la carta, al sicuro sul telefono"
+      ],
+      [
+        "Foto per ogni giorno",
+        "Con umore, tag e righe da quaderno"
+      ],
+      [
+        "Una domanda al giorno",
+        "Mai più la pagina bianca"
+      ],
+      [
+        "Guarda indietro",
+        "“Accadde oggi”, serie e andamento dell’umore"
+      ],
+      [
+        "L’umore a colpo d’occhio",
+        "Calendario con i colori dell’umore"
+      ],
+      [
+        "Stili, PIN e Face ID",
+        "Tutto resta sul tuo dispositivo"
+      ]
+    ],
+    "today": [
+      "Tramonto a Positano",
+      "Oggi è stata una di quelle giornate da tenersi strette. Siamo partiti per il mare all’improvviso e abbiamo guardato il sole tuffarsi nell’acqua.\n\nPer cosa sono grata: questo momento, e non essermelo perso.",
+      [
+        "vacanze",
+        "gratitudine"
+      ]
+    ],
+    "year": [
+      "Primo giorno nella casa nuova",
+      "Scatoloni ovunque, ma sembra già casa.",
+      [
+        "casa"
+      ]
+    ],
+    "month": [
+      "Concerto al parco",
+      "Musica dal vivo sotto le stelle: pelle d’oca.",
+      [
+        "musica"
+      ]
+    ],
+    "texts": [
+      [
+        "Lunga passeggiata sul lago",
+        "Un’ora in riva all’acqua dopo il lavoro. L’aria sapeva d’autunno e per un attimo tutto era immobile.",
+        4,
+        [
+          "natura",
+          "movimento"
+        ]
+      ],
+      [
+        "Caffè con Giulia",
+        "Abbiamo parlato di tutto quello che ci passa per la testa. Che fortuna averla nella mia vita.",
+        5,
+        [
+          "amici"
+        ]
+      ],
+      [
+        "Settimana pesante",
+        "Troppe riunioni. Stasera solo tisana, coperta e un buon libro.",
+        2,
+        [
+          "lavoro"
+        ]
+      ],
+      [
+        "Ricetta nuova",
+        "Ho provato il risotto alla zucca con un tocco di zenzero. Da rifare presto!",
+        4,
+        [
+          "cucina"
+        ]
+      ],
+      [
+        "Piccola vittoria",
+        "La presentazione è andata meglio del previsto. Fiera di me!",
+        5,
+        [
+          "lavoro"
+        ]
+      ],
+      [
+        "Giornata di pioggia",
+        "Tutto il pomeriggio a leggere e ascoltare musica.",
+        3,
+        [
+          "relax"
+        ]
+      ],
+      [
+        "Pranzo della domenica",
+        "La nonna ha raccontato di nuovo le storie di una volta.",
+        4,
+        [
+          "famiglia"
+        ]
+      ]
+    ]
+  }
+}

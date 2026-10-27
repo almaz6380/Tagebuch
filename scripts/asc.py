@@ -24,6 +24,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import store_locales
+
 ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / 'store'
 BUNDLE_ID = 'io.github.almaz6380.tagebuch'
@@ -183,7 +185,11 @@ def cmd_profil(args):
 # ---------------------------------------------------------------- store texts + screenshots
 
 def store_texts():
-    return json.loads((STORE / 'texte.json').read_text())
+    """Shared texts plus one entry per language, keyed by this store's locale code."""
+    t = store_locales.load()
+    t['locales'] = {l['appleLocale']: {**l['store'], 'urls': store_locales.legal_urls(l)} for l in t['langs']}
+    t['iap']['locales'] = {l['appleLocale']: l['iap'] for l in t['langs']}
+    return t
 
 
 def editable_version(app_id: str, version: str, ausfuehren: bool):

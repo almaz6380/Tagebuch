@@ -1,0 +1,128 @@
+{
+  "lang": "tr",
+  "appleLocale": "tr",
+  "playLocale": "tr-TR",
+  "store": {
+    "name": "Günlük – Gizli Anı Defteri",
+    "subtitle": "Fotoğraflarla özgürce yaz",
+    "keywords": "not,hatıra,şükran,minnet,ruh,hali,duygu,anılar,notlar,kişisel,şifreli,takip,ajanda,yazı,sorular",
+    "promotionalText": "Fotoğraflar, yazma soruları ve ruh hâli geçmişiyle kişisel günlüğün – hesap yok, bulut yok. Kayıtların cihazında kalır.",
+    "description": "Kişisel günlüğün – kâğıt bir defter kadar güzel, telefonunda güvende.\n\nSeni etkileyenleri yakala: akşam birkaç satır, günün bir fotoğrafı ya da seni düşündüren bir soru. Her şey cihazında kalır. Hesap yok, bulut yok.\n\nİSTEDİĞİN GİBİ YAZ\n• Başlık ve tarihli, çizgili defter görünümünde editör\n• Her kayda galeriden ya da kameradan fotoğraf\n• Beş kademede günün ruh hâli\n• Kayıtlarını düzenlemek için etiketler\n• Yazarken taslaklar otomatik kaydedilir\n\nBİR DAHA ASLA BOŞ SAYFA YOK\n• Her gün yazmana ilham olacak yeni bir soru\n• Göz atabileceğin 40’tan fazla soru daha\n• Şükran ve akşam değerlendirmesi için şablonlar\n\nGERİYE BAK\n• “Bugün geçmişte”: bir ay ya da bir yıl önce ne yazmıştın?\n• Yazma serisi ve en uzun seri\n• Son 30 günün ruh hâli geçmişi\n• Ruh hâli renkli takvim ve tam metin arama\n\nDÜZENİNİ KORU\n• Seçtiğin saatte günlük hatırlatıcı\n\nÖZEL VE GÜVENLİ\n• Tüm kayıtlar yalnızca cihazında kalır\n• PIN kilidi, istersen Face ID ya da parmak iziyle\n• Bir dosyaya yedekle, her cihazda geri yükle\n• Çöp kutusu: silinen kayıtlar 30 gün boyunca geri yüklenebilir\n\nDÖRT GÖRÜNÜM\nKâğıt, Sade, Neşeli ya da Gece – günlüğünün nasıl görüneceğini sen seç.\n\nREKLAMLI VE ÜCRETSİZ\nUygulama ücretsizdir ve reklam gösterir. Tek seferlik bir satın alımla reklamlar sonsuza dek kalkar – abonelik yok. Kayıtların asla reklam için kullanılmaz.\n\n14 dilde kullanılabilir.",
+    "googleTitle": "Günlük – Gizli Anı Defteri",
+    "shortDescription": "Fotoğraflı, sorulu ve ruh hâli takipli kişisel günlük – hesap yok, bulut yok",
+    "releaseNotes": "İlk sürüm: fotoğraflar, yazma soruları ve ruh hâli geçmişiyle kişisel günlüğün."
+  },
+  "iap": {
+    "name": "Reklamları kaldır",
+    "description": "Sonsuza dek reklamsız. Tek seferlik ödeme."
+  },
+  "screenshots": {
+    "captions": [
+      [
+        "Kişisel günlüğün",
+        "Kâğıt kadar güzel – telefonunda güvende"
+      ],
+      [
+        "Her güne fotoğraflar",
+        "Ruh hâli, etiketler ve defter çizgileriyle"
+      ],
+      [
+        "Her gün bir soru",
+        "Bir daha asla boş sayfaya bakma"
+      ],
+      [
+        "Geriye bak",
+        "“Bugün geçmişte”, yazma serisi ve ruh hâli geçmişi"
+      ],
+      [
+        "Ruh hâlin bir bakışta",
+        "Ruh hâli renkli takvim"
+      ],
+      [
+        "Görünümler, PIN ve Face ID",
+        "Her şey cihazında kalır"
+      ]
+    ],
+    "today": [
+      "Deniz kenarında gün batımı",
+      "Bugün, sımsıkı tutmak istediğin günlerdendi. Bir anda karar verip sahile gittik, güneşin denize gömülüşünü izledik.\n\nŞükrettiğim şey: bu an ve onu kaçırmamış olmam.",
+      [
+        "tatil",
+        "şükran"
+      ]
+    ],
+    "year": [
+      "Yeni evde ilk gün",
+      "Her yer koli dolu ama şimdiden yuva gibi.",
+      [
+        "ev"
+      ]
+    ],
+    "month": [
+      "Parkta konser",
+      "Açık havada canlı müzik – tüylerim diken diken oldu.",
+      [
+        "müzik"
+      ]
+    ],
+    "texts": [
+      [
+        "Moda sahilinde uzun yürüyüş",
+        "İşten sonra bir saat deniz kenarında. Hava sonbahar kokuyordu ve bir an her şey tamamen sustu.",
+        4,
+        [
+          "doğa",
+          "spor"
+        ]
+      ],
+      [
+        "Elif’le kahve",
+        "Aklımızdaki her şeyi konuştuk. İyi ki hayatımda.",
+        5,
+        [
+          "arkadaşlar"
+        ]
+      ],
+      [
+        "Zor bir hafta",
+        "Fazlasıyla toplantı. Bu akşam sadece çay, battaniye ve güzel bir kitap.",
+        2,
+        [
+          "iş"
+        ]
+      ],
+      [
+        "Yeni tarif",
+        "Annemin tarifiyle zeytinyağlı yaprak sarma denedim – artık daha sık yapacağım.",
+        4,
+        [
+          "yemek"
+        ]
+      ],
+      [
+        "Küçük bir zafer",
+        "Sunum beklediğimden iyi geçti. Kendimle gurur duyuyorum!",
+        5,
+        [
+          "iş"
+        ]
+      ],
+      [
+        "Yağmurlu gün",
+        "Bütün öğleden sonrayı kitap okuyup müzik dinleyerek geçirdim.",
+        3,
+        [
+          "huzur"
+        ]
+      ],
+      [
+        "Pazar kahvaltısı",
+        "Babaannem yine eski günlerden hikâyeler anlattı.",
+        4,
+        [
+          "aile"
+        ]
+      ]
+    ]
+  }
+}

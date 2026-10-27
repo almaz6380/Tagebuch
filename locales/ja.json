@@ -1,0 +1,12 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "日記",
+    "NSFaceIDUsageDescription": "日記のロックを解除するためにFace IDを使用します。",
+    "NSPhotoLibraryUsageDescription": "日記に写真を添えられるよう、写真へのアクセスが必要です。",
+    "NSCameraUsageDescription": "日記用の写真を撮影するために、カメラを使用します。",
+    "NSUserTrackingUsageDescription": "許可すると、より関心に合った広告が表示されます。日記の内容が共有されることはありません。"
+  },
+  "android": {
+    "app_name": "日記"
+  }
+}
