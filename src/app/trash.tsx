@@ -6,6 +6,7 @@ import { Button, Card, Screen, T } from '@/components/Themed';
 import { TRASH_DAYS, useEntries } from '@/db/EntriesProvider';
 import { confirm } from '@/lib/confirm';
 import { formatLong } from '@/lib/dates';
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 import { moodInfo } from '@/theme/themes';
 
@@ -16,6 +17,7 @@ function daysLeft(deletedAt: number) {
 export default function TrashScreen() {
   const { theme } = useTheme();
   const { colors } = theme;
+  const { t } = useI18n();
   const { trash, restore, purge, emptyTrash } = useEntries();
 
   const close = () => (router.canGoBack() ? router.back() : router.replace('/settings'));
@@ -23,9 +25,9 @@ export default function TrashScreen() {
   return (
     <Screen>
       <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
-        <Pressable onPress={close} hitSlop={12} accessibilityRole="button" accessibilityLabel="Zurück" style={styles.back}>
+        <Pressable onPress={close} hitSlop={12} accessibilityRole="button" accessibilityLabel={t.trash.backA11y} style={styles.back}>
           <Feather name="chevron-left" size={22} color={colors.accent} />
-          <T style={{ color: colors.accent }}>Einstellungen</T>
+          <T style={{ color: colors.accent }}>{t.trash.back}</T>
         </Pressable>
       </View>
       <FlatList
@@ -34,18 +36,18 @@ export default function TrashScreen() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View style={{ marginBottom: 16 }}>
-            <T variant="display">Papierkorb</T>
+            <T variant="display">{t.trash.title}</T>
             <T variant="muted" style={{ marginTop: 6 }}>
-              Gelöschte Einträge bleiben {TRASH_DAYS} Tage hier und werden dann endgültig entfernt.
+              {t.trash.info(TRASH_DAYS)}
             </T>
             {trash.length > 0 && (
               <Button
                 kind="danger"
-                label="Papierkorb leeren"
+                label={t.trash.empty}
                 style={{ marginTop: 14 }}
                 onPress={async () => {
                   const n = trash.length;
-                  if (await confirm('Papierkorb leeren?', `${n} ${n === 1 ? 'Eintrag wird' : 'Einträge werden'} endgültig gelöscht.`, 'Leeren')) {
+                  if (await confirm(t.trash.emptyTitle, t.trash.emptyBody(n), t.trash.emptyConfirm)) {
                     await emptyTrash();
                   }
                 }}
@@ -53,7 +55,7 @@ export default function TrashScreen() {
             )}
           </View>
         }
-        ListEmptyComponent={<T variant="body" style={{ color: colors.textMuted }}>Der Papierkorb ist leer.</T>}
+        ListEmptyComponent={<T variant="body" style={{ color: colors.textMuted }}>{t.trash.isEmpty}</T>}
         renderItem={({ item }) => {
           const mood = moodInfo(item.mood);
           const left = daysLeft(item.deletedAt!);
@@ -64,7 +66,7 @@ export default function TrashScreen() {
                 {mood ? ` · ${mood.emoji}` : ''}
               </T>
               <T variant="title" numberOfLines={1} style={{ fontSize: theme.name === 'paper' ? 24 : 17, marginTop: 2 }}>
-                {item.title || 'Ohne Titel'}
+                {item.title || t.untitled}
               </T>
               {!!item.body && (
                 <T variant="body" numberOfLines={2} style={{ fontSize: 14, lineHeight: 21, color: colors.textMuted }}>
@@ -72,17 +74,17 @@ export default function TrashScreen() {
                 </T>
               )}
               <T variant="muted" style={{ marginTop: 8 }}>
-                {left === 0 ? 'Wird heute endgültig gelöscht' : `Noch ${left} ${left === 1 ? 'Tag' : 'Tage'} wiederherstellbar`}
-                {item.photos.length > 0 ? ` · ${item.photos.length} ${item.photos.length === 1 ? 'Foto' : 'Fotos'}` : ''}
+                {left === 0 ? t.trash.lastDay : t.trash.daysLeft(left)}
+                {item.photos.length > 0 ? ` · ${t.trash.photos(item.photos.length)}` : ''}
               </T>
               <View style={styles.actions}>
-                <Button label="Wiederherstellen" onPress={() => restore(item.id)} style={{ flex: 1 }} />
+                <Button label={t.trash.restore} onPress={() => restore(item.id)} style={{ flex: 1 }} />
                 <Button
                   kind="danger"
-                  label="Endgültig löschen"
+                  label={t.trash.purge}
                   style={{ flex: 1 }}
                   onPress={async () => {
-                    if (await confirm('Endgültig löschen?', 'Der Eintrag und seine Fotos sind dann weg.', 'Löschen')) {
+                    if (await confirm(t.trash.purgeTitle, t.trash.purgeBody, t.trash.purgeConfirm)) {
                       await purge(item.id);
                     }
                   }}

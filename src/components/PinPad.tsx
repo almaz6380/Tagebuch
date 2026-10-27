@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 
 export const PIN_LENGTH = 4;
@@ -26,6 +27,7 @@ export function PinDots({ length, error }: { length: number; error?: boolean }) 
 
 export function PinPad({ onDigit, onDelete }: { onDigit: (d: string) => void; onDelete: () => void }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const keys = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', '⌫'];
   return (
     <View style={styles.pad}>
@@ -36,7 +38,7 @@ export function PinPad({ onDigit, onDelete }: { onDigit: (d: string) => void; on
           <Pressable
             key={i}
             accessibilityRole="button"
-            accessibilityLabel={k === '⌫' ? 'Löschen' : k}
+            accessibilityLabel={k === '⌫' ? t.lock.deletePin : k}
             onPress={() => (k === '⌫' ? onDelete() : onDigit(k))}
             style={({ pressed }) => [
               styles.key,

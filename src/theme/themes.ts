@@ -2,8 +2,6 @@ export type ThemeName = 'paper' | 'minimal' | 'playful' | 'dark';
 
 export type Theme = {
   name: ThemeName;
-  label: string;
-  description: string;
   dark: boolean;
   colors: {
     background: string;
@@ -32,8 +30,6 @@ export type Theme = {
 export const themes: Record<ThemeName, Theme> = {
   paper: {
     name: 'paper',
-    label: 'Papier',
-    description: 'Warmes Notizbuch mit Linien',
     dark: false,
     colors: {
       background: '#F5EFE3',
@@ -59,8 +55,6 @@ export const themes: Record<ThemeName, Theme> = {
   },
   minimal: {
     name: 'minimal',
-    label: 'Minimal',
-    description: 'Klar, ruhig, viel Weißraum',
     dark: false,
     colors: {
       background: '#FFFFFF',
@@ -86,8 +80,6 @@ export const themes: Record<ThemeName, Theme> = {
   },
   playful: {
     name: 'playful',
-    label: 'Verspielt',
-    description: 'Bunt, rund und fröhlich',
     dark: false,
     colors: {
       background: '#FFF4F8',
@@ -113,8 +105,6 @@ export const themes: Record<ThemeName, Theme> = {
   },
   dark: {
     name: 'dark',
-    label: 'Nacht',
-    description: 'Dunkel und elegant',
     dark: true,
     colors: {
       background: '#14161B',
@@ -142,12 +132,13 @@ export const themes: Record<ThemeName, Theme> = {
 
 export const themeOrder: ThemeName[] = ['paper', 'minimal', 'playful', 'dark'];
 
+// Mood names are in the dictionaries (t.moods[value]).
 export const moods = [
-  { value: 1, emoji: '😢', label: 'Schlecht', color: '#7A8FB8' },
-  { value: 2, emoji: '🙁', label: 'Mäßig', color: '#9BB0C9' },
-  { value: 3, emoji: '😐', label: 'Okay', color: '#C9B98F' },
-  { value: 4, emoji: '🙂', label: 'Gut', color: '#9CC48F' },
-  { value: 5, emoji: '😄', label: 'Super', color: '#F2A65A' },
+  { value: 1, emoji: '😢', color: '#7A8FB8' },
+  { value: 2, emoji: '🙁', color: '#9BB0C9' },
+  { value: 3, emoji: '😐', color: '#C9B98F' },
+  { value: 4, emoji: '🙂', color: '#9CC48F' },
+  { value: 5, emoji: '😄', color: '#F2A65A' },
 ] as const;
 
 export function moodInfo(value: number | null | undefined) {

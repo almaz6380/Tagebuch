@@ -5,8 +5,9 @@ import { EntryCard } from '@/components/EntryCard';
 import { TagChip } from '@/components/TagChip';
 import { Card, Screen, T } from '@/components/Themed';
 import { useEntries } from '@/db/EntriesProvider';
-import { parseISODate, todayISO } from '@/lib/dates';
-import { currentStreak, longestStreak, moodSeries, onThisDay, topTags, wordCount } from '@/lib/stats';
+import { useI18n } from '@/i18n';
+import { formatNumber, formatShort, todayISO } from '@/lib/dates';
+import { currentStreak, longestStreak, memoryLabel, moodSeries, onThisDay, topTags, wordCount } from '@/lib/stats';
 import { useTheme } from '@/theme/ThemeProvider';
 import { moodInfo } from '@/theme/themes';
 
@@ -15,6 +16,7 @@ const CHART_DAYS = 30;
 export default function ReviewScreen() {
   const { theme } = useTheme();
   const { colors } = theme;
+  const { t } = useI18n();
   const { entries } = useEntries();
 
   const memories = useMemo(() => onThisDay(entries), [entries]);
@@ -32,10 +34,9 @@ export default function ReviewScreen() {
     return (
       <Screen>
         <ScrollView contentContainerStyle={styles.scroll}>
-          <T variant="display">Rückblick</T>
+          <T variant="display">{t.review.title}</T>
           <T variant="body" style={{ color: colors.textMuted, marginTop: 12 }}>
-            Sobald du ein paar Einträge geschrieben hast, siehst du hier deine Schreib-Serie, deinen Stimmungsverlauf und
-            Erinnerungen von früher.
+            {t.review.empty}
           </T>
         </ScrollView>
       </Screen>
@@ -45,24 +46,24 @@ export default function ReviewScreen() {
   return (
     <Screen>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <T variant="display">Rückblick</T>
+        <T variant="display">{t.review.title}</T>
 
         <View style={styles.stats}>
-          <Stat value={currentStreak(entries)} label="Tage in Folge" />
-          <Stat value={longestStreak(entries)} label="längste Serie" />
-          <Stat value={thisMonth} label="diesen Monat" />
-          <Stat value={words} label={words === 1 ? 'Wort' : 'Wörter'} />
+          <Stat value={currentStreak(entries)} label={t.review.streak} />
+          <Stat value={longestStreak(entries)} label={t.review.longest} />
+          <Stat value={thisMonth} label={t.review.thisMonth} />
+          <Stat value={words} label={t.review.words(words)} />
         </View>
 
         <T variant="label" style={styles.section}>
-          An diesem Tag
+          {t.review.onThisDay}
         </T>
         {memories.length === 0 && (
-          <T variant="muted">Vor einem Monat oder einem Jahr hast du an diesem Tag noch nichts geschrieben.</T>
+          <T variant="muted">{t.review.noMemories}</T>
         )}
         {memories.map((m) => (
-          <View key={m.label} style={{ marginBottom: 8 }}>
-            <T style={{ fontFamily: theme.fonts.uiBold, marginBottom: 8 }}>{m.label}</T>
+          <View key={m.yearsAgo} style={{ marginBottom: 8 }}>
+            <T style={{ fontFamily: theme.fonts.uiBold, marginBottom: 8 }}>{memoryLabel(m, t)}</T>
             {m.entries.map((e) => (
               <View key={e.id} style={{ marginBottom: 12 }}>
                 <EntryCard entry={e} />
@@ -72,19 +73,19 @@ export default function ReviewScreen() {
         ))}
 
         <T variant="label" style={styles.section}>
-          Stimmung der letzten {CHART_DAYS} Tage
+          {t.review.moodTitle(CHART_DAYS)}
         </T>
         <Card>
           {averageMood ? (
             <T variant="muted" style={{ marginBottom: 12 }}>
-              Im Schnitt: {averageMood.emoji} {averageMood.label} ({rated.length} {rated.length === 1 ? 'Tag' : 'Tage'} bewertet)
+              {t.review.average(averageMood.emoji, t.moods[averageMood.value], rated.length)}
             </T>
           ) : (
             <T variant="muted" style={{ marginBottom: 12 }}>
-              In den letzten {CHART_DAYS} Tagen hast du keine Stimmung angegeben.
+              {t.review.noMood(CHART_DAYS)}
             </T>
           )}
-          <View style={styles.chart} accessibilityLabel="Stimmungsverlauf">
+          <View style={styles.chart} accessibilityLabel={t.review.chart}>
             {series.map((d) => {
               const mood = moodInfo(d.mood == null ? null : Math.round(d.mood));
               return (
@@ -99,15 +100,15 @@ export default function ReviewScreen() {
             })}
           </View>
           <View style={styles.axis}>
-            <T variant="muted">{parseISODate(series[0].date).toLocaleDateString('de-DE', { day: 'numeric', month: 'short' })}</T>
-            <T variant="muted">heute</T>
+            <T variant="muted">{formatShort(series[0].date)}</T>
+            <T variant="muted">{t.today}</T>
           </View>
         </Card>
 
         {tags.length > 0 && (
           <>
             <T variant="label" style={styles.section}>
-              Häufigste Tags
+              {t.review.topTags}
             </T>
             <View style={styles.tags}>
               {tags.map(([tag, count]) => (
@@ -125,7 +126,7 @@ function Stat({ value, label }: { value: number; label: string }) {
   const { theme } = useTheme();
   return (
     <View style={[styles.stat, { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radius + 4 }]}>
-      <T style={{ fontFamily: theme.fonts.display, fontSize: 26, color: theme.colors.accent }}>{value.toLocaleString('de-DE')}</T>
+      <T style={{ fontFamily: theme.fonts.display, fontSize: 26, color: theme.colors.accent }}>{formatNumber(value)}</T>
       <T variant="muted">{label}</T>
     </View>
   );

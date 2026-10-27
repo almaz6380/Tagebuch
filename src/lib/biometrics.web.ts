@@ -1,5 +1,7 @@
 // No biometric unlock in the browser; the PIN is the only lock.
-export async function biometricLabel(): Promise<string | null> {
+import type { BiometricKind } from './biometrics';
+
+export async function biometricKind(): Promise<BiometricKind | null> {
   return null;
 }
 

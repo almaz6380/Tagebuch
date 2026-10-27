@@ -9,6 +9,8 @@ import {
 } from 'expo-notifications';
 import { Platform } from 'react-native';
 
+import { getMessages } from '@/i18n';
+
 export const reminderSupported = true;
 
 setNotificationHandler({
@@ -24,9 +26,10 @@ const CHANNEL = 'daily-reminder';
 
 /** Replaces any existing reminder with a daily one; false if permission was denied. */
 export async function scheduleDailyReminder(hour: number, minute: number): Promise<boolean> {
+  const t = getMessages().notification;
   if (Platform.OS === 'android') {
     await setNotificationChannelAsync(CHANNEL, {
-      name: 'Tägliche Erinnerung',
+      name: t.channel,
       importance: AndroidImportance.DEFAULT,
     });
   }
@@ -34,7 +37,7 @@ export async function scheduleDailyReminder(hour: number, minute: number): Promi
   if (!granted) return false;
   await cancelAllScheduledNotificationsAsync();
   await scheduleNotificationAsync({
-    content: { title: 'Zeit für dein Tagebuch ✍️', body: 'Wie war dein Tag? Ein paar Zeilen reichen schon.' },
+    content: { title: t.title, body: t.body },
     trigger: { type: SchedulableTriggerInputTypes.DAILY, hour, minute, channelId: CHANNEL },
   });
   return true;

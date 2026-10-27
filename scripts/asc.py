@@ -9,7 +9,7 @@ Writing commands only change something with --ausfuehren; without it they print 
   python3 scripts/asc.py bundle --ausfuehren          # register io.github.almaz6380.tagebuch
   python3 scripts/asc.py profil --p12 cert.p12 --ausgabe x.mobileprovision --ausfuehren
   python3 scripts/asc.py warten --build 7              # until Apple has processed the upload
-  python3 scripts/asc.py metadaten --ausfuehren       # texts, URLs, categories, age rating, screenshots
+  python3 scripts/asc.py metadaten --ausfuehren       # texts, URLs, categories, age rating, screenshots (all locales)
   python3 scripts/asc.py einreichen --build 1 --ausfuehren
 """
 import argparse
@@ -27,7 +27,6 @@ ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / 'store'
 BUNDLE_ID = 'io.github.almaz6380.tagebuch'
 BASE = 'https://api.appstoreconnect.apple.com'
-LOCALE = 'de-DE'
 EDITABLE = {'PREPARE_FOR_SUBMISSION', 'DEVELOPER_REJECTED', 'REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY'}
 
 
@@ -207,27 +206,27 @@ def editable_version(app_id: str, version: str, ausfuehren: bool):
     })['data']
 
 
-def localization(path: str):
-    data = get(path)['data']
-    return next((l for l in data if l['attributes']['locale'] == LOCALE), None)
+def localizations(path: str) -> dict:
+    return {l['attributes']['locale']: l for l in get(path)['data']}
 
 
-def upload_screenshots(version_id: str, ausfuehren: bool):
-    files = sorted((STORE / 'screenshots' / 'iphone-69').glob('*.png'))
+def screenshot_files(locale: str):
+    files = sorted((STORE / 'screenshots' / 'iphone-69' / locale).glob('*.png'))
     if not files:
-        sys.exit('Keine Screenshots in store/screenshots/iphone-69/.')
-    loc = localization(f'/v1/appStoreVersions/{version_id}/appStoreVersionLocalizations')
-    sets = get(f"/v1/appStoreVersionLocalizations/{loc['id']}/appScreenshotSets?fields[appScreenshotSets]=screenshotDisplayType")['data']
+        sys.exit(f'Keine Screenshots in store/screenshots/iphone-69/{locale}/.')
+    return files
+
+
+def upload_screenshots(loc_id: str, locale: str):
+    files = screenshot_files(locale)
+    sets = get(f"/v1/appStoreVersionLocalizations/{loc_id}/appScreenshotSets?fields[appScreenshotSets]=screenshotDisplayType")['data']
     target = next((s for s in sets if s['attributes']['screenshotDisplayType'] == 'APP_IPHONE_67'), None)
-    if not ausfuehren:
-        print(f'Probelauf: würde {len(files)} Screenshots hochladen (ersetzt vorhandene).')
-        return
     if not target:
         target = call('POST', '/v1/appScreenshotSets', {
             'data': {
                 'type': 'appScreenshotSets',
                 'attributes': {'screenshotDisplayType': 'APP_IPHONE_67'},
-                'relationships': {'appStoreVersionLocalization': {'data': {'type': 'appStoreVersionLocalizations', 'id': loc['id']}}},
+                'relationships': {'appStoreVersionLocalization': {'data': {'type': 'appStoreVersionLocalizations', 'id': loc_id}}},
             }
         })['data']
     for old in get(f"/v1/appScreenshotSets/{target['id']}/appScreenshots")['data']:
@@ -254,7 +253,7 @@ def upload_screenshots(version_id: str, ausfuehren: bool):
                 'attributes': {'uploaded': True, 'sourceFileChecksum': hashlib.md5(blob).hexdigest()},
             }
         })
-        print('  Screenshot hochgeladen:', f.name)
+        print(f'  [{locale}] Screenshot hochgeladen:', f.name)
 
 
 def cmd_metadaten(args):
@@ -262,23 +261,57 @@ def cmd_metadaten(args):
     apple = t['apple']
     app = require_app()
     app_id = app['id']
+    primary = app['attributes'].get('primaryLocale')
+    if primary != t['primaryLocale']:
+        print(f"Hinweis: Primärsprache in App Store Connect ist {primary}, texte.json erwartet {t['primaryLocale']}.")
 
     info = get(f'/v1/apps/{app_id}/appInfos')['data'][0]
-    info_loc = localization(f"/v1/appInfos/{info['id']}/appInfoLocalizations")
+    info_locs = localizations(f"/v1/appInfos/{info['id']}/appInfoLocalizations")
     version = editable_version(app_id, t['version'], args.ausfuehren)
+    version_locs = localizations(f"/v1/appStoreVersions/{version['id']}/appStoreVersionLocalizations") if version else {}
+
     if not args.ausfuehren:
-        print('Probelauf: würde setzen – Untertitel, Datenschutz-URL, Kategorien, Altersfreigabe,',
-              'Beschreibung, Stichwörter, Werbetext, Support-/Marketing-URL, Copyright, Prüfkontakt und Screenshots.')
-        print('  Untertitel:', apple['subtitle'], f"({len(apple['subtitle'])}/30)")
-        print('  Stichwörter:', apple['keywords'], f"({len(apple['keywords'])}/100)")
+        print('Probelauf: würde Kategorien, Altersfreigabe, Copyright und Prüfkontakt setzen, dann je Sprache:')
+        for locale, l in t['locales'].items():
+            neu = '' if locale in info_locs else ' (Sprache wird angelegt, mit Name)'
+            print(f"  {locale}{neu}: {l['name']} | {l['subtitle']} ({len(l['subtitle'])}/30)")
+            print(f"    Stichwörter ({len(l['keywords'])}/100): {l['keywords']}")
+            print(f"    Screenshots: {len(screenshot_files(locale))}")
         return
 
-    # The name is set when the app is created; sending it again triggers a uniqueness check (409).
-    call('PATCH', f"/v1/appInfoLocalizations/{info_loc['id']}", {
-        'data': {'type': 'appInfoLocalizations', 'id': info_loc['id'], 'attributes': {
-            'subtitle': apple['subtitle'], 'privacyPolicyUrl': t['urls']['privacy'],
-        }}
-    })
+    for locale, l in t['locales'].items():
+        attrs = {'subtitle': l['subtitle'], 'privacyPolicyUrl': l['urls']['privacy']}
+        if locale in info_locs:
+            # The name is set when the app is created; sending it again triggers a uniqueness check (409).
+            lid = info_locs[locale]['id']
+            call('PATCH', f'/v1/appInfoLocalizations/{lid}', {
+                'data': {'type': 'appInfoLocalizations', 'id': lid, 'attributes': attrs}
+            })
+        else:
+            call('POST', '/v1/appInfoLocalizations', {'data': {
+                'type': 'appInfoLocalizations', 'attributes': {'locale': locale, 'name': l['name'], **attrs},
+                'relationships': {'appInfo': {'data': {'type': 'appInfos', 'id': info['id']}}},
+            }})
+        vattrs = {
+            'description': l['description'],
+            'keywords': l['keywords'],
+            'promotionalText': l['promotionalText'],
+            'supportUrl': l['urls']['support'],
+            'marketingUrl': l['urls']['marketing'],
+        }
+        if locale in version_locs:
+            vid = version_locs[locale]['id']
+            call('PATCH', f'/v1/appStoreVersionLocalizations/{vid}', {
+                'data': {'type': 'appStoreVersionLocalizations', 'id': vid, 'attributes': vattrs}
+            })
+        else:
+            vid = call('POST', '/v1/appStoreVersionLocalizations', {'data': {
+                'type': 'appStoreVersionLocalizations', 'attributes': {'locale': locale, **vattrs},
+                'relationships': {'appStoreVersion': {'data': {'type': 'appStoreVersions', 'id': version['id']}}},
+            }})['data']['id']
+        print(f'[{locale}] Texte gesetzt.')
+        upload_screenshots(vid, locale)
+
     call('PATCH', f"/v1/appInfos/{info['id']}", {
         'data': {'type': 'appInfos', 'id': info['id'], 'relationships': {
             'primaryCategory': {'data': {'type': 'appCategories', 'id': apple['primaryCategory']}},
@@ -288,17 +321,6 @@ def cmd_metadaten(args):
     age = get(f"/v1/appInfos/{info['id']}/ageRatingDeclaration")['data']
     call('PATCH', f"/v1/ageRatingDeclarations/{age['id']}", {
         'data': {'type': 'ageRatingDeclarations', 'id': age['id'], 'attributes': apple['ageRating']}
-    })
-
-    vloc = localization(f"/v1/appStoreVersions/{version['id']}/appStoreVersionLocalizations")
-    call('PATCH', f"/v1/appStoreVersionLocalizations/{vloc['id']}", {
-        'data': {'type': 'appStoreVersionLocalizations', 'id': vloc['id'], 'attributes': {
-            'description': t['description'],
-            'keywords': apple['keywords'],
-            'promotionalText': apple['promotionalText'],
-            'supportUrl': t['urls']['support'],
-            'marketingUrl': t['urls']['marketing'],
-        }}
     })
     call('PATCH', f"/v1/appStoreVersions/{version['id']}", {
         'data': {'type': 'appStoreVersions', 'id': version['id'], 'attributes': {'copyright': t['copyright']}}
@@ -318,8 +340,7 @@ def cmd_metadaten(args):
             'type': 'appStoreReviewDetails', 'attributes': attrs,
             'relationships': {'appStoreVersion': {'data': {'type': 'appStoreVersions', 'id': version['id']}}},
         }})
-    print('Texte, URLs, Kategorien, Altersfreigabe und Prüfkontakt gesetzt.')
-    upload_screenshots(version['id'], True)
+    print('Kategorien, Altersfreigabe, Copyright und Prüfkontakt gesetzt.')
 
 
 def cmd_warten(args):

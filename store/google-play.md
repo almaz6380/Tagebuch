@@ -4,14 +4,14 @@ Diese Formulare lassen sich nicht per API ausfüllen. Alles unter **App-Inhalte*
 Store-Eintrag (Texte, Grafiken, Screenshots) setzt `scripts/play.py` automatisch.
 
 ## App anlegen
-- **App-Name:** Tagebuch – Mein Journal
-- **Standardsprache:** Deutsch – de-DE
+- **App-Name:** Daily Journal – Private Diary (deutscher Eintrag „Tagebuch – Mein Journal“ legt `scripts/play.py eintrag` an)
+- **Standardsprache:** Englisch (USA) – en-US
 - **App oder Spiel:** App
 - **Kostenlos oder kostenpflichtig:** Kostenlos
 - Erklärungen (Richtlinien, US-Exportgesetze) bestätigen
 
 ## Datenschutzerklärung
-`https://tagebuch-c5j.pages.dev/datenschutz`
+`https://tagebuch-c5j.pages.dev/privacy` (englisch; deutsch: `/datenschutz`)
 
 ## App-Zugriff
 Alle Funktionen sind ohne besondere Zugriffsrechte verfügbar (kein Login).

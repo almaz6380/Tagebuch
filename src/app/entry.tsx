@@ -14,7 +14,8 @@ import { TRASH_DAYS, useEntries } from '@/db/EntriesProvider';
 import { deletePhoto } from '@/db/photos';
 import type { Entry } from '@/db/types';
 import { confirm, notify } from '@/lib/confirm';
-import { formatLong, shiftDays, todayISO } from '@/lib/dates';
+import { formatLongNoYear, shiftDays, todayISO } from '@/lib/dates';
+import { useI18n } from '@/i18n';
 import { clearDraft, loadDraft, saveDraft } from '@/lib/drafts';
 import type { DraftData } from '@/lib/draftTypes';
 import { pickPhotos } from '@/lib/pickPhotos';
@@ -48,6 +49,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   const { colors, fonts } = theme;
   const insets = useSafeAreaInsets();
   const { save, remove, allTags } = useEntries();
+  const { t } = useI18n();
 
 
   // Values when the editor opened; never changes for this form instance.
@@ -125,7 +127,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   };
 
   const onCancel = async () => {
-    if (dirty && !(await confirm('Änderungen verwerfen?', 'Was du seit dem letzten Speichern geschrieben hast, geht verloren.', 'Verwerfen'))) {
+    if (dirty && !(await confirm(t.entry.discardTitle, t.entry.discardBody, t.entry.discard))) {
       return;
     }
     await discardChanges();
@@ -152,7 +154,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
 
   const onDelete = async () => {
     if (!existing) return;
-    if (await confirm('In den Papierkorb legen?', `Du kannst den Eintrag ${TRASH_DAYS} Tage lang wiederherstellen.`, 'Löschen')) {
+    if (await confirm(t.entry.trashTitle, t.entry.trashBody(TRASH_DAYS), t.entry.delete)) {
       await discardChanges();
       await remove(existing.id);
       close();
@@ -165,7 +167,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
       const ids = await pickPhotos(source);
       setPhotos((prev) => [...prev, ...ids]);
     } catch (err) {
-      notify('Foto nicht möglich', err instanceof Error ? err.message : 'Das Foto konnte nicht hinzugefügt werden.');
+      notify(t.entry.photoFailedTitle, err instanceof Error ? err.message : t.entry.photoFailedBody);
     } finally {
       setAddingPhotos(false);
     }
@@ -192,21 +194,21 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={[styles.topBar, { paddingTop: insets.top + 8, borderBottomColor: colors.border }]}>
         <Pressable onPress={onCancel} hitSlop={12} accessibilityRole="button">
-          <T style={{ color: colors.textMuted }}>Abbrechen</T>
+          <T style={{ color: colors.textMuted }}>{t.entry.cancel}</T>
         </Pressable>
         <View style={styles.dateNav}>
-          <Pressable onPress={() => setDate(shiftDays(date, -1))} hitSlop={10} accessibilityLabel="Vorheriger Tag">
+          <Pressable onPress={() => setDate(shiftDays(date, -1))} hitSlop={10} accessibilityLabel={t.entry.prevDay}>
             <Feather name="chevron-left" size={20} color={colors.textMuted} />
           </Pressable>
-          <Pressable onPress={() => setDate(todayISO())} accessibilityLabel="Auf heute setzen">
-            <T style={{ fontFamily: fonts.uiBold, fontSize: 14 }}>{formatLong(date).replace(/ \d{4}$/, '')}</T>
+          <Pressable onPress={() => setDate(todayISO())} accessibilityLabel={t.entry.toToday}>
+            <T style={{ fontFamily: fonts.uiBold, fontSize: 14 }}>{formatLongNoYear(date)}</T>
           </Pressable>
-          <Pressable onPress={() => setDate(shiftDays(date, 1))} hitSlop={10} accessibilityLabel="Nächster Tag">
+          <Pressable onPress={() => setDate(shiftDays(date, 1))} hitSlop={10} accessibilityLabel={t.entry.nextDay}>
             <Feather name="chevron-right" size={20} color={colors.textMuted} />
           </Pressable>
         </View>
         <Pressable onPress={onSave} hitSlop={12} accessibilityRole="button">
-          <T style={{ color: colors.accent, fontFamily: fonts.uiBold }}>Fertig</T>
+          <T style={{ color: colors.accent, fontFamily: fonts.uiBold }}>{t.entry.done}</T>
         </Pressable>
       </View>
 
@@ -214,16 +216,16 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
         {restored && (
           <View style={[styles.banner, { backgroundColor: colors.surfaceAlt, borderRadius: theme.radius + 4 }]}>
             <Feather name="rotate-ccw" size={16} color={colors.accent} />
-            <T style={{ flex: 1, fontSize: 14 }}>Entwurf wiederhergestellt</T>
+            <T style={{ flex: 1, fontSize: 14 }}>{t.entry.draftRestored}</T>
             <Pressable onPress={onDiscardDraft} accessibilityRole="button" hitSlop={8}>
-              <T style={{ color: colors.accent, fontFamily: fonts.uiBold, fontSize: 14 }}>Verwerfen</T>
+              <T style={{ color: colors.accent, fontFamily: fonts.uiBold, fontSize: 14 }}>{t.entry.discard}</T>
             </Pressable>
           </View>
         )}
         <TextInput
           value={title}
           onChangeText={setTitle}
-          placeholder="Titel"
+          placeholder={t.entry.titlePlaceholder}
           placeholderTextColor={colors.textMuted}
           style={[
             styles.title,
@@ -233,7 +235,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
 
         <Card style={{ marginTop: 8 }}>
           <T variant="label" style={{ marginBottom: 10 }}>
-            Wie war dein Tag?
+            {t.entry.moodQuestion}
           </T>
           <MoodPicker value={mood} onChange={setMood} />
         </Card>
@@ -247,7 +249,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
             onChangeText={(v) => (v.endsWith(',') || v.endsWith(' ') ? addTag(v) : setTagDraft(v))}
             onSubmitEditing={() => addTag(tagDraft)}
             submitBehavior="submit"
-            placeholder="+ Tag"
+            placeholder={t.entry.tagPlaceholder}
             placeholderTextColor={colors.textMuted}
             autoCapitalize="none"
             style={[styles.tagInput, { fontFamily: fonts.ui, color: colors.text }]}
@@ -264,13 +266,13 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
         <View style={styles.photoRow}>
           {photos.map((p, i) => (
             <View key={p}>
-              <Pressable onPress={() => setViewing(i)} accessibilityRole="imagebutton" accessibilityLabel={`Foto ${i + 1} ansehen`}>
+              <Pressable onPress={() => setViewing(i)} accessibilityRole="imagebutton" accessibilityLabel={t.entry.viewPhoto(i + 1)}>
                 <Photo id={p} style={[styles.thumb, { borderRadius: theme.radius }]} />
               </Pressable>
               <Pressable
                 onPress={() => removePhoto(p)}
                 accessibilityRole="button"
-                accessibilityLabel={`Foto ${i + 1} entfernen`}
+                accessibilityLabel={t.entry.removePhoto(i + 1)}
                 hitSlop={8}
                 style={[styles.removePhoto, { backgroundColor: colors.text }]}>
                 <Feather name="x" size={12} color={colors.background} />
@@ -281,20 +283,20 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
             onPress={() => addPhotos('library')}
             disabled={addingPhotos}
             accessibilityRole="button"
-            accessibilityLabel="Foto hinzufügen"
+            accessibilityLabel={t.entry.addPhoto}
             style={[styles.addPhoto, { borderColor: colors.border, borderRadius: theme.radius, opacity: addingPhotos ? 0.5 : 1 }]}>
             <Feather name="image" size={20} color={colors.accent} />
-            <T variant="muted">{addingPhotos ? '…' : 'Foto'}</T>
+            <T variant="muted">{addingPhotos ? '…' : t.entry.photo}</T>
           </Pressable>
           {Platform.OS !== 'web' && (
             <Pressable
               onPress={() => addPhotos('camera')}
               disabled={addingPhotos}
               accessibilityRole="button"
-              accessibilityLabel="Foto aufnehmen"
+              accessibilityLabel={t.entry.takePhoto}
               style={[styles.addPhoto, { borderColor: colors.border, borderRadius: theme.radius, opacity: addingPhotos ? 0.5 : 1 }]}>
               <Feather name="camera" size={20} color={colors.accent} />
-              <T variant="muted">Kamera</T>
+              <T variant="muted">{t.entry.camera}</T>
             </Pressable>
           )}
         </View>
@@ -303,9 +305,9 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
           <PromptCard
             date={date}
             onUsePrompt={(prompt) => setBody(`${prompt}\n`)}
-            onUseTemplate={(t) => {
-              setBody(t.text);
-              if (!title.trim()) setTitle(t.label);
+            onUseTemplate={(tpl) => {
+              setBody(tpl.text);
+              if (!title.trim()) setTitle(tpl.label);
             }}
           />
         )}
@@ -325,7 +327,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
             onChangeText={setBody}
             multiline
             scrollEnabled={false}
-            placeholder="Liebes Tagebuch …"
+            placeholder={t.entry.bodyPlaceholder}
             placeholderTextColor={colors.textMuted}
             onContentSizeChange={(e) => setBodyHeight(e.nativeEvent.contentSize.height)}
             style={[
@@ -342,8 +344,8 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
         </View>
 
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 20 }}>
-          {existing && <Button kind="danger" label="Löschen" onPress={onDelete} style={{ flex: 1 }} />}
-          <Button label="Speichern" onPress={onSave} style={{ flex: 2 }} />
+          {existing && <Button kind="danger" label={t.entry.delete} onPress={onDelete} style={{ flex: 1 }} />}
+          <Button label={t.entry.save} onPress={onSave} style={{ flex: 2 }} />
         </View>
       </ScrollView>
       {viewing != null && <PhotoViewer ids={photos} start={viewing} onClose={() => setViewing(null)} />}

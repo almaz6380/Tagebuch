@@ -12,10 +12,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { LockScreen } from '@/components/LockScreen';
 import { EntriesProvider } from '@/db/EntriesProvider';
+import { initI18n } from '@/i18n';
 import { LockProvider, useLock } from '@/lib/LockProvider';
 import { ThemeProvider, useTheme } from '@/theme/ThemeProvider';
 
 if (Platform.OS !== 'web') SplashScreen.preventAutoHideAsync();
+// Saved language choice; until it loads the device language is used.
+initI18n();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({

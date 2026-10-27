@@ -8,7 +8,7 @@ const BASE = '';
 export default function Root({ children }: PropsWithChildren) {
   const { htmlAttributes, bodyAttributes, headNodes, bodyNodes } = useServerDocumentContext();
   return (
-    <html lang="de" {...htmlAttributes}>
+    <html lang="en" {...htmlAttributes}>
       <head>
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -16,7 +16,7 @@ export default function Root({ children }: PropsWithChildren) {
         <meta name="theme-color" content="#F5EFE3" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Tagebuch" />
+        <meta name="apple-mobile-web-app-title" content="Journal" />
         <link rel="manifest" href={`${BASE}/manifest.json`} />
         <link rel="apple-touch-icon" href={`${BASE}/icon-192.png`} />
         <ScrollViewStyleReset />

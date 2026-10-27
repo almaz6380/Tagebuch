@@ -4,12 +4,14 @@ import { StyleSheet, View } from 'react-native';
 import { useEntries } from '@/db/EntriesProvider';
 import { BACKUP_INTERVAL_DAYS, daysSince, useLastBackup } from '@/lib/backup';
 import { useBackup } from '@/lib/useBackup';
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 import { Button, Card, T } from './Themed';
 
 /** Shown on the home screen when the last backup is missing or overdue. */
 export function BackupReminder() {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const { entries } = useEntries();
   const last = useLastBackup();
   const { backup } = useBackup();
@@ -23,15 +25,15 @@ export function BackupReminder() {
       <View style={styles.row}>
         <Feather name="shield" size={20} color={theme.colors.accent} />
         <View style={{ flex: 1 }}>
-          <T style={{ fontFamily: theme.fonts.uiBold }}>Zeit für ein Backup</T>
+          <T style={{ fontFamily: theme.fonts.uiBold }}>{t.backupReminder.title}</T>
           <T variant="muted">
             {last === null
-              ? 'Du hast deine Einträge noch nie gesichert. Sie liegen nur auf diesem Gerät.'
-              : `Deine letzte Sicherung ist ${daysSince(last)} Tage her.`}
+              ? t.backupReminder.never
+              : t.backupReminder.since(daysSince(last))}
           </T>
         </View>
       </View>
-      <Button label="Jetzt sichern" onPress={backup} style={{ marginTop: 12 }} />
+      <Button label={t.backupReminder.now} onPress={backup} style={{ marginTop: 12 }} />
     </Card>
   );
 }

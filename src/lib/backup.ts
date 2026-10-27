@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { readPhotoBase64 } from '@/db/photos';
+import { getMessages } from '@/i18n';
 import type { Entry } from '@/db/types';
 import { getItem, setItem } from './kv';
 
@@ -22,15 +23,16 @@ export async function buildBackup(entries: Entry[]): Promise<string> {
 
 /** Validate an export file; throws with a user-facing message. Accepts the old plain-array format too. */
 export function parseBackup(text: string): Backup {
+  const t = getMessages().backup;
   let data: unknown;
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error('Die Datei ist kein gültiges JSON.');
+    throw new Error(t.notJson);
   }
   const obj = data as { entries?: unknown; photos?: unknown };
   const list = Array.isArray(data) ? data : obj && Array.isArray(obj.entries) ? obj.entries : null;
-  if (!list) throw new Error('Die Datei enthält keine Tagebuch-Einträge.');
+  if (!list) throw new Error(t.noEntries);
 
   const photos: Record<string, string> = {};
   if (obj && typeof obj.photos === 'object' && obj.photos && !Array.isArray(data)) {
@@ -42,7 +44,7 @@ export function parseBackup(text: string): Backup {
   const entries = list.map((raw, i): Entry => {
     const e = raw as Partial<Entry>;
     if (typeof e?.id !== 'string' || typeof e.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(e.date)) {
-      throw new Error(`Eintrag ${i + 1} ist beschädigt.`);
+      throw new Error(t.broken(i + 1));
     }
     const now = Date.now();
     const strings = (v: unknown) => (Array.isArray(v) ? v.filter((t): t is string => typeof t === 'string') : []);

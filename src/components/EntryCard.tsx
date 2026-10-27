@@ -2,7 +2,8 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { Entry } from '@/db/types';
-import { parseISODate } from '@/lib/dates';
+import { parseISODate, weekdayShort } from '@/lib/dates';
+import { useI18n } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 import { moodInfo } from '@/theme/themes';
 import { Photo } from './Photo';
@@ -11,6 +12,7 @@ import { TagChip } from './TagChip';
 
 export function EntryCard({ entry }: { entry: Entry }) {
   const { theme } = useTheme();
+  const { t } = useI18n();
   const date = parseISODate(entry.date);
   const mood = moodInfo(entry.mood);
   return (
@@ -24,13 +26,13 @@ export function EntryCard({ entry }: { entry: Entry }) {
             {date.getDate()}
           </Text>
           <T variant="label" style={{ fontSize: 10 }}>
-            {date.toLocaleDateString('de-DE', { weekday: 'short' })}
+            {weekdayShort(entry.date)}
           </T>
           {mood && <Text style={styles.mood}>{mood.emoji}</Text>}
         </View>
         <View style={styles.content}>
           <T variant="title" numberOfLines={1} style={{ fontSize: theme.name === 'paper' ? 24 : 17 }}>
-            {entry.title || 'Ohne Titel'}
+            {entry.title || t.untitled}
           </T>
           {!!entry.body && (
             <T variant="body" numberOfLines={3} style={{ fontSize: 14, lineHeight: 21, color: theme.colors.textMuted, marginTop: 4 }}>

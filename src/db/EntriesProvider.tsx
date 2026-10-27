@@ -53,7 +53,7 @@ export function EntriesProvider({ children }: { children: ReactNode }) {
       for (const e of expired) await deleteForGood(e);
       setAll(sortEntries(list.filter((e) => !expired.includes(e))));
     })()
-      .catch((err) => console.error('Einträge konnten nicht geladen werden', err))
+      .catch((err) => console.error('Could not load entries', err))
       .finally(() => setLoaded(true));
   }, []);
 

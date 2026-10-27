@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Tagebuch",
+    "name": "Journal",
     "slug": "tagebuch",
     "scheme": "tagebuch",
     "version": "1.0.0",
@@ -12,6 +12,14 @@
       "bundleIdentifier": "io.github.almaz6380.tagebuch",
       "config": {
         "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleDevelopmentRegion": "en",
+        "CFBundleLocalizations": [
+          "en",
+          "de"
+        ],
+        "CFBundleAllowMixedLocalizations": true
       }
     },
     "android": {
@@ -33,8 +41,8 @@
     "web": {
       "output": "static",
       "favicon": "./assets/favicon.png",
-      "name": "Tagebuch",
-      "shortName": "Tagebuch",
+      "name": "Journal",
+      "shortName": "Journal",
       "themeColor": "#F5EFE3",
       "backgroundColor": "#F5EFE3"
     },
@@ -55,7 +63,7 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Tagebuch nutzt Face ID, um dein Tagebuch zu entsperren."
+          "faceIDPermission": "Journal uses Face ID to unlock your journal."
         }
       ],
       [
@@ -68,15 +76,20 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Tagebuch braucht Zugriff auf deine Fotos, damit du Bilder zu Einträgen hinzufügen kannst.",
-          "cameraPermission": "Tagebuch braucht die Kamera, damit du Fotos für deine Einträge aufnehmen kannst.",
+          "photosPermission": "Journal needs access to your photos so you can add pictures to your entries.",
+          "cameraPermission": "Journal needs the camera so you can take photos for your entries.",
           "microphonePermission": false
         }
       ],
-      "./plugins/withReleaseSigning"
+      "./plugins/withReleaseSigning",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "locales": {
+      "en": "./locales/en.json",
+      "de": "./locales/de.json"
     }
   }
 }

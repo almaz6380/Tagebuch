@@ -1,8 +1,7 @@
-export const WEEKDAYS_SHORT = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-export const MONTHS = [
-  'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-  'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember',
-];
+import { getMessages } from '@/i18n';
+
+// All names come from Intl in the active app language.
+const locale = () => getMessages().locale;
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -25,19 +24,37 @@ export function shiftDays(iso: string, days: number) {
   return toISODate(d);
 }
 
-/** "Dienstag, 21. Oktober 2026" */
+/** "Dienstag, 21. Oktober 2026" / "Tuesday, October 21, 2026" */
 export function formatLong(iso: string) {
-  return parseISODate(iso).toLocaleDateString('de-DE', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
+  return parseISODate(iso).toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+/** Same without the year, for compact headers. */
+export function formatLongNoYear(iso: string) {
+  return parseISODate(iso).toLocaleDateString(locale(), { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+/** "21. Okt." / "Oct 21" */
+export function formatShort(iso: string) {
+  return parseISODate(iso).toLocaleDateString(locale(), { day: 'numeric', month: 'short' });
 }
 
 export function formatMonthYear(iso: string) {
-  const d = parseISODate(iso);
-  return `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+  return parseISODate(iso).toLocaleDateString(locale(), { month: 'long', year: 'numeric' });
+}
+
+export function weekdayShort(iso: string) {
+  return parseISODate(iso).toLocaleDateString(locale(), { weekday: 'short' });
+}
+
+/** Monday-first short weekday names. */
+export function weekdaysShort() {
+  // 1 January 2024 was a Monday.
+  return Array.from({ length: 7 }, (_, i) => new Date(2024, 0, 1 + i).toLocaleDateString(locale(), { weekday: 'short' }));
+}
+
+export function formatNumber(n: number) {
+  return n.toLocaleString(locale());
 }
 
 /** Monday-first grid of ISO dates (null for padding cells). */
@@ -49,4 +66,9 @@ export function monthGrid(year: number, month: number): (string | null)[] {
   for (let d = 1; d <= days; d++) cells.push(toISODate(new Date(year, month, d)));
   while (cells.length % 7) cells.push(null);
   return cells;
+}
+
+/** "20:00" / "8:00 PM" */
+export function formatTime(hour: number, minute: number) {
+  return new Date(2000, 0, 1, hour, minute).toLocaleTimeString(locale(), { hour: 'numeric', minute: '2-digit' });
 }
