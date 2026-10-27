@@ -62,6 +62,11 @@ nativen Projekte mit `npx expo prebuild` und starten nur von Hand (*Actions → 
 - **Android Release** (`.github/workflows/android-release.yml`): App-Bundle bauen, Store-Eintrag setzen,
   Release auf den gewählten Track.
 
+**Im Moment wird über den Workflow „Tagebuch Release“ im Repo `almaz6380/mahjong-app` gebaut**
+(`.github/workflows/tagebuch-release.yml`): Dort liegen die Signier- und Store-Schlüssel bereits als
+Secrets, er checkt dieses Repo aus und fährt dieselben Schritte. Build-Nummer = Laufnummer + 100.
+Die Workflows hier brauchen die Secrets im eigenen Repo.
+
 Build-Nummer bzw. versionCode ist jeweils die Laufnummer des Workflows. Die Android-Release-Signierung
 steckt im Config-Plugin `plugins/withReleaseSigning.js`.
 
