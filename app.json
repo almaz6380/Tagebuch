@@ -86,8 +86,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-3940256099942544~3347511713",
-          "iosAppId": "ca-app-pub-3940256099942544~1458002511",
+          "androidAppId": "ca-app-pub-8860791993288062~1732965553",
+          "iosAppId": "ca-app-pub-8860791993288062~7998991009",
           "delayAppMeasurementInit": true,
           "userTrackingUsageDescription": "Your consent lets us show you more relevant ads. Your journal entries are never shared.",
           "skAdNetworkItems": [
