@@ -180,15 +180,28 @@ def cmd_release(args):
     bundle = call('POST', f'{UPLOAD}/edits/{edit}/bundles?uploadType=media', raw=aab.read_bytes(),
                   content_type='application/octet-stream')
     code = bundle['versionCode']
-    call('PUT', f'{API}/edits/{edit}/tracks/{args.track}', {
-        'track': args.track,
-        'releases': [{
-            'name': f"{code} ({t['version']})", 'versionCodes': [str(code)], 'status': args.status,
-            # --notes overrides the texts from texte.json in every language.
-            'releaseNotes': [{'language': lang, 'text': args.notes or l['releaseNotes']} for lang, l in t['locales'].items()],
-        }],
-    })
-    print(f'versionCode {code} → Track {args.track} ({args.status}).')
+
+    def set_track(status):
+        call('PUT', f'{API}/edits/{edit}/tracks/{args.track}', {
+            'track': args.track,
+            'releases': [{
+                'name': f"{code} ({t['version']})", 'versionCodes': [str(code)], 'status': status,
+                # --notes overrides the texts from texte.json in every language.
+                'releaseNotes': [{'language': lang, 'text': args.notes or l['releaseNotes']} for lang, l in t['locales'].items()],
+            }],
+        })
+        print(f'versionCode {code} → Track {args.track} ({status}).')
+
+    set_track(args.status)
+    check = call('POST', f'{API}/edits/{edit}:validate', fatal=False)
+    if check.get('_error') == 400 and 'draft app' in check.get('_detail', ''):
+        # An app that was never published only takes draft releases via the API.
+        # The first release has to be sent for review once in the Play Console.
+        set_track('draft')
+        print('Erste Veröffentlichung: Release liegt als ENTWURF bereit. In der Play Console einmal '
+              '„Release prüfen“ → „Zur Überprüfung senden“ tippen; ab dem nächsten Release geht es automatisch.')
+    elif check.get('_error'):
+        sys.exit(f"validate -> {check['_error']}\n{check['_detail'][:1500]}")
     finish(edit, args.ausfuehren)
 
 

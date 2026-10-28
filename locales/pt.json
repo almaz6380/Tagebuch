@@ -1,12 +1,12 @@
 {
   "ios": {
-    "CFBundleDisplayName": "Diário",
+    "CFBundleDisplayName": "Meu Diário",
     "NSFaceIDUsageDescription": "O Diário usa o Face ID para desbloquear o seu diário.",
     "NSPhotoLibraryUsageDescription": "O Diário precisa acessar suas fotos para você adicionar imagens aos seus registros.",
     "NSCameraUsageDescription": "O Diário precisa da câmera para você tirar fotos para os seus registros.",
     "NSUserTrackingUsageDescription": "Com a sua permissão, mostramos anúncios mais relevantes para você. Seus registros do diário nunca são compartilhados."
   },
   "android": {
-    "app_name": "Diário"
+    "app_name": "Meu Diário"
   }
 }
