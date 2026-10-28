@@ -12,6 +12,10 @@ def load():
     t = json.loads((STORE / 'texte.json').read_text())
     files = sorted((STORE / 'locales').glob('*.json'))
     langs = [json.loads(f.read_text()) for f in files]
+    for l in langs:
+        # Name under the app icon, used as the fallback store name.
+        app = json.loads((STORE.parent / 'locales' / f"{l['lang']}.json").read_text())
+        l['store']['appName'] = app['ios']['CFBundleDisplayName']
     # Primary language first: Apple and Play both expect it to exist before the others.
     langs.sort(key=lambda l: l['appleLocale'] != t['primaryLocale'])
     t['langs'] = langs
