@@ -136,37 +136,47 @@ def cmd_eintrag(args):
     finish(edit, args.ausfuehren)
 
 
+def money(eur: str) -> dict:
+    units, _, cents = f'{float(eur):.2f}'.partition('.')
+    return {'currencyCode': 'EUR', 'units': units, 'nanos': int(cents) * 10_000_000}
+
+
 def cmd_produkt(args):
-    """One-time product "Remove ads". Play takes EU prices net of VAT, so 2.49 € ends up as 2.99 €;
-    other currencies are converted by Play. Needs the payments profile (exists from Mahjong)."""
+    """One-time product "Remove ads" via the monetization API (the old inappproducts API is gone).
+    Play takes EU prices net of VAT, so 2.49 € ends up as 2.99 €; Play converts the other regions.
+    Needs a build with the billing permission uploaded first (even as a draft)."""
     t = texts()
     iap = t['iap']
     sku = iap['productId']
-    body = {
-        'packageName': PACKAGE, 'sku': sku, 'status': 'active', 'purchaseType': 'managedUser',
-        'defaultLanguage': t['primaryLocale'],
-        'defaultPrice': {'priceMicros': str(round(float(iap['playPriceEurNet']) * 1_000_000)), 'currency': 'EUR'},
-        'listings': {lang: {'title': l['name'], 'description': l['description']} for lang, l in iap['locales'].items()},
-    }
-    existing = call('GET', f'{API}/inappproducts/{sku}', fatal=False)
     if not args.ausfuehren:
-        state = 'fehlt' if existing.get('_error') == 404 else existing.get('status', existing.get('_error'))
-        print(f"Probelauf: Produkt {sku} ({state}) – würde {iap['playPriceEurNet']} € netto und Texte {list(iap['locales'])} setzen.")
+        print(f"Probelauf: würde Produkt {sku} mit {iap['playPriceEurNet']} € netto in allen Regionen "
+              f"und Texten {list(iap['locales'])} anlegen und aktivieren.")
         return
-    if existing.get('_error') == 404:
-        call('POST', f'{API}/inappproducts?autoConvertMissingPrices=true', body)
-        print(f'Produkt {sku} angelegt und aktiv.')
-    elif existing.get('_error'):
-        if existing['_error'] == 403 and 'migrate' in existing['_detail']:
-            # Google switched off the old in-app products API; until the new one is used here,
-            # the product is created once by hand. Not a reason to fail the release.
-            print(f"HINWEIS: Produkt {sku} bitte einmal in der Play Console anlegen (Monetarisieren → Produkte → "
-                  f"In-App-Produkte): {iap['playPriceEurNet']} € netto, Texte aus store/locales, dann aktivieren.")
-            return
-        sys.exit(f"Produkt nicht lesbar ({existing['_error']}): {existing['_detail'][:600]}")
-    else:
-        call('PUT', f'{API}/inappproducts/{sku}?autoConvertMissingPrices=true', body)
-        print(f'Produkt {sku} aktualisiert.')
+    converted = call('POST', f'{API}/pricing:convertRegionPrices', {'price': money(iap['playPriceEurNet'])})
+    version = converted.get('regionVersion', {}).get('version', '2022/02')
+    regions = [{'regionCode': code, 'price': r['price'], 'availability': 'AVAILABLE'}
+               for code, r in converted['convertedRegionPrices'].items()]
+    product = {
+        'packageName': PACKAGE, 'productId': sku,
+        'listings': [{'languageCode': lang, 'title': l['name'], 'description': l['description']}
+                     for lang, l in iap['locales'].items()],
+        'purchaseOptions': [{
+            'purchaseOptionId': 'buy',
+            'buyOption': {'legacyCompatible': True, 'multiQuantityEnabled': False},
+            'regionalPricingAndAvailabilityConfigs': regions,
+        }],
+    }
+    result = call('PATCH', f'{API}/onetimeproducts/{sku}?allowMissing=true&regionsVersion.version={version}'
+                  '&updateMask=listings,purchaseOptions', product, fatal=False)
+    if result.get('_error'):
+        sys.exit(f"Produkt {sku} nicht angelegt ({result['_error']}): {result['_detail'][:1200]}")
+    print(f'Produkt {sku} angelegt/aktualisiert ({len(regions)} Regionen).')
+    state = call('POST', f'{API}/oneTimeProducts/{sku}/purchaseOptions:batchUpdateStates', {'requests': [
+        {'activatePurchaseOptionRequest': {'packageName': PACKAGE, 'productId': sku, 'purchaseOptionId': 'buy'}},
+    ]}, fatal=False)
+    if state.get('_error'):
+        sys.exit(f"Produkt {sku} nicht aktiviert ({state['_error']}): {state['_detail'][:1200]}")
+    print(f'Produkt {sku} aktiv.')
 
 
 def assert_live_ads():
