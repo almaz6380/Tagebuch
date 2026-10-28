@@ -63,15 +63,22 @@ def call(method: str, path: str, body=None, ok=(200, 201, 204)):
     req.add_header('Authorization', f'Bearer {token()}')
     if data is not None:
         req.add_header('Content-Type', 'application/json')
-    try:
-        with urllib.request.urlopen(req) as res:
-            text = res.read().decode()
-            return json.loads(text) if text else {}
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode()
-        if e.code in ok:
-            return json.loads(detail) if detail else {}
-        sys.exit(f'{method} {path} -> {e.code}\n{detail[:1500]}')
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req) as res:
+                text = res.read().decode()
+                return json.loads(text) if text else {}
+        except urllib.error.HTTPError as e:
+            code, detail = e.code, e.read().decode()
+            # Apple answers 5xx now and then; try again before giving up.
+            if code >= 500 and attempt < 3:
+                print(f'{method} {path} -> {code}, neuer Versuch …', flush=True)
+                time.sleep(5 * 3 ** attempt)
+                continue
+            break
+    if code in ok:
+        return json.loads(detail) if detail else {}
+    sys.exit(f'{method} {path} -> {code}\n{detail[:1500]}')
 
 
 def get(path: str):

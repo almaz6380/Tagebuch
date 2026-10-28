@@ -55,20 +55,27 @@ def call(method, url, body=None, raw=None, content_type=None, fatal=True):
     req.add_header('Authorization', f'Bearer {TOKEN}')
     if data is not None:
         req.add_header('Content-Type', content_type or 'application/json')
-    try:
-        with urllib.request.urlopen(req, timeout=600) as res:
-            text = res.read().decode()
-            return json.loads(text) if text else {}
-    except urllib.error.HTTPError as e:
-        detail = e.read().decode()
-        if not fatal:
-            return {'_error': e.code, '_detail': detail}
-        if e.code == 404:
-            sys.exit(f'Play kennt {PACKAGE} nicht. Bitte die App zuerst in der Play Console anlegen.\n{detail[:400]}')
-        if e.code == 403:
-            sys.exit('403 – das Dienstkonto hat für diese App keine Rechte. Play Console → Nutzer und '
-                     f'Berechtigungen → Dienstkonto mit Admin-Rechten für die App einladen.\n{detail[:600]}')
-        sys.exit(f'{method} {url} -> {e.code}\n{detail[:1500]}')
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req, timeout=600) as res:
+                text = res.read().decode()
+                return json.loads(text) if text else {}
+        except urllib.error.HTTPError as e:
+            code, detail = e.code, e.read().decode()
+            # Google's API answers 5xx now and then (503 "currently unavailable"); try again.
+            if code >= 500 and attempt < 3:
+                print(f'{method} -> {code}, neuer Versuch …', flush=True)
+                time.sleep(5 * 3 ** attempt)
+                continue
+            break
+    if not fatal:
+        return {'_error': code, '_detail': detail}
+    if code == 404:
+        sys.exit(f'Play kennt {PACKAGE} nicht. Bitte die App zuerst in der Play Console anlegen.\n{detail[:400]}')
+    if code == 403:
+        sys.exit('403 – das Dienstkonto hat für diese App keine Rechte. Play Console → Nutzer und '
+                 f'Berechtigungen → Dienstkonto mit Admin-Rechten für die App einladen.\n{detail[:600]}')
+    sys.exit(f'{method} {url} -> {code}\n{detail[:1500]}')
 
 
 def new_edit():
