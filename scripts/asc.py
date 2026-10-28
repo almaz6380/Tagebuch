@@ -419,28 +419,28 @@ def cmd_warten(args):
 
 def app_basics(app_id: str):
     """App-level settings Apple requires before the first submission: content rights,
-    price (free) and availability (all countries). Each is only set when missing."""
+    price (free) and availability (all countries)."""
     call('PATCH', f'/v1/apps/{app_id}', {'data': {'type': 'apps', 'id': app_id, 'attributes': {
         'contentRightsDeclaration': 'DOES_NOT_USE_THIRD_PARTY_CONTENT'}}})
-    if not call('GET', f'/v1/apps/{app_id}/appPriceSchedule', ok=(200, 404)).get('data'):
-        path, free = f'/v1/apps/{app_id}/appPricePoints?filter[territory]=USA&limit=200', None
-        while path and not free:
-            page = get(path)
-            free = next((p for p in page['data'] if float(p['attributes']['customerPrice']) == 0), None)
-            nxt = page.get('links', {}).get('next')
-            path = nxt.replace(BASE, '') if nxt else None
-        if not free:
-            sys.exit('Kein Gratis-Preispunkt gefunden.')
-        call('POST', '/v1/appPriceSchedules', {
-            'data': {'type': 'appPriceSchedules', 'relationships': {
-                'app': {'data': {'type': 'apps', 'id': app_id}},
-                'baseTerritory': {'data': {'type': 'territories', 'id': 'USA'}},
-                'manualPrices': {'data': [{'type': 'appPrices', 'id': '${free}'}]},
-            }},
-            'included': [{'type': 'appPrices', 'id': '${free}', 'attributes': {'startDate': None},
-                          'relationships': {'appPricePoint': {'data': {'type': 'appPricePoints', 'id': free['id']}}}}],
-        })
-        print('Preis gesetzt: kostenlos.')
+    # Apple returns a price schedule even when no price is set, so always (re)set "free".
+    path, free = f'/v1/apps/{app_id}/appPricePoints?filter[territory]=USA&limit=200', None
+    while path and not free:
+        page = get(path)
+        free = next((p for p in page['data'] if float(p['attributes']['customerPrice']) == 0), None)
+        nxt = page.get('links', {}).get('next')
+        path = nxt.replace(BASE, '') if nxt else None
+    if not free:
+        sys.exit('Kein Gratis-Preispunkt gefunden.')
+    call('POST', '/v1/appPriceSchedules', {
+        'data': {'type': 'appPriceSchedules', 'relationships': {
+            'app': {'data': {'type': 'apps', 'id': app_id}},
+            'baseTerritory': {'data': {'type': 'territories', 'id': 'USA'}},
+            'manualPrices': {'data': [{'type': 'appPrices', 'id': '${free}'}]},
+        }},
+        'included': [{'type': 'appPrices', 'id': '${free}', 'attributes': {'startDate': None},
+                      'relationships': {'appPricePoint': {'data': {'type': 'appPricePoints', 'id': free['id']}}}}],
+    })
+    print('Preis gesetzt: kostenlos.')
     if not call('GET', f'/v1/apps/{app_id}/appAvailabilityV2', ok=(200, 404)).get('data'):
         territories = all_territories()
         call('POST', '/v2/appAvailabilities', {
