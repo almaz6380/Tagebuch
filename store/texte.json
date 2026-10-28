@@ -27,7 +27,8 @@
       "userGeneratedContent": false,
       "violenceCartoonOrFantasy": "NONE",
       "violenceRealisticProlongedGraphicOrSadistic": "NONE",
-      "violenceRealistic": "NONE"
+      "violenceRealistic": "NONE",
+      "socialMedia": false
     }
   },
   "review": {
