@@ -377,6 +377,7 @@ def cmd_metadaten(args):
     call('PATCH', f"/v1/ageRatingDeclarations/{age['id']}", {
         'data': {'type': 'ageRatingDeclarations', 'id': age['id'], 'attributes': apple['ageRating']}
     })
+    app_basics(app_id)
     call('PATCH', f"/v1/appStoreVersions/{version['id']}", {
         'data': {'type': 'appStoreVersions', 'id': version['id'], 'attributes': {'copyright': t['copyright']}}
     })
@@ -415,6 +416,46 @@ def cmd_warten(args):
 
 
 # ---------------------------------------------------------------- in-app purchase
+
+def app_basics(app_id: str):
+    """App-level settings Apple requires before the first submission: content rights,
+    price (free) and availability (all countries). Each is only set when missing."""
+    call('PATCH', f'/v1/apps/{app_id}', {'data': {'type': 'apps', 'id': app_id, 'attributes': {
+        'contentRightsDeclaration': 'DOES_NOT_USE_THIRD_PARTY_CONTENT'}}})
+    if not call('GET', f'/v1/apps/{app_id}/appPriceSchedule', ok=(200, 404)).get('data'):
+        path, free = f'/v1/apps/{app_id}/appPricePoints?filter[territory]=USA&limit=200', None
+        while path and not free:
+            page = get(path)
+            free = next((p for p in page['data'] if float(p['attributes']['customerPrice']) == 0), None)
+            nxt = page.get('links', {}).get('next')
+            path = nxt.replace(BASE, '') if nxt else None
+        if not free:
+            sys.exit('Kein Gratis-Preispunkt gefunden.')
+        call('POST', '/v1/appPriceSchedules', {
+            'data': {'type': 'appPriceSchedules', 'relationships': {
+                'app': {'data': {'type': 'apps', 'id': app_id}},
+                'baseTerritory': {'data': {'type': 'territories', 'id': 'USA'}},
+                'manualPrices': {'data': [{'type': 'appPrices', 'id': '${free}'}]},
+            }},
+            'included': [{'type': 'appPrices', 'id': '${free}', 'attributes': {'startDate': None},
+                          'relationships': {'appPricePoint': {'data': {'type': 'appPricePoints', 'id': free['id']}}}}],
+        })
+        print('Preis gesetzt: kostenlos.')
+    if not call('GET', f'/v1/apps/{app_id}/appAvailabilityV2', ok=(200, 404)).get('data'):
+        territories = all_territories()
+        call('POST', '/v2/appAvailabilities', {
+            'data': {'type': 'appAvailabilities', 'attributes': {'availableInNewTerritories': True},
+                     'relationships': {
+                         'app': {'data': {'type': 'apps', 'id': app_id}},
+                         'territoryAvailabilities': {'data': [
+                             {'type': 'territoryAvailabilities', 'id': f'${{{t}}}'} for t in territories]},
+                     }},
+            'included': [{'type': 'territoryAvailabilities', 'id': f'${{{t}}}', 'attributes': {'available': True},
+                          'relationships': {'territory': {'data': {'type': 'territories', 'id': t}}}}
+                         for t in territories],
+        })
+        print(f'Verfügbar in {len(territories)} Ländern.')
+
 
 def all_territories():
     out, path = [], '/v1/territories?limit=200'
