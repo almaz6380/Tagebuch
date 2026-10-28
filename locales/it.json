@@ -1,12 +1,12 @@
 {
   "ios": {
-    "CFBundleDisplayName": "Diario",
+    "CFBundleDisplayName": "Il mio diario",
     "NSFaceIDUsageDescription": "Diario usa Face ID per sbloccare il tuo diario.",
     "NSPhotoLibraryUsageDescription": "Diario ha bisogno di accedere alle tue foto per poterle aggiungere alle tue pagine.",
     "NSCameraUsageDescription": "Diario ha bisogno della fotocamera per scattare foto per le tue pagine.",
     "NSUserTrackingUsageDescription": "Il tuo consenso ci permette di mostrarti pubblicità più pertinenti. Le pagine del tuo diario non vengono mai condivise."
   },
   "android": {
-    "app_name": "Diario"
+    "app_name": "Il mio diario"
   }
 }

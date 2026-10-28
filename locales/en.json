@@ -1,12 +1,12 @@
 {
   "ios": {
-    "CFBundleDisplayName": "Journal",
-    "NSFaceIDUsageDescription": "Journal uses Face ID to unlock your journal.",
-    "NSPhotoLibraryUsageDescription": "Journal needs access to your photos so you can add pictures to your entries.",
-    "NSCameraUsageDescription": "Journal needs the camera so you can take photos for your entries.",
+    "CFBundleDisplayName": "My Journal",
+    "NSFaceIDUsageDescription": "My Journal uses Face ID to unlock your journal.",
+    "NSPhotoLibraryUsageDescription": "My Journal needs access to your photos so you can add pictures to your entries.",
+    "NSCameraUsageDescription": "My Journal needs the camera so you can take photos for your entries.",
     "NSUserTrackingUsageDescription": "Your consent lets us show you more relevant ads. Your journal entries are never shared."
   },
   "android": {
-    "app_name": "Journal"
+    "app_name": "My Journal"
   }
 }
