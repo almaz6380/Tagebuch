@@ -483,7 +483,8 @@ def cmd_iap(args):
             }})
     print('Texte gesetzt:', ', '.join(iap['locales']))
 
-    schedule = get(f'/v2/inAppPurchases/{iap_id}/iapPriceSchedule')
+    # These parts answer 404 (not an empty list) until they exist.
+    schedule = call('GET', f'/v2/inAppPurchases/{iap_id}/iapPriceSchedule', ok=(200, 404))
     if not schedule.get('data'):
         points = get(f"/v2/inAppPurchases/{iap_id}/pricePoints?filter[territory]=DEU&limit=200&fields[inAppPurchasePricePoints]=customerPrice")
         point = next((p for p in points['data'] if p['attributes']['customerPrice'] == iap['priceEur']), None)
@@ -503,7 +504,7 @@ def cmd_iap(args):
         })
         print(f"Preis gesetzt: {iap['priceEur']} € (Basis Deutschland, andere Länder rechnet Apple um).")
 
-    if not get(f'/v2/inAppPurchases/{iap_id}/inAppPurchaseAvailability').get('data'):
+    if not call('GET', f'/v2/inAppPurchases/{iap_id}/inAppPurchaseAvailability', ok=(200, 404)).get('data'):
         call('POST', '/v1/inAppPurchaseAvailabilities', {'data': {
             'type': 'inAppPurchaseAvailabilities', 'attributes': {'availableInNewTerritories': True},
             'relationships': {
@@ -513,7 +514,7 @@ def cmd_iap(args):
         }})
         print('Verfügbarkeit: alle Länder.')
 
-    if not get(f'/v2/inAppPurchases/{iap_id}/appStoreReviewScreenshot').get('data'):
+    if not call('GET', f'/v2/inAppPurchases/{iap_id}/appStoreReviewScreenshot', ok=(200, 404)).get('data'):
         if not image.exists():
             sys.exit(f'Prüf-Screenshot fehlt: {image}')
         upload_review_screenshot(iap_id, image)
