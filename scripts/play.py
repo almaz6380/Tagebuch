@@ -157,6 +157,12 @@ def cmd_produkt(args):
         call('POST', f'{API}/inappproducts?autoConvertMissingPrices=true', body)
         print(f'Produkt {sku} angelegt und aktiv.')
     elif existing.get('_error'):
+        if existing['_error'] == 403 and 'migrate' in existing['_detail']:
+            # Google switched off the old in-app products API; until the new one is used here,
+            # the product is created once by hand. Not a reason to fail the release.
+            print(f"HINWEIS: Produkt {sku} bitte einmal in der Play Console anlegen (Monetarisieren → Produkte → "
+                  f"In-App-Produkte): {iap['playPriceEurNet']} € netto, Texte aus store/locales, dann aktivieren.")
+            return
         sys.exit(f"Produkt nicht lesbar ({existing['_error']}): {existing['_detail'][:600]}")
     else:
         call('PUT', f'{API}/inappproducts/{sku}?autoConvertMissingPrices=true', body)

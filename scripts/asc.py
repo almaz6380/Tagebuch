@@ -263,8 +263,21 @@ def upload_screenshots(loc_id: str, locale: str):
         print(f'  [{locale}] Screenshot hochgeladen:', f.name)
 
 
+LIMITS = {'name': 30, 'subtitle': 30, 'keywords': 100, 'promotionalText': 170, 'description': 4000}
+
+
+def check_lengths(t):
+    """Apple rejects an over-long field only when it is sent, possibly halfway through the
+    languages. Check all of them before the first call."""
+    errors = [f'{locale} {field}: {len(l[field])}/{limit}'
+              for locale, l in t['locales'].items() for field, limit in LIMITS.items() if len(l[field]) > limit]
+    if errors:
+        sys.exit('Zu lange Store-Texte:\n  ' + '\n  '.join(errors))
+
+
 def cmd_metadaten(args):
     t = store_texts()
+    check_lengths(t)
     apple = t['apple']
     app = require_app()
     app_id = app['id']
