@@ -319,6 +319,10 @@ def cmd_metadaten(args):
             'supportUrl': l['urls']['support'],
             'marketingUrl': l['urls']['marketing'],
         }
+        if locale not in version_locs:
+            # Adding a language to the app info makes Apple create an empty version
+            # localization on its own; look again before creating a duplicate (409).
+            version_locs = localizations(f"/v1/appStoreVersions/{version['id']}/appStoreVersionLocalizations")
         if locale in version_locs:
             vid = version_locs[locale]['id']
             call('PATCH', f'/v1/appStoreVersionLocalizations/{vid}', {
