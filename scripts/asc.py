@@ -275,6 +275,33 @@ def check_lengths(t):
         sys.exit('Zu lange Store-Texte:\n  ' + '\n  '.join(errors))
 
 
+def name_candidates(l: dict) -> list:
+    """Store names are unique across all of the App Store. If ours is taken in a language,
+    try the alternatives from store/locales, then "Daily Journal – <local app name>"."""
+    out = [l['name'], *l.get('nameAlternatives', [])]
+    generic = f"Daily Journal – {l['appName']}"
+    if len(generic) <= LIMITS['name']:
+        out.append(generic)
+    return out
+
+
+def create_info_localization(info_id: str, locale: str, l: dict, attrs: dict):
+    for name in name_candidates(l):
+        res = call('POST', '/v1/appInfoLocalizations', {'data': {
+            'type': 'appInfoLocalizations', 'attributes': {'locale': locale, 'name': name, **attrs},
+            'relationships': {'appInfo': {'data': {'type': 'appInfos', 'id': info_id}}},
+        }}, ok=(200, 201, 409))
+        errors = res.get('errors') or []
+        if not errors:
+            if name != l['name']:
+                print(f'[{locale}] Name „{l["name"]}“ ist vergeben, verwendet: „{name}“')
+            return
+        if not any('DUPLICATE' in e.get('code', '') and e.get('source', {}).get('pointer', '').endswith('/name')
+                   for e in errors):
+            sys.exit(f'POST /v1/appInfoLocalizations [{locale}] -> 409\n{json.dumps(errors, indent=2)[:1500]}')
+    sys.exit(f'[{locale}] Alle Namen sind im App Store vergeben: {name_candidates(l)} – bitte nameAlternatives ergänzen.')
+
+
 def cmd_metadaten(args):
     t = store_texts()
     check_lengths(t)
@@ -308,10 +335,7 @@ def cmd_metadaten(args):
                 'data': {'type': 'appInfoLocalizations', 'id': lid, 'attributes': attrs}
             })
         else:
-            call('POST', '/v1/appInfoLocalizations', {'data': {
-                'type': 'appInfoLocalizations', 'attributes': {'locale': locale, 'name': l['name'], **attrs},
-                'relationships': {'appInfo': {'data': {'type': 'appInfos', 'id': info['id']}}},
-            }})
+            create_info_localization(info['id'], locale, l, attrs)
         vattrs = {
             'description': l['description'],
             'keywords': l['keywords'],
