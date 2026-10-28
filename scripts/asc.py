@@ -550,24 +550,45 @@ def cmd_einreichen(args):
     call('PATCH', f"/v1/appStoreVersions/{version['id']}/relationships/build", {'data': {'type': 'builds', 'id': build['id']}})
     open_subs = get(f"/v1/reviewSubmissions?filter[app]={app['id']}&filter[state]=READY_FOR_REVIEW,UNRESOLVED_ISSUES&fields[reviewSubmissions]=state")['data']
     if open_subs:
+        # A draft left by an earlier, interrupted run; reuse it (Apple allows only one).
         sub = open_subs[0]
     else:
         sub = call('POST', '/v1/reviewSubmissions', {'data': {
             'type': 'reviewSubmissions', 'attributes': {'platform': 'IOS'},
             'relationships': {'app': {'data': {'type': 'apps', 'id': app['id']}}},
         }})['data']
-        call('POST', '/v1/reviewSubmissionItems', {'data': {
-            'type': 'reviewSubmissionItems',
-            'relationships': {
-                'reviewSubmission': {'data': {'type': 'reviewSubmissions', 'id': sub['id']}},
-                'appStoreVersion': {'data': {'type': 'appStoreVersions', 'id': version['id']}},
-            },
-        }})
+    if 'appStoreVersion' not in submission_kinds(sub['id']):
+        add_submission_item(sub['id'], 'appStoreVersion', 'appStoreVersions', version['id'])
     attach_iap(app['id'], sub['id'], t['iap']['productId'])
     call('PATCH', f"/v1/reviewSubmissions/{sub['id']}", {
         'data': {'type': 'reviewSubmissions', 'id': sub['id'], 'attributes': {'submitted': True}}
     })
     print(f"Zur Prüfung eingereicht: Version {t['version']}, Build {args.build} (reviewSubmission {sub['id']}).")
+
+
+def submission_kinds(sub_id: str) -> set:
+    """What a review submission already contains: appStoreVersion, inAppPurchaseVersion, …"""
+    items = get(f'/v1/reviewSubmissions/{sub_id}/items?limit=50&include=appStoreVersion,inAppPurchaseVersion')['data']
+    return {k for i in items for k, v in (i.get('relationships') or {}).items() if isinstance(v, dict) and v.get('data')}
+
+
+def add_submission_item(sub_id: str, relation: str, rel_type: str, rel_id: str):
+    """Apple refuses items whose new screenshots are still being processed
+    ("Asset is being processed"); that takes a few minutes, so wait and try again."""
+    body = {'data': {'type': 'reviewSubmissionItems', 'relationships': {
+        'reviewSubmission': {'data': {'type': 'reviewSubmissions', 'id': sub_id}},
+        relation: {'data': {'type': rel_type, 'id': rel_id}},
+    }}}
+    for _ in range(30):
+        res = call('POST', '/v1/reviewSubmissionItems', body, ok=(200, 201, 409))
+        errors = res.get('errors')
+        if not errors:
+            return
+        if 'being processed' not in json.dumps(errors):
+            sys.exit(f'POST /v1/reviewSubmissionItems ({relation}) -> 409\n{json.dumps(errors, indent=2)[:2500]}')
+        print('Apple verarbeitet noch Screenshots, warte 1 min …', flush=True)
+        time.sleep(60)
+    sys.exit('Apple hat die Screenshots nach 30 min noch nicht verarbeitet – Lauf später wiederholen.')
 
 
 def attach_iap(app_id: str, sub_id: str, product_id: str):
@@ -578,26 +599,26 @@ def attach_iap(app_id: str, sub_id: str, product_id: str):
                  if p['attributes']['productId'] == product_id), None)
     if not item:
         sys.exit(f'Kauf {product_id} fehlt – zuerst: python3 scripts/asc.py iap --ausfuehren')
-    state = item['attributes']['state']
+    # Right after the review screenshot upload the purchase reads MISSING_METADATA
+    # until Apple has processed the image.
+    for _ in range(30):
+        state = get(f"/v2/inAppPurchases/{item['id']}?fields[inAppPurchases]=state")['data']['attributes']['state']
+        if state != 'MISSING_METADATA':
+            break
+        print(f'Kauf {product_id}: {state}, warte auf Apple …', flush=True)
+        time.sleep(60)
     if state in ('APPROVED', 'WAITING_FOR_REVIEW', 'IN_REVIEW'):
         return
     if state != 'READY_TO_SUBMIT':
         sys.exit(f'Kauf {product_id} ist im Zustand {state} – Texte, Preis oder Prüf-Screenshot fehlen (asc.py iap).')
-    items = get(f'/v1/reviewSubmissions/{sub_id}/items?limit=50')['data']
-    if any((i.get('relationships') or {}).get('inAppPurchaseVersion', {}).get('data') for i in items):
+    if 'inAppPurchaseVersion' in submission_kinds(sub_id):
         return
     try:
         version = call('POST', '/v1/inAppPurchaseVersions', {'data': {
             'type': 'inAppPurchaseVersions',
             'relationships': {'inAppPurchase': {'data': {'type': 'inAppPurchases', 'id': item['id']}}},
         }})['data']
-        call('POST', '/v1/reviewSubmissionItems', {'data': {
-            'type': 'reviewSubmissionItems',
-            'relationships': {
-                'reviewSubmission': {'data': {'type': 'reviewSubmissions', 'id': sub_id}},
-                'inAppPurchaseVersion': {'data': {'type': 'inAppPurchaseVersions', 'id': version['id']}},
-            },
-        }})
+        add_submission_item(sub_id, 'inAppPurchaseVersion', 'inAppPurchaseVersions', version['id'])
         print(f'Kauf {product_id} hängt an der Einreichung.')
     except SystemExit as e:
         sys.exit(f'{e}\n\nDen Kauf konnte die API nicht anhängen. In App Store Connect auf der Versionsseite unter '
