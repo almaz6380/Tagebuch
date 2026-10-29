@@ -245,7 +245,13 @@ def upload_screenshots(loc_id: str, locale: str):
                 'relationships': {'appStoreVersionLocalization': {'data': {'type': 'appStoreVersionLocalizations', 'id': loc_id}}},
             }
         })['data']
-    for old in get(f"/v1/appScreenshotSets/{target['id']}/appScreenshots")['data']:
+    existing = get(f"/v1/appScreenshotSets/{target['id']}/appScreenshots")['data']
+    if [e['attributes'].get('fileName') for e in existing] == [f.name for f in files]:
+        # Already there. Once the version sits in a review submission Apple also refuses
+        # to delete screenshots ("Can't Delete Screenshot while Ready For Review").
+        print(f'  [{locale}] Screenshots schon vorhanden ({len(files)}).')
+        return
+    for old in existing:
         call('DELETE', f"/v1/appScreenshots/{old['id']}")
     for f in files:
         blob = f.read_bytes()
