@@ -31,7 +31,8 @@ ROOT = Path(__file__).resolve().parent.parent
 STORE = ROOT / 'store'
 BUNDLE_ID = 'io.github.almaz6380.tagebuch'
 BASE = 'https://api.appstoreconnect.apple.com'
-EDITABLE = {'PREPARE_FOR_SUBMISSION', 'DEVELOPER_REJECTED', 'REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY'}
+# READY_FOR_REVIEW: the version already sits in a not yet sent review submission; still editable.
+EDITABLE = {'PREPARE_FOR_SUBMISSION', 'READY_FOR_REVIEW', 'DEVELOPER_REJECTED', 'REJECTED', 'METADATA_REJECTED', 'INVALID_BINARY'}
 
 
 def private_key() -> str:
