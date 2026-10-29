@@ -17,6 +17,7 @@ import argparse
 import base64
 import hashlib
 import json
+import re
 import os
 import sys
 import time
@@ -655,11 +656,19 @@ def attach_iap(app_id: str, sub_id: str, product_id: str):
     if 'inAppPurchaseVersion' in submission_kinds(sub_id):
         return
     try:
-        version = call('POST', '/v1/inAppPurchaseVersions', {'data': {
+        res = call('POST', '/v1/inAppPurchaseVersions', {'data': {
             'type': 'inAppPurchaseVersions',
             'relationships': {'inAppPurchase': {'data': {'type': 'inAppPurchases', 'id': item['id']}}},
-        }})['data']
-        add_submission_item(sub_id, 'inAppPurchaseVersion', 'inAppPurchaseVersions', version['id'])
+        }}, ok=(200, 201, 409))
+        if res.get('errors'):
+            # An earlier run already opened a version; Apple names its id in the error.
+            found = re.search(r"inflight version with id '([0-9a-f-]+)'", json.dumps(res['errors']))
+            if not found:
+                sys.exit(f"POST /v1/inAppPurchaseVersions -> 409\n{json.dumps(res['errors'], indent=2)[:1500]}")
+            version_id = found.group(1)
+        else:
+            version_id = res['data']['id']
+        add_submission_item(sub_id, 'inAppPurchaseVersion', 'inAppPurchaseVersions', version_id)
         print(f'Kauf {product_id} hängt an der Einreichung.')
     except SystemExit as e:
         sys.exit(f'{e}\n\nDen Kauf konnte die API nicht anhängen. In App Store Connect auf der Versionsseite unter '
