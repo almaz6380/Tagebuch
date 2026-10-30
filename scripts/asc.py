@@ -523,8 +523,17 @@ def cmd_iap(args):
         attrs = {'name': l['name'], 'description': l['description']}
         if locale in locs:
             lid = locs[locale]['id']
-            call('PATCH', f'/v1/inAppPurchaseLocalizations/{lid}', {'data': {
-                'type': 'inAppPurchaseLocalizations', 'id': lid, 'attributes': attrs}})
+            current = locs[locale]['attributes']
+            if all(current.get(k) == v for k, v in attrs.items()):
+                continue
+            # Once the purchase was in a review, Apple locks its texts (409 UNMODIFIABLE);
+            # they stay as they were, which is fine for a resubmission.
+            res = call('PATCH', f'/v1/inAppPurchaseLocalizations/{lid}', {'data': {
+                'type': 'inAppPurchaseLocalizations', 'id': lid, 'attributes': attrs}}, ok=(200, 409))
+            if res.get('errors'):
+                if 'UNMODIFIABLE' not in json.dumps(res['errors']):
+                    sys.exit(f"PATCH inAppPurchaseLocalizations ({locale}) -> 409\n{json.dumps(res['errors'], indent=2)[:1500]}")
+                print(f'  [{locale}] Kauf-Texte gesperrt (schon in Prüfung gewesen), bleiben wie sie sind.')
         else:
             call('POST', '/v1/inAppPurchaseLocalizations', {'data': {
                 'type': 'inAppPurchaseLocalizations', 'attributes': {'locale': locale, **attrs},
