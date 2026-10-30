@@ -20,6 +20,10 @@ Ein schönes, privates Tagebuch für **Web (PWA)**, **iOS** und **Android** aus 
 - 🔔 Tägliche Erinnerung zum Schreiben zur Wunschzeit (iOS/Android)
 - 🕰️ Rückblick: „An diesem Tag“ (vor einem Monat / vor Jahren), Schreib-Serie, Stimmungsverlauf der letzten 30 Tage, häufigste Tags
 - 👤 Entsperren mit Face ID / Fingerabdruck (iOS/Android, zusätzlich zur PIN)
+- 💌 Zeitkapsel: Einträge für 1 Monat bis 5 Jahre versiegeln, Mitteilung am Öffnungstag (iOS/Android)
+- 🎙️ Sprachnotizen bis 5 Minuten pro Eintrag (Aufnahme nur iOS/Android, im Web abspielbar)
+- 🟩 Stimmungs-Jahr: jeder Tag als Farbquadrat, dazu Muster (Wochentage, Tags guter Tage, Verteilung)
+- 📖 Tagebuch als Buch: Monat, Jahr oder alles als PDF exportieren
 - 📴 Funktioniert offline, alle Daten bleiben **nur lokal** auf dem Gerät
 
 ## Loslegen
