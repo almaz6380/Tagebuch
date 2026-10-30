@@ -16,7 +16,8 @@ export default function CalendarScreen() {
   const { theme } = useTheme();
   const { colors, fonts } = theme;
   const { t } = useI18n();
-  const { entries } = useEntries();
+  // Closed time capsules don't show up before their day.
+  const { open: entries } = useEntries();
   const today = todayISO();
   const [cursor, setCursor] = useState(() => {
     const d = new Date();

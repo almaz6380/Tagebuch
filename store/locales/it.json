@@ -4,13 +4,13 @@
   "playLocale": "it-IT",
   "store": {
     "name": "Diario Personale – Privato",
-    "subtitle": "Il tuo quaderno, con foto",
-    "keywords": "segreto,journal,gratitudine,umore,emozioni,ricordi,note,agenda,scrittura,riflessione,benessere,diary",
-    "promotionalText": "Il tuo diario privato con foto, domande per scrivere e l’andamento dell’umore. Niente account, niente cloud: le tue pagine restano sul dispositivo.",
-    "description": "Il tuo diario personale: bello come un quaderno di carta, al sicuro sul tuo telefono.\n\nFissa ciò che ti emoziona: qualche riga la sera, la foto del giorno o una domanda che fa riflettere. Tutto resta sul tuo dispositivo. Niente account, niente cloud.\n\nSCRIVI COME PIACE A TE\n• Editor a righe come un quaderno, con titolo e data\n• Foto per ogni pagina, dalla galleria o dalla fotocamera\n• L’umore del giorno su cinque livelli\n• Tag per organizzare le tue pagine\n• Le bozze si salvano da sole mentre scrivi\n\nMAI PIÙ LA PAGINA BIANCA\n• Una nuova domanda ogni giorno per ispirarti\n• Oltre 40 altre domande da sfogliare\n• Modelli per la gratitudine e il bilancio della sera\n\nGUARDA INDIETRO\n• “Accadde oggi”: cosa hai scritto un mese o un anno fa?\n• Serie di scrittura e serie più lunga\n• Andamento dell’umore negli ultimi 30 giorni\n• Calendario con i colori dell’umore e ricerca in tutto il testo\n\nRESTA COSTANTE\n• Promemoria giornaliero all’ora che preferisci\n\nPRIVATO E SICURO\n• Tutte le pagine restano solo sul tuo dispositivo\n• Blocco con PIN, anche con Face ID o impronta digitale\n• Backup in un file, da ripristinare su qualsiasi dispositivo\n• Cestino: le pagine eliminate si recuperano per 30 giorni\n\nQUATTRO STILI\nCarta, Minimal, Allegro o Notte: scegli tu l’aspetto del tuo diario.\n\nGRATIS CON PUBBLICITÀ\nL’app è gratuita e mostra pubblicità. Con un acquisto unico la elimini per sempre, senza abbonamento. Le tue pagine non vengono mai usate a scopo pubblicitario.\n\nDisponibile in 14 lingue.",
+    "subtitle": "Capsule del tempo, voce, umore",
+    "keywords": "capsula,tempo,vocale,umore,emozioni,gratitudine,ricordi,segreto,journal,note,pdf,libro,benessere",
+    "promotionalText": "Sigilla lettere per il tuo io futuro, registra note vocali, guarda il tuo anno in emozioni e trasforma il diario in un libro PDF – privato e offline.",
+    "description": "Un diario privato con idee che non troverai in un quaderno: lettere al tuo io futuro, la tua voce, tutto il tuo anno a colori – e alla fine un vero libro.\n\nTutto resta sul tuo dispositivo. Niente account, niente cloud.\n\nCAPSULE DEL TEMPO\n• Sigilla una pagina per 1 mese, 6 mesi, 1 anno o 5 anni\n• Resta bloccata fino al giorno stabilito – nemmeno la ricerca la trova\n• Il giorno dell’apertura una notifica ti riporta la tua lettera\n\nNOTE VOCALI\n• Registra fino a 5 minuti per nota vocale, direttamente nella pagina\n• Riascolta com’era davvero una giornata – salvata solo sul tuo telefono\n\nIL TUO ANNO IN EMOZIONI\n• Un quadratino colorato per ogni giorno dell’anno\n• Schemi: il tuo giorno della settimana migliore e quello più difficile, i tag che accompagnano i giorni belli, il tuo mix di umori\n\nIL TUO DIARIO COME LIBRO\n• Esporta un mese, un anno o tutto in un PDF impaginato con cura\n• Copertina, umori, tag e foto – da stampare, conservare o regalare\n\nSCRIVI COME PIACE A TE\n• Editor a righe come un quaderno, con foto dalla galleria o dalla fotocamera\n• Umore del giorno, tag e bozze automatiche\n• Una nuova domanda ogni giorno, modelli per la gratitudine e il bilancio della sera\n\nGUARDA INDIETRO\n• “Accadde oggi”, serie di scrittura, andamento dell’umore negli ultimi 30 giorni\n• Calendario con i colori dell’umore e ricerca in tutto il testo\n\nPRIVATO E SICURO\n• Blocco con PIN, anche con Face ID o impronta digitale\n• Backup in un file (note vocali comprese), da ripristinare su qualsiasi dispositivo\n• Cestino: le pagine eliminate si recuperano per 30 giorni\n• Quattro stili: Carta, Minimal, Allegro, Notte\n\nGRATIS CON PUBBLICITÀ\nL’app è gratuita e mostra pubblicità. Con un acquisto unico la elimini per sempre, senza abbonamento. Le tue pagine non vengono mai usate a scopo pubblicitario.\n\nDisponibile in 14 lingue.",
     "googleTitle": "Diario Personale – Privato",
-    "shortDescription": "Diario segreto con foto, domande e umore del giorno. Senza account né cloud",
-    "releaseNotes": "Prima versione: il tuo diario privato con foto, domande per scrivere e l’andamento dell’umore."
+    "shortDescription": "Diario privato con capsule del tempo, note vocali, anno in emozioni e PDF",
+    "releaseNotes": "Novità: capsule del tempo per il tuo io futuro, note vocali, l’anno in emozioni con i tuoi schemi ed esportazione come libro PDF."
   },
   "iap": {
     "name": "Rimuovi la pubblicità",
@@ -23,20 +23,20 @@
         "Bello come la carta, al sicuro sul telefono"
       ],
       [
-        "Foto per ogni giorno",
-        "Con umore, tag e righe da quaderno"
+        "Dillo ad alta voce",
+        "Note vocali e foto per ogni pagina"
       ],
       [
-        "Una domanda al giorno",
-        "Mai più la pagina bianca"
+        "Lettere al tuo io futuro",
+        "Sigilla una pagina come capsula del tempo"
       ],
       [
-        "Guarda indietro",
-        "“Accadde oggi”, serie e andamento dell’umore"
+        "Il tuo anno in emozioni",
+        "Un quadratino al giorno – e gli schemi dietro"
       ],
       [
-        "L’umore a colpo d’occhio",
-        "Calendario con i colori dell’umore"
+        "Il diario come libro",
+        "Esporta un PDF da stampare o conservare"
       ],
       [
         "Stili, PIN e Face ID",
@@ -123,6 +123,10 @@
           "famiglia"
         ]
       ]
+    ],
+    "capsule": [
+      "Caro me, tra un anno",
+      "In questo momento il nuovo lavoro mi agita. Spero che ormai tu ci rida sopra – e che la domenica tu vada ancora a nuotare."
     ]
   }
 }

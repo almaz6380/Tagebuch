@@ -4,13 +4,13 @@
   "playLocale": "pt-BR",
   "store": {
     "name": "Diário Pessoal – Meu Journal",
-    "subtitle": "Privado, com fotos e humor",
-    "keywords": "secreto,caderno,gratidão,emoções,sentimentos,memórias,anotações,notas,agenda,reflexão,autocuidado",
-    "promotionalText": "Seu diário pessoal com fotos, perguntas para inspirar e histórico de humor – sem conta, sem nuvem. Seus registros ficam no seu aparelho.",
-    "description": "Seu diário pessoal – bonito como um caderno de papel, seguro no seu celular.\n\nGuarde o que mexe com você: algumas linhas à noite, uma foto do dia ou uma pergunta que te faz pensar. Tudo fica no seu aparelho. Sem conta, sem nuvem.\n\nESCREVA DO SEU JEITO\n• Editor com pautas de caderno, título e data\n• Fotos em cada registro, da galeria ou direto da câmera\n• Humor do dia em cinco níveis\n• Tags para organizar seus registros\n• Rascunhos salvos automaticamente enquanto você digita\n\nNUNCA MAIS A PÁGINA EM BRANCO\n• Uma pergunta nova todo dia para inspirar a escrita\n• Mais de 40 perguntas para explorar\n• Modelos de gratidão e de balanço do dia\n\nOLHE PARA TRÁS\n• “Neste dia”: o que você escreveu há um mês ou há um ano?\n• Sequência de dias escrevendo e maior sequência\n• Histórico de humor dos últimos 30 dias\n• Calendário com as cores do humor e busca em todo o texto\n\nCRIE O HÁBITO\n• Lembrete diário no horário que você escolher\n\nPRIVADO E SEGURO\n• Todos os registros ficam só no seu aparelho\n• Bloqueio por PIN, se quiser com Face ID ou impressão digital\n• Backup em arquivo e restauração em qualquer aparelho\n• Lixeira: registros apagados podem ser recuperados por 30 dias\n\nQUATRO ESTILOS\nPapel, Minimalista, Divertido ou Noite – escolha a cara do seu diário.\n\nGRÁTIS COM ANÚNCIOS\nO app é gratuito e mostra anúncios. Uma compra única remove os anúncios para sempre – sem assinatura. Seus registros nunca são usados para publicidade.\n\nDisponível em 14 idiomas.",
+    "subtitle": "Cápsulas do tempo, voz e humor",
+    "keywords": "cápsula,tempo,voz,humor,emoções,gratidão,memórias,secreto,caderno,anotações,pdf,livro,autocuidado",
+    "promotionalText": "Lacre cartas para o seu eu do futuro, grave notas de voz, veja seu ano em humores e transforme seu diário num livro em PDF – privado e offline.",
+    "description": "Um diário privado com ideias que você não encontra num caderno: cartas para o seu eu do futuro, a sua voz, o seu ano inteiro em cores – e, no fim, um livro de verdade.\n\nTudo fica no seu aparelho. Sem conta, sem nuvem.\n\nCÁPSULAS DO TEMPO\n• Lacre um registro por 1 mês, 6 meses, 1 ano ou 5 anos\n• Ele fica trancado até o dia chegar – nem a busca o encontra\n• No dia da abertura, uma notificação traz a sua carta de volta\n\nNOTAS DE VOZ\n• Grave até 5 minutos por nota de voz, direto no registro\n• Ouça como um dia realmente soou – salvo só no seu celular\n\nSEU ANO EM HUMORES\n• Um quadradinho colorido para cada dia do ano\n• Padrões: seu melhor dia da semana e o mais difícil, as tags que acompanham os dias bons, sua mistura de humores\n\nSEU DIÁRIO COMO LIVRO\n• Exporte um mês, um ano ou tudo como um PDF bem diagramado\n• Capa, humores, tags e fotos – para imprimir, guardar ou dar de presente\n\nESCREVA DO SEU JEITO\n• Editor com pautas de caderno e fotos da galeria ou da câmera\n• Humor do dia, tags e rascunhos automáticos\n• Uma pergunta nova por dia, modelos de gratidão e de balanço do dia\n\nOLHE PARA TRÁS\n• “Neste dia”, sequência de dias escrevendo, histórico de humor de 30 dias\n• Calendário com as cores do humor e busca em todo o texto\n\nPRIVADO E SEGURO\n• Bloqueio por PIN, se quiser com Face ID ou impressão digital\n• Backup em arquivo (com as notas de voz) e restauração em qualquer aparelho\n• Lixeira: registros apagados podem ser recuperados por 30 dias\n• Quatro estilos: Papel, Minimalista, Divertido, Noite\n\nGRÁTIS COM ANÚNCIOS\nO app é gratuito e mostra anúncios. Uma compra única remove os anúncios para sempre – sem assinatura. Seus registros nunca são usados para publicidade.\n\nDisponível em 14 idiomas.",
     "googleTitle": "Diário Pessoal – Meu Journal",
-    "shortDescription": "Diário privado com fotos, perguntas e humor – sem conta e sem nuvem",
-    "releaseNotes": "Primeira versão: seu diário pessoal com fotos, perguntas para inspirar a escrita e histórico de humor."
+    "shortDescription": "Diário privado com cápsulas do tempo, notas de voz, ano em humores e PDF",
+    "releaseNotes": "Novidades: cápsulas do tempo para o seu eu do futuro, notas de voz, o ano em humores com seus padrões e exportação como livro em PDF."
   },
   "iap": {
     "name": "Remover anúncios",
@@ -23,20 +23,20 @@
         "Bonito como papel – seguro no seu celular"
       ],
       [
-        "Fotos de cada dia",
-        "Com humor, tags e pautas de caderno"
+        "Fale em voz alta",
+        "Notas de voz e fotos em cada registro"
       ],
       [
-        "Uma pergunta por dia",
-        "Nunca mais trave na página em branco"
+        "Cartas para o futuro",
+        "Lacre um registro como cápsula do tempo"
       ],
       [
-        "Olhe para trás",
-        "“Neste dia”, sequência e histórico de humor"
+        "Seu ano em humores",
+        "Um quadradinho por dia – e os padrões por trás"
       ],
       [
-        "Seu humor num relance",
-        "Calendário com as cores do humor"
+        "Seu diário como livro",
+        "Exporte um PDF para imprimir ou guardar"
       ],
       [
         "Estilos, PIN e Face ID",
@@ -123,6 +123,10 @@
           "família"
         ]
       ]
+    ],
+    "capsule": [
+      "Para mim, daqui a um ano",
+      "Agora estou com frio na barriga por causa do trabalho novo. Espero que você já ria disso – e que ainda vá nadar aos domingos."
     ]
   }
 }

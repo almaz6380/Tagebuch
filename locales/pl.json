@@ -4,7 +4,8 @@
     "NSFaceIDUsageDescription": "Pamiętnik używa Face ID do odblokowania twojego pamiętnika.",
     "NSPhotoLibraryUsageDescription": "Pamiętnik potrzebuje dostępu do zdjęć, aby można było dodawać obrazy do wpisów.",
     "NSCameraUsageDescription": "Pamiętnik potrzebuje aparatu, aby można było robić zdjęcia do wpisów.",
-    "NSUserTrackingUsageDescription": "Twoja zgoda pozwala nam wyświetlać trafniejsze reklamy. Twoje wpisy nigdy nie są udostępniane."
+    "NSUserTrackingUsageDescription": "Twoja zgoda pozwala nam wyświetlać trafniejsze reklamy. Twoje wpisy nigdy nie są udostępniane.",
+    "NSMicrophoneUsageDescription": "Aplikacja używa mikrofonu, aby można było nagrywać notatki głosowe do wpisów. Nagrania pozostają na urządzeniu."
   },
   "android": {
     "app_name": "Pamiętnik"

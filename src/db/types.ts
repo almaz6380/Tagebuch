@@ -9,13 +9,26 @@ export type Entry = {
   tags: string[];
   /** Photo ids, see db/photos. */
   photos: string[];
+  /** Voice notes, see db/audio. */
+  audio: AudioClip[];
+  /** Time capsule: hidden until this day (YYYY-MM-DD), null for a normal entry. */
+  sealedUntil: string | null;
   /** Set while the entry is in the trash. */
   deletedAt: number | null;
   createdAt: number;
   updatedAt: number;
 };
 
+export type AudioClip = { id: string; ms: number };
+
+type Optional = 'photos' | 'deletedAt' | 'audio' | 'sealedUntil';
+
 /** Fills fields that older saved entries and backups don't have. */
-export function normalizeEntry(e: Omit<Entry, 'photos' | 'deletedAt'> & Partial<Pick<Entry, 'photos' | 'deletedAt'>>): Entry {
-  return { ...e, photos: e.photos ?? [], deletedAt: e.deletedAt ?? null };
+export function normalizeEntry(e: Omit<Entry, Optional> & Partial<Pick<Entry, Optional>>): Entry {
+  return { ...e, photos: e.photos ?? [], deletedAt: e.deletedAt ?? null, audio: e.audio ?? [], sealedUntil: e.sealedUntil ?? null };
+}
+
+/** True while a time capsule is still closed. */
+export function isSealed(e: Pick<Entry, 'sealedUntil'>, today: string): boolean {
+  return e.sealedUntil != null && e.sealedUntil > today;
 }

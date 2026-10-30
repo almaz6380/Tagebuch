@@ -4,7 +4,8 @@
     "NSFaceIDUsageDescription": "Diario usa Face ID per sbloccare il tuo diario.",
     "NSPhotoLibraryUsageDescription": "Diario ha bisogno di accedere alle tue foto per poterle aggiungere alle tue pagine.",
     "NSCameraUsageDescription": "Diario ha bisogno della fotocamera per scattare foto per le tue pagine.",
-    "NSUserTrackingUsageDescription": "Il tuo consenso ci permette di mostrarti pubblicità più pertinenti. Le pagine del tuo diario non vengono mai condivise."
+    "NSUserTrackingUsageDescription": "Il tuo consenso ci permette di mostrarti pubblicità più pertinenti. Le pagine del tuo diario non vengono mai condivise.",
+    "NSMicrophoneUsageDescription": "Il mio diario usa il microfono per registrare note vocali nelle tue voci. Le registrazioni restano sul tuo dispositivo."
   },
   "android": {
     "app_name": "Il mio diario"

@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { useEntries } from '@/db/EntriesProvider';
+import { writeAudioBase64 } from '@/db/audio';
 import { writePhotoBase64 } from '@/db/photos';
 import { getMessages } from '@/i18n';
 import { buildBackup, markBackedUp, parseBackup } from './backup';
@@ -37,6 +38,7 @@ export function useBackup() {
     try {
       const backup = parseBackup(text);
       for (const [id, data] of Object.entries(backup.photos)) await writePhotoBase64(id, data);
+      for (const [id, data] of Object.entries(backup.audio)) await writeAudioBase64(id, data);
       const { added, updated, unchanged } = await importEntries(backup.entries);
       notify(t.importDoneTitle, t.importDone(added, updated, unchanged));
     } catch (err) {

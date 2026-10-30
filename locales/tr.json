@@ -4,7 +4,8 @@
     "NSFaceIDUsageDescription": "Günlük, günlüğünün kilidini açmak için Face ID’yi kullanır.",
     "NSPhotoLibraryUsageDescription": "Kayıtlarına resim ekleyebilmen için Günlük’ün fotoğraflarına erişmesi gerekiyor.",
     "NSCameraUsageDescription": "Kayıtların için fotoğraf çekebilmen için Günlük’ün kameraya erişmesi gerekiyor.",
-    "NSUserTrackingUsageDescription": "İznin sayesinde sana daha ilgili reklamlar gösterebiliriz. Günlük kayıtların asla paylaşılmaz."
+    "NSUserTrackingUsageDescription": "İznin sayesinde sana daha ilgili reklamlar gösterebiliriz. Günlük kayıtların asla paylaşılmaz.",
+    "NSMicrophoneUsageDescription": "Günlüğüm, kayıtlarına sesli not ekleyebilmen için mikrofonu kullanır. Kayıtlar cihazında kalır."
   },
   "android": {
     "app_name": "Günlüğüm"

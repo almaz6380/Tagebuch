@@ -17,6 +17,8 @@ import { useLock } from '@/lib/LockProvider';
 import { cancelDailyReminder, reminderSupported, scheduleDailyReminder } from '@/lib/reminder';
 import { buyNoAds, loadPrice, restoreNoAds } from '@/lib/purchases';
 import { useBackup } from '@/lib/useBackup';
+import { shareBook } from '@/lib/book';
+import { bookEntries, buildBookHtml, type BookRange } from '@/lib/bookHtml';
 import { getMessages, LANG_NAMES, LANGS, needsRestartForDirection, setLanguage, useI18n, type Lang, type LangPref } from '@/i18n';
 import { useTheme } from '@/theme/ThemeProvider';
 import { themeOrder, themes, type Theme } from '@/theme/themes';
@@ -81,6 +83,7 @@ export default function SettingsScreen() {
             <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
           </Pressable>
         </Card>
+        <BookExport />
 
         {adsSupported && (
           <>
@@ -112,6 +115,55 @@ export default function SettingsScreen() {
         </T>
       </ScrollView>
     </Screen>
+  );
+}
+
+/** "Export as a book": the open (not sealed) entries of a period as a PDF. */
+function BookExport() {
+  const { theme } = useTheme();
+  const { t } = useI18n();
+  const { open } = useEntries();
+  const [busy, setBusy] = useState<BookRange | null>(null);
+
+  const run = async (range: BookRange) => {
+    const list = bookEntries(open, range);
+    if (!list.length) {
+      notify(t.book.emptyTitle, t.book.emptyBody);
+      return;
+    }
+    setBusy(range);
+    try {
+      await shareBook(await buildBookHtml(list), t.book.export);
+    } catch (err) {
+      console.warn('[book] export failed', err);
+      notify(t.book.export, t.book.failed);
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  return (
+    <Card style={{ marginTop: 12 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+        <Feather name="book-open" size={22} color={theme.colors.accent} />
+        <View style={{ flex: 1 }}>
+          <T style={{ fontFamily: theme.fonts.uiBold }}>{t.book.export}</T>
+          <T variant="muted">{t.book.exportHint}</T>
+        </View>
+      </View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
+        {(['month', 'year', 'all'] as const).map((range) => (
+          <Button
+            key={range}
+            kind="ghost"
+            label={t.book[range]}
+            disabled={busy != null}
+            onPress={() => run(range)}
+            style={{ flexGrow: 1 }}
+          />
+        ))}
+      </View>
+    </Card>
   );
 }
 

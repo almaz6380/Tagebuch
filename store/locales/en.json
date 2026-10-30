@@ -4,13 +4,13 @@
   "playLocale": "en-US",
   "store": {
     "name": "Daily Journal – Private Diary",
-    "subtitle": "Write privately, with photos",
-    "keywords": "notebook,gratitude,mood,tracker,feelings,memories,notes,prompts,reflection,log,writing,selfcare",
-    "promotionalText": "Your private journal with photos, writing prompts and a mood history – no account, no cloud. Your entries stay on your device.",
-    "description": "Your private journal – as lovely as a paper notebook, safe on your phone.\n\nCapture what moves you: a few lines in the evening, a photo of the day or a question that makes you think. Everything stays on your device. No account, no cloud.\n\nWRITE THE WAY YOU LIKE\n• Lined notebook editor with title and date\n• Photos for every entry, from your gallery or the camera\n• Mood of the day in five levels\n• Tags to organize your entries\n• Drafts are saved automatically as you type\n\nNEVER A BLANK PAGE AGAIN\n• A new question every day as a writing prompt\n• Over 40 more questions to browse\n• Templates for gratitude and an evening review\n\nLOOK BACK\n• “On this day”: what did you write a month or a year ago?\n• Writing streak and longest streak\n• Mood history of the last 30 days\n• Calendar with mood colors and full-text search\n\nSTAY ON TRACK\n• Daily reminder at the time you choose\n\nPRIVATE AND SECURE\n• All entries stay on your device only\n• PIN lock, optionally with Face ID or fingerprint\n• Back up to a file, restore on any device\n• Trash: deleted entries can be restored for 30 days\n\nFOUR STYLES\nPaper, Minimal, Playful or Night – choose how your journal looks.\n\nFREE WITH ADS\nThe app is free and shows ads. A one-time purchase removes them for good – no subscription. Your entries are never used for advertising.\n\nAvailable in 14 languages.",
+    "subtitle": "Time capsules, voice & moods",
+    "keywords": "time capsule,voice,mood,tracker,gratitude,notebook,memories,feelings,prompts,pdf,book,selfcare",
+    "promotionalText": "Seal letters to your future self, record voice notes, see your year in moods and turn your journal into a PDF book – private and offline.",
+    "description": "A private journal with ideas you won't find in a notebook: letters to your future self, your voice, your whole year in colours – and in the end a real book.\n\nEverything stays on your device. No account, no cloud.\n\nTIME CAPSULES\n• Seal an entry for 1 month, 6 months, 1 year or 5 years\n• It stays locked until the day arrives – not even search can find it\n• On the opening day a notification brings your letter back\n\nVOICE NOTES\n• Record up to 5 minutes per voice note, right in the entry\n• Hear how a day really sounded – stored only on your phone\n\nYOUR YEAR IN MOODS\n• One coloured square for every day of the year\n• Patterns: your best and hardest weekday, the tags that come with good days, your mood mix\n\nYOUR JOURNAL AS A BOOK\n• Export a month, a year or everything as a beautifully set PDF\n• Cover page, moods, tags and photos – to print, keep or give away\n\nWRITE THE WAY YOU LIKE\n• Lined notebook editor with photos from your gallery or camera\n• Mood of the day, tags and automatic drafts\n• A new writing prompt every day, templates for gratitude and evening review\n\nLOOK BACK\n• \"On this day\", writing streak, 30-day mood history\n• Calendar with mood colours and full-text search\n\nPRIVATE AND SECURE\n• PIN lock, optionally with Face ID or fingerprint\n• Backup to a file (including voice notes), restore on any device\n• Trash: deleted entries can be restored for 30 days\n• Four styles: Paper, Minimal, Playful, Night\n\nFREE WITH ADS\nThe app is free and shows ads. A one-time purchase removes them for good – no subscription. Your entries are never used for advertising.\n\nAvailable in 14 languages.",
     "googleTitle": "Daily Journal – Private Diary",
-    "shortDescription": "Private diary with photos, prompts & mood tracking – no account, no cloud",
-    "releaseNotes": "First version: your private journal with photos, writing prompts and mood history."
+    "shortDescription": "Private diary with time capsules, voice notes, mood year & PDF book",
+    "releaseNotes": "New: time capsules for your future self, voice notes, the mood year with patterns, and export as a PDF book."
   },
   "iap": {
     "name": "Remove ads",
@@ -23,20 +23,20 @@
         "As lovely as paper – safe on your phone"
       ],
       [
-        "Photos for every day",
-        "With mood, tags and notebook lines"
+        "Say it out loud",
+        "Voice notes and photos for every entry"
       ],
       [
-        "A prompt every day",
-        "Never stare at a blank page again"
+        "Letters to future you",
+        "Seal an entry as a time capsule"
       ],
       [
-        "Look back",
-        "“On this day”, writing streak and mood history"
+        "Your year in moods",
+        "One square a day – and the patterns behind it"
       ],
       [
-        "Moods at a glance",
-        "Calendar with mood colors"
+        "Your journal as a book",
+        "Export a PDF to print or keep"
       ],
       [
         "Styles, PIN & Face ID",
@@ -123,6 +123,10 @@
           "family"
         ]
       ]
+    ],
+    "capsule": [
+      "Dear me, one year from now",
+      "Right now I'm nervous about the new job. I hope you're laughing about it by now – and that you still go swimming on Sundays."
     ]
   }
 }

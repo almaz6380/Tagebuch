@@ -6,3 +6,9 @@ export async function scheduleDailyReminder(_hour: number, _minute: number): Pro
 }
 
 export async function cancelDailyReminder() {}
+
+export async function scheduleCapsule(_entryId: string, _opensOn: string) {}
+
+export async function cancelCapsule(_entryId: string) {}
+
+export async function syncCapsules(_entries: { id: string; sealedUntil: string | null }[]) {}

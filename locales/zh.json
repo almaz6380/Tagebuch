@@ -4,7 +4,8 @@
     "NSFaceIDUsageDescription": "“日记”使用面容 ID 为你的日记解锁。",
     "NSPhotoLibraryUsageDescription": "“日记”需要访问你的照片，以便为日记添加图片。",
     "NSCameraUsageDescription": "“日记”需要使用相机，以便为日记拍摄照片。",
-    "NSUserTrackingUsageDescription": "授权后，我们可以为你展示更相关的广告。你的日记内容绝不会被分享。"
+    "NSUserTrackingUsageDescription": "授权后，我们可以为你展示更相关的广告。你的日记内容绝不会被分享。",
+    "NSMicrophoneUsageDescription": "本应用使用麦克风，以便你为日记录制语音笔记。录音只保存在你的设备上。"
   },
   "android": {
     "app_name": "日记"

@@ -11,11 +11,13 @@ import { PromptCard } from '@/components/PromptCard';
 import { RuledLines } from '@/components/RuledLines';
 import { TagChip } from '@/components/TagChip';
 import { Button, Card, T } from '@/components/Themed';
+import { VoiceClip, VoiceRecorder } from '@/components/VoiceNotes';
+import { deleteAudio } from '@/db/audio';
 import { TRASH_DAYS, useEntries } from '@/db/EntriesProvider';
 import { deletePhoto } from '@/db/photos';
-import type { Entry } from '@/db/types';
+import { isSealed, type AudioClip, type Entry } from '@/db/types';
 import { confirm, notify } from '@/lib/confirm';
-import { formatLongNoYear, shiftDays, todayISO } from '@/lib/dates';
+import { formatLong, formatLongNoYear, shiftDays, todayISO, toISODate } from '@/lib/dates';
 import { useI18n } from '@/i18n';
 import { clearDraft, loadDraft, saveDraft } from '@/lib/drafts';
 import type { DraftData } from '@/lib/draftTypes';
@@ -26,7 +28,20 @@ const LINE = 30;
 const BODY_PADDING_TOP = 6;
 const DRAFT_DELAY_MS = 800;
 
-type Fields = Omit<DraftData, 'savedAt'>;
+type Fields = Required<Omit<DraftData, 'savedAt'>>;
+
+/** Time capsule lengths offered in the editor. */
+const CAPSULE_OPTIONS = [
+  { key: 'm1', months: 1 },
+  { key: 'm6', months: 6 },
+  { key: 'y1', months: 12 },
+  { key: 'y5', months: 60 },
+] as const;
+
+function addMonths(iso: string, months: number) {
+  const [y, m, d] = iso.split('-').map(Number);
+  return toISODate(new Date(y, m - 1 + months, d));
+}
 
 function sameFields(a: Fields, b: Fields) {
   return JSON.stringify(a) === JSON.stringify(b);
@@ -42,7 +57,29 @@ export default function EntryScreen() {
   const { theme } = useTheme();
   // Entries load asynchronously on a cold start; wait so the form starts with the saved values.
   if (!loaded) return <View style={{ flex: 1, backgroundColor: theme.colors.background }} />;
-  return <EntryForm key={id ?? 'new'} existing={id ? get(id) : undefined} initialDate={date} />;
+  const existing = id ? get(id) : undefined;
+  // A closed time capsule can't be opened early, not even through a direct link.
+  if (existing && isSealed(existing, todayISO())) return <SealedNotice opensOn={existing.sealedUntil!} />;
+  return <EntryForm key={id ?? 'new'} existing={existing} initialDate={date} />;
+}
+
+function SealedNotice({ opensOn }: { opensOn: string }) {
+  const { theme } = useTheme();
+  const { t } = useI18n();
+  const insets = useSafeAreaInsets();
+  const close = () => (router.canGoBack() ? router.back() : router.replace('/'));
+  return (
+    <View style={[styles.sealed, { backgroundColor: theme.colors.background, paddingTop: insets.top + 40 }]}>
+      <Feather name="lock" size={42} color={theme.colors.accent} />
+      <T variant="display" style={{ textAlign: 'center', marginTop: 16 }}>
+        {t.capsule.title}
+      </T>
+      <T variant="body" style={{ textAlign: 'center', marginTop: 10, color: theme.colors.textMuted }}>
+        {t.capsule.lockedBody(formatLong(opensOn))}
+      </T>
+      <Button label={t.trash.back} onPress={close} style={{ marginTop: 24, alignSelf: 'stretch' }} />
+    </View>
+  );
 }
 
 function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: string }) {
@@ -61,6 +98,8 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
     mood: existing?.mood ?? null,
     tags: existing?.tags ?? [],
     photos: existing?.photos ?? [],
+    audio: existing?.audio ?? [],
+    sealedUntil: existing?.sealedUntil ?? null,
   }));
   const draftKey = existing?.id ?? 'new';
 
@@ -70,6 +109,8 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   const [mood, setMood] = useState<number | null>(baseline.mood);
   const [tags, setTags] = useState<string[]>(baseline.tags);
   const [photos, setPhotos] = useState<string[]>(baseline.photos);
+  const [audio, setAudio] = useState<AudioClip[]>(baseline.audio);
+  const [sealedUntil, setSealedUntil] = useState<string | null>(baseline.sealedUntil);
   const [tagDraft, setTagDraft] = useState('');
   const [bodyHeight, setBodyHeight] = useState(LINE * 10);
   const [viewing, setViewing] = useState<number | null>(null);
@@ -78,10 +119,13 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   const [draftReady, setDraftReady] = useState(false);
   const [restored, setRestored] = useState(false);
 
-  const fields: Fields = { date, title, body, mood, tags, photos };
+  const fields: Fields = { date, title, body, mood, tags, photos, audio, sealedUntil };
   const dirty = !sameFields(fields, baseline);
   /** Photos stored during this edit that the saved entry doesn't know about. */
   const unsavedPhotos = (list: string[]) => list.filter((p) => !baseline.photos.includes(p));
+  const unsavedAudio = (list: AudioClip[]) => list.filter((a) => !baseline.audio.some((b) => b.id === a.id));
+  // An opened capsule stays a capsule; only new or never sealed entries can be sealed.
+  const canSeal = !baseline.sealedUntil;
 
   const apply = (f: Fields) => {
     setDate(f.date);
@@ -90,12 +134,15 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
     setMood(f.mood);
     setTags(f.tags);
     setPhotos(f.photos);
+    setAudio(f.audio);
+    setSealedUntil(f.sealedUntil);
   };
 
   useEffect(() => {
     loadDraft(draftKey).then((draft) => {
       if (draft && draft.savedAt > (existing?.updatedAt ?? 0)) {
-        const { savedAt: _, ...rest } = draft;
+        const { savedAt: _, ...saved } = draft;
+        const rest: Fields = { ...saved, audio: saved.audio ?? [], sealedUntil: saved.sealedUntil ?? null };
         if (!sameFields(rest, baseline)) {
           apply(rest);
           setRestored(true);
@@ -125,6 +172,7 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   const discardChanges = async () => {
     await clearDraft(draftKey);
     await Promise.all(unsavedPhotos(photos).map((p) => deletePhoto(p).catch(() => {})));
+    await Promise.all(unsavedAudio(audio).map((a) => deleteAudio(a.id).catch(() => {})));
   };
 
   const onCancel = async () => {
@@ -144,11 +192,11 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
   const onSave = async () => {
     const pending = normalizeTag(tagDraft);
     const finalTags = pending && !tags.includes(pending) ? [...tags, pending] : tags;
-    if (!title.trim() && !body.trim() && mood == null && !photos.length) {
+    if (!title.trim() && !body.trim() && mood == null && !photos.length && !audio.length) {
       await discardChanges();
       return close();
     }
-    await save({ id: existing?.id, date, title: title.trim(), body, mood, tags: finalTags, photos });
+    await save({ id: existing?.id, date, title: title.trim(), body, mood, tags: finalTags, photos, audio, sealedUntil });
     await clearDraft(draftKey);
     close();
     // Only after a finished entry, once the editor is gone.
@@ -180,6 +228,11 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
     setPhotos((prev) => prev.filter((p) => p !== id));
     // Saved photos are only deleted once the entry is saved without them.
     if (!baseline.photos.includes(id)) deletePhoto(id).catch(() => {});
+  };
+
+  const removeAudio = (id: string) => {
+    setAudio((prev) => prev.filter((a) => a.id !== id));
+    if (!baseline.audio.some((a) => a.id === id)) deleteAudio(id).catch(() => {});
   };
 
   const addTag = (raw: string) => {
@@ -302,7 +355,11 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
               <T variant="muted">{t.entry.camera}</T>
             </Pressable>
           )}
+          <VoiceRecorder onRecorded={(clip) => setAudio((prev) => [...prev, clip])} />
         </View>
+        {audio.map((clip, i) => (
+          <VoiceClip key={clip.id} clip={clip} index={i} onRemove={() => removeAudio(clip.id)} />
+        ))}
 
         {!body.trim() && (
           <PromptCard
@@ -345,6 +402,48 @@ function EntryForm({ existing, initialDate }: { existing?: Entry; initialDate?: 
             ]}
           />
         </View>
+
+        {canSeal ? (
+          <Card style={{ marginTop: 16 }}>
+            <View style={styles.capsuleHead}>
+              <Feather name="clock" size={18} color={colors.accent} />
+              <T style={{ fontFamily: fonts.uiBold, flex: 1 }}>{t.capsule.seal}</T>
+            </View>
+            <T variant="muted" style={{ marginTop: 4 }}>
+              {sealedUntil ? t.capsule.sealedUntil(formatLong(sealedUntil)) : t.capsule.sealHint}
+            </T>
+            <View style={styles.capsuleRow}>
+              {[{ key: 'none' as const, months: 0 }, ...CAPSULE_OPTIONS].map((o) => {
+                const value = o.months ? addMonths(todayISO(), o.months) : null;
+                const active = o.months ? sealedUntil === value : sealedUntil == null;
+                return (
+                  <Pressable
+                    key={o.key}
+                    onPress={() => setSealedUntil(value)}
+                    accessibilityRole="radio"
+                    accessibilityState={{ checked: active }}
+                    style={[
+                      styles.capsuleChip,
+                      {
+                        borderRadius: Math.max(theme.radius, 10),
+                        borderColor: active ? colors.accent : colors.border,
+                        backgroundColor: active ? colors.accent : 'transparent',
+                      },
+                    ]}>
+                    <T style={{ fontSize: 13, color: active ? colors.accentText : colors.text }}>
+                      {o.key === 'none' ? t.capsule.none : t.capsule.options[o.key]}
+                    </T>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </Card>
+        ) : (
+          <View style={[styles.banner, { backgroundColor: colors.surfaceAlt, borderRadius: theme.radius + 4, marginTop: 16 }]}>
+            <Feather name="gift" size={16} color={colors.accent} />
+            <T style={{ flex: 1, fontSize: 14 }}>{t.capsule.opened}</T>
+          </View>
+        )}
 
         <View style={{ flexDirection: 'row', gap: 10, marginTop: 20 }}>
           {existing && <Button kind="danger" label={t.entry.delete} onPress={onDelete} style={{ flex: 1 }} />}
@@ -391,6 +490,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 4,
   },
+  sealed: { flex: 1, alignItems: 'center', padding: 32 },
+  capsuleHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  capsuleRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 12 },
+  capsuleChip: { borderWidth: 1, paddingHorizontal: 12, paddingVertical: 7 },
   tagInput: { minWidth: 80, fontSize: 14, paddingVertical: 4, outlineWidth: 0 },
   page: { marginTop: 16, borderWidth: StyleSheet.hairlineWidth, overflow: 'hidden' },
   body: {

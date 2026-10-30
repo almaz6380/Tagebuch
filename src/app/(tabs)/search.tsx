@@ -16,7 +16,8 @@ const fold = (s: string) => s.toLocaleLowerCase('de').normalize('NFD').replace(/
 export default function SearchScreen() {
   const { theme } = useTheme();
   const { colors, fonts } = theme;
-  const { entries, allTags } = useEntries();
+  // Closed time capsules stay out of search.
+  const { open: entries, allTags } = useEntries();
   const { t } = useI18n();
   const [query, setQuery] = useState('');
   const [activeTags, setActiveTags] = useState<string[]>([]);

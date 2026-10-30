@@ -31,7 +31,8 @@
           "zh-Hans",
           "ar"
         ],
-        "CFBundleAllowMixedLocalizations": true
+        "CFBundleAllowMixedLocalizations": true,
+        "NSMicrophoneUsageDescription": "My Journal uses the microphone so you can record voice notes for your entries. Recordings stay on your device."
       }
     },
     "android": {
@@ -44,7 +45,6 @@
       },
       "predictiveBackGestureEnabled": false,
       "blockedPermissions": [
-        "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.SYSTEM_ALERT_WINDOW"
@@ -90,7 +90,7 @@
         {
           "photosPermission": "Journal needs access to your photos so you can add pictures to your entries.",
           "cameraPermission": "Journal needs the camera so you can take photos for your entries.",
-          "microphonePermission": false
+          "microphonePermission": "My Journal uses the microphone so you can record voice notes for your entries. Recordings stay on your device."
         }
       ],
       "./plugins/withReleaseSigning",
@@ -171,7 +171,15 @@
           "userTrackingPermission": "Your consent lets us show you more relevant ads. Your journal entries are never shared."
         }
       ],
-      "expo-iap"
+      "expo-iap",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "My Journal uses the microphone so you can record voice notes for your entries. Recordings stay on your device.",
+          "enableBackgroundPlayback": false,
+          "enableBackgroundRecording": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

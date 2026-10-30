@@ -14,6 +14,9 @@ import { join } from 'node:path';
 // Playwright isn't a project dependency; point PLAYWRIGHT at an installed copy if needed.
 const { chromium } = await import(process.env.PLAYWRIGHT ?? 'playwright');
 
+// Transpiles the app's TypeScript dictionaries (see dictionary()).
+const ts = (await import('typescript')).default;
+
 const BASE = process.env.BASE ?? 'http://localhost:4321';
 const OUT = 'store/screenshots';
 // Caveat and Inter have no CJK or Arabic letters; the browser picks the Noto
@@ -30,12 +33,13 @@ const DEVICES = [
   { dir: 'play', width: 1080, height: 2160, view: { width: 360, height: 720 } },
 ];
 
+// scroll: text on the screen to bring to the top; book: open the PDF book preview instead.
 const SHOTS = [
   { file: '1-entries', path: '/' },
-  { file: '2-photo', path: '/entry?id=s-today' },
-  { file: '3-prompt', path: '/entry' },
-  { file: '4-review', path: '/review' },
-  { file: '5-calendar', path: '/calendar' },
+  { file: '2-voice', path: '/entry?id=s-today', scroll: 'voice' },
+  { file: '3-capsule', path: '/entry', scroll: 'capsule', letter: true },
+  { file: '4-mood-year', path: '/review', scroll: 'moodYear' },
+  { file: '5-book', path: '/settings?storeshot', book: true },
   { file: '6-night', path: '/', theme: 'dark' },
 ];
 
@@ -47,8 +51,34 @@ const LOCALES = Object.fromEntries(
     .filter((f) => f.endsWith('.json'))
     .map((f) => JSON.parse(readFileSync(join('store/locales', f), 'utf8')))
     .filter((l) => !only || only.includes(l.lang))
-    .map((l) => [l.lang, { ...l, ...l.screenshots }]),
+    .map((l) => [l.lang, { ...l, ...l.screenshots, ui: uiTexts(l.lang) }]),
 );
+
+// App texts the script has to find on screen, straight from the app's dictionaries
+// (TypeScript, transpiled on the fly with the compiler the project already has).
+function dictionary(lang) {
+  const load = (file) => {
+    const src = readFileSync(join('src/i18n', `${file}.ts`), 'utf8');
+    const js = ts.transpileModule(src, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
+    const module = { exports: {} };
+    new Function('module', 'exports', 'require', js)(module, module.exports, (dep) => load(dep.replace('./', '')));
+    return module.exports;
+  };
+  return load(lang)[lang];
+}
+function uiTexts(lang) {
+  const t = dictionary(lang);
+  return {
+    voice: t.voice.clip(1, '0:47'),
+    capsule: t.capsule.seal,
+    moodYear: t.moodYear.title(new Date().getFullYear()),
+    book: t.book.export,
+    bookAll: t.book.all,
+    capsuleYear: t.capsule.options.y1,
+    titlePlaceholder: t.entry.titlePlaceholder,
+    bodyPlaceholder: t.entry.bodyPlaceholder,
+  };
+}
 
 const pad = (n) => String(n).padStart(2, '0');
 const iso = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -72,11 +102,13 @@ function sampleEntries(L) {
       mood: 5,
       tags,
       photos: ['p-sea'],
+      audio: [{ id: 'a-voice', ms: 47000 }],
     },
   ];
-  for (let i = 1; i <= 26; i++) {
+  // A year of entries so the mood year is filled; a few gaps make it look real.
+  for (let i = 1; i <= 330; i++) {
     const [title, body, mood, tags] = L.texts[i % L.texts.length];
-    if (i === 8 || i === 17) continue; // a few gaps make the calendar look real
+    if (i === 8 || i === 17 || i % 7 === 3 || i % 11 === 5) continue;
     entries.push({
       id: `s-${i}`,
       date: day(-i),
@@ -105,8 +137,16 @@ function sampleEntries(L) {
     tags: L.month[2],
     photos: [],
   });
+  // Two sealed time capsules (shown on the start page) and one that opened today.
+  const [capTitle, capBody] = L.capsule;
+  entries.push(
+    { id: 's-cap-1', date: day(-20), title: capTitle, body: capBody, mood: 4, tags: [], photos: [], sealedUntil: day(0, { years: -1 }) },
+    { id: 's-cap-2', date: day(-40), title: capTitle, body: capBody, mood: 5, tags: [], photos: [], sealedUntil: day(0, { months: -5 }) },
+  );
   const now = Date.now();
   return entries.map((e, i) => ({
+    audio: [],
+    sealedUntil: null,
     ...e,
     deletedAt: null,
     createdAt: now - i * 1000,
@@ -128,19 +168,22 @@ async function seed(page, entries, photoBase64, theme, lang) {
         del.onsuccess = del.onerror = del.onblocked = resolve;
       });
       const db = await new Promise((resolve, reject) => {
-        const req = indexedDB.open('tagebuch', 2);
+        const req = indexedDB.open('tagebuch', 3);
         req.onupgradeneeded = () => {
           req.result.createObjectStore('entries', { keyPath: 'id' });
           req.result.createObjectStore('photos');
+          req.result.createObjectStore('audio');
         };
         req.onsuccess = () => resolve(req.result);
         req.onerror = () => reject(req.error);
       });
       const blob = await (await fetch(`data:image/jpeg;base64,${photoBase64}`)).blob();
       await new Promise((resolve, reject) => {
-        const tx = db.transaction(['entries', 'photos'], 'readwrite');
+        const tx = db.transaction(['entries', 'photos', 'audio'], 'readwrite');
         for (const e of entries) tx.objectStore('entries').put(e);
         tx.objectStore('photos').put(blob, 'p-sea');
+        // Any bytes do: the clip row only needs a file to enable its play button.
+        tx.objectStore('audio').put(new Blob([new Uint8Array(64)], { type: 'audio/mp4' }), 'a-voice');
         tx.oncomplete = resolve;
         tx.onerror = () => reject(tx.error);
       });
@@ -192,7 +235,43 @@ for (const L of process.env.ONLY_IAP || process.env.ONLY_FEATURE ? [] : Object.v
       }
       await page.goto(`${BASE}${shot.path}`);
       await page.waitForTimeout(2000); // fonts, data and entry animations
-      const raw = (await page.screenshot()).toString('base64');
+      let raw;
+      if (shot.letter) {
+        // A letter to the future self, sealed for a year.
+        await page.getByPlaceholder(L.ui.titlePlaceholder).fill(L.capsule[0]);
+        await page.getByPlaceholder(L.ui.bodyPlaceholder).fill(L.capsule[1]);
+        await page.getByText(L.ui.capsuleYear, { exact: true }).first().click();
+      }
+      if (shot.scroll) {
+        const text = { voice: L.ui.voice, capsule: L.ui.capsule, moodYear: L.ui.moodYear }[shot.scroll];
+        // The capsule card goes to the bottom so the letter above it stays in view.
+        const block = shot.letter ? 'end' : 'start';
+        await page.getByText(text, { exact: false }).first().evaluate((el, block) => el.scrollIntoView({ block }), block);
+        await page.mouse.wheel(0, shot.letter ? device.view.height * 0.2 : -device.view.height * 0.12);
+        await page.waitForTimeout(600);
+      }
+      if (shot.book) {
+        // The browser version opens the book in a new tab; photograph that tab around the photo entry.
+        await page.getByText(L.ui.book, { exact: true }).first().evaluate((el) => el.scrollIntoView({ block: 'center' }));
+        const [popup] = await Promise.all([
+          page.waitForEvent('popup'),
+          page.getByText(L.ui.bookAll, { exact: true }).first().click(),
+        ]);
+        await popup.addInitScript(() => (window.print = () => {}));
+        await popup.evaluate(() => (window.print = () => {}));
+        await popup.setViewportSize(device.view);
+        await popup.waitForTimeout(800);
+        await popup.evaluate(() => {
+          const img = document.querySelector('.photos img');
+          const entry = img?.closest('.entry');
+          if (entry) window.scrollTo(0, entry.getBoundingClientRect().top + window.scrollY - 40);
+        });
+        await popup.waitForTimeout(300);
+        raw = (await popup.screenshot()).toString('base64');
+        await popup.close();
+      } else {
+        raw = (await page.screenshot()).toString('base64');
+      }
 
       const dark = theme === 'dark';
       const bg = dark ? '#14161B' : '#F5EFE3';

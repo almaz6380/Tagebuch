@@ -4,13 +4,13 @@
   "playLocale": "pl-PL",
   "store": {
     "name": "Pamiętnik – Mój Dziennik",
-    "subtitle": "Prywatne notatki ze zdjęciami",
-    "keywords": "journal,wdzięczność,nastrój,emocje,uczucia,wspomnienia,notes,zeszyt,sekretny,refleksja,pisanie,diary",
-    "promotionalText": "Twój prywatny pamiętnik ze zdjęciami, pytaniami do pisania i historią nastroju – bez konta, bez chmury. Wpisy zostają na twoim urządzeniu.",
-    "description": "Twój prywatny pamiętnik – piękny jak papierowy zeszyt, bezpieczny w telefonie.\n\nZapisuj to, co cię porusza: kilka zdań wieczorem, zdjęcie z dnia albo pytanie, które skłania do refleksji. Wszystko zostaje na twoim urządzeniu. Bez konta, bez chmury.\n\nPISZ PO SWOJEMU\n• Edytor jak zeszyt w linie, z tytułem i datą\n• Zdjęcia do każdego wpisu – z galerii albo prosto z aparatu\n• Nastrój dnia w pięciu stopniach\n• Tagi do porządkowania wpisów\n• Szkice zapisują się automatycznie podczas pisania\n\nKONIEC Z PUSTĄ KARTKĄ\n• Codziennie nowe pytanie na dobry początek\n• Ponad 40 kolejnych pytań do przejrzenia\n• Szablony wdzięczności i podsumowania dnia\n\nWSPOMNIENIA\n• „Tego dnia”: co zapisało się w pamiętniku miesiąc albo rok temu?\n• Seria dni pisania i najdłuższa seria\n• Historia nastroju z ostatnich 30 dni\n• Kalendarz w kolorach nastroju i wyszukiwanie w całym tekście\n\nWYTRWAJ W NAWYKU\n• Codzienne przypomnienie o wybranej godzinie\n\nPRYWATNIE I BEZPIECZNIE\n• Wszystkie wpisy są tylko na twoim urządzeniu\n• Blokada PIN, a do tego Face ID lub odcisk palca\n• Kopia zapasowa w pliku, przywracanie na każdym urządzeniu\n• Kosz: usunięte wpisy można przywrócić przez 30 dni\n\nCZTERY STYLE\nPapier, Minimalny, Zabawny albo Noc – wybierz, jak ma wyglądać twój pamiętnik.\n\nZA DARMO Z REKLAMAMI\nAplikacja jest bezpłatna i wyświetla reklamy. Jednorazowy zakup usuwa je na zawsze – bez subskrypcji. Twoje wpisy nigdy nie są wykorzystywane do reklam.\n\nDostępna w 14 językach.",
+    "subtitle": "Kapsuły czasu, głos i nastrój",
+    "keywords": "kapsuła,czasu,głosowe,nastrój,wdzięczność,emocje,uczucia,wspomnienia,journal,zeszyt,pdf,książka",
+    "promotionalText": "Zapieczętuj list do siebie z przyszłości, nagrywaj notatki głosowe, zobacz swój rok nastrojów i zamień pamiętnik w książkę PDF – prywatnie i offline.",
+    "description": "Prywatny pamiętnik z pomysłami, których nie znajdziesz w zeszycie: listy do siebie z przyszłości, twój głos, cały rok w kolorach – a na końcu prawdziwa książka.\n\nWszystko zostaje na twoim urządzeniu. Bez konta, bez chmury.\n\nKAPSUŁY CZASU\n• Zapieczętuj wpis na 1 miesiąc, 6 miesięcy, 1 rok albo 5 lat\n• Pozostaje zamknięty aż do wyznaczonego dnia – nie znajdzie go nawet wyszukiwarka\n• W dniu otwarcia powiadomienie odda ci twój list\n\nNOTATKI GŁOSOWE\n• Nagraj do 5 minut na jedną notatkę głosową, prosto we wpisie\n• Usłysz, jak naprawdę brzmiał dany dzień – zapisane tylko w twoim telefonie\n\nROK NASTROJÓW\n• Jeden kolorowy kwadracik na każdy dzień roku\n• Wzorce: twój najlepszy i najtrudniejszy dzień tygodnia, tagi, które towarzyszą dobrym dniom, twoja mieszanka nastrojów\n\nPAMIĘTNIK JAKO KSIĄŻKA\n• Wyeksportuj miesiąc, rok albo wszystko jako pięknie złożony PDF\n• Okładka, nastroje, tagi i zdjęcia – do wydruku, na pamiątkę albo w prezencie\n\nPISZ PO SWOJEMU\n• Edytor jak zeszyt w linie, ze zdjęciami z galerii albo z aparatu\n• Nastrój dnia, tagi i automatyczne szkice\n• Codziennie nowe pytanie, szablony wdzięczności i podsumowania dnia\n\nWSPOMNIENIA\n• „Tego dnia”, seria dni pisania, historia nastroju z 30 dni\n• Kalendarz w kolorach nastroju i wyszukiwanie w całym tekście\n\nPRYWATNIE I BEZPIECZNIE\n• Blokada PIN, a do tego Face ID lub odcisk palca\n• Kopia zapasowa w pliku (razem z notatkami głosowymi), przywracanie na każdym urządzeniu\n• Kosz: usunięte wpisy można przywrócić przez 30 dni\n• Cztery style: Papier, Minimalny, Zabawny, Noc\n\nZA DARMO Z REKLAMAMI\nAplikacja jest bezpłatna i wyświetla reklamy. Jednorazowy zakup usuwa je na zawsze – bez subskrypcji. Twoje wpisy nigdy nie są wykorzystywane do reklam.\n\nDostępna w 14 językach.",
     "googleTitle": "Pamiętnik – Mój Dziennik",
-    "shortDescription": "Prywatny pamiętnik ze zdjęciami, pytaniami i nastrojem – bez konta i chmury",
-    "releaseNotes": "Pierwsza wersja: twój prywatny pamiętnik ze zdjęciami, pytaniami do pisania i historią nastroju."
+    "shortDescription": "Prywatny pamiętnik: kapsuły czasu, notatki głosowe, rok nastrojów i PDF",
+    "releaseNotes": "Nowość: kapsuły czasu dla ciebie z przyszłości, notatki głosowe, rok nastrojów z twoimi wzorcami i eksport jako książka PDF."
   },
   "iap": {
     "name": "Usuń reklamy",
@@ -23,20 +23,20 @@
         "Piękny jak papier – bezpieczny w telefonie"
       ],
       [
-        "Zdjęcia z każdego dnia",
-        "Z nastrojem, tagami i liniami zeszytu"
+        "Powiedz to na głos",
+        "Notatki głosowe i zdjęcia w każdym wpisie"
       ],
       [
-        "Pytanie na każdy dzień",
-        "Koniec z pustą kartką"
+        "Listy w przyszłość",
+        "Zapieczętuj wpis jako kapsułę czasu"
       ],
       [
-        "Wspomnienia",
-        "„Tego dnia”, seria pisania i historia nastroju"
+        "Twój rok nastrojów",
+        "Kwadracik na każdy dzień – i wzorce za nim"
       ],
       [
-        "Nastrój w jednym spojrzeniu",
-        "Kalendarz w kolorach nastroju"
+        "Pamiętnik jako książka",
+        "Wyeksportuj PDF do wydruku lub na pamiątkę"
       ],
       [
         "Style, PIN i Face ID",
@@ -123,6 +123,10 @@
           "rodzina"
         ]
       ]
+    ],
+    "capsule": [
+      "Do mnie za rok",
+      "Teraz denerwuję się nową pracą. Mam nadzieję, że już się z tego śmiejesz – i że w niedziele wciąż chodzisz na basen."
     ]
   }
 }
