@@ -29,10 +29,11 @@ Run lint and typecheck before declaring any task done.
 - Import `Link`, `router`, and `useLocalSearchParams` from `expo-router`.
 - Docs: https://docs.expo.dev/router/introduction.md
 
-## Building with EAS
+## Building and releasing
 
-Use EAS to build, sign, and submit the app in the cloud (`eas build`, `eas submit`) and to ship over-the-air updates (`eas update`) — no local Xcode or Android Studio required. Run EAS CLI as `bunx eas-cli <command>` in Bun projects, or `npx eas-cli@latest <command>` otherwise; substitute that for bare `eas` in docs examples.
-Docs: https://docs.expo.dev/eas/index.md
+This project does **not** use EAS. Store builds are made by the GitHub Actions workflow
+`tagebuch-release.yml` in the repo almaz6380/mahjong-app (it holds the signing and store secrets) and
+submitted with `scripts/asc.py` / `scripts/play.py`. Details, store history and pitfalls: `CLAUDE.md`.
 
 ## Rules
 
