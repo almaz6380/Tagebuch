@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { EntryCard } from '@/components/EntryCard';
+import { MoodPatterns, MoodYear } from '@/components/MoodYear';
 import { TagChip } from '@/components/TagChip';
 import { Card, Screen, T } from '@/components/Themed';
 import { useEntries } from '@/db/EntriesProvider';
@@ -17,7 +18,8 @@ export default function ReviewScreen() {
   const { theme } = useTheme();
   const { colors } = theme;
   const { t } = useI18n();
-  const { entries } = useEntries();
+  // Look back only at what is readable; closed time capsules stay hidden.
+  const { open: entries } = useEntries();
 
   const memories = useMemo(() => onThisDay(entries), [entries]);
   const series = useMemo(() => moodSeries(entries, CHART_DAYS), [entries]);
@@ -104,6 +106,14 @@ export default function ReviewScreen() {
             <T variant="muted">{t.today}</T>
           </View>
         </Card>
+
+        <View style={styles.section} />
+        <MoodYear entries={entries} />
+
+        <T variant="label" style={styles.section}>
+          {t.moodYear.patterns}
+        </T>
+        <MoodPatterns entries={entries} />
 
         {tags.length > 0 && (
           <>

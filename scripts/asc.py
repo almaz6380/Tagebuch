@@ -599,8 +599,11 @@ def cmd_einreichen(args):
     call('PATCH', f"/v1/appStoreVersions/{version['id']}/relationships/build", {'data': {'type': 'builds', 'id': build['id']}})
     open_subs = get(f"/v1/reviewSubmissions?filter[app]={app['id']}&filter[state]=READY_FOR_REVIEW,UNRESOLVED_ISSUES&fields[reviewSubmissions]=state")['data']
     if open_subs:
-        # A draft left by an earlier, interrupted run; reuse it (Apple allows only one).
+        # A draft left by an earlier, interrupted run, or the submission Apple rejected
+        # (UNRESOLVED_ISSUES); reuse it, Apple allows only one.
         sub = open_subs[0]
+        if sub['attributes']['state'] == 'UNRESOLVED_ISSUES':
+            resolve_items(sub['id'])
     else:
         sub = call('POST', '/v1/reviewSubmissions', {'data': {
             'type': 'reviewSubmissions', 'attributes': {'platform': 'IOS'},
@@ -613,6 +616,17 @@ def cmd_einreichen(args):
         'data': {'type': 'reviewSubmissions', 'id': sub['id'], 'attributes': {'submitted': True}}
     })
     print(f"Zur Prüfung eingereicht: Version {t['version']}, Build {args.build} (reviewSubmission {sub['id']}).")
+
+
+def resolve_items(sub_id: str):
+    """After a rejection the submission stays open with its items marked as having issues.
+    Apple only accepts it again once every item is flagged as resolved (Mahjong Royale, 8.10.2026)."""
+    for item in get(f'/v1/reviewSubmissions/{sub_id}/items?limit=50')['data']:
+        res = call('PATCH', f"/v1/reviewSubmissionItems/{item['id']}", {
+            'data': {'type': 'reviewSubmissionItems', 'id': item['id'], 'attributes': {'resolved': True}}
+        }, ok=(200, 201, 204, 409))
+        note = ' (Apple: nicht nötig)' if res.get('errors') else ''
+        print(f"Eintrag {item['id'][:8]}… ({item['attributes'].get('state')}) als gelöst markiert{note}.")
 
 
 def submission_kinds(sub_id: str) -> set:
@@ -658,7 +672,10 @@ def attach_iap(app_id: str, sub_id: str, product_id: str):
         time.sleep(60)
     if state in ('APPROVED', 'WAITING_FOR_REVIEW', 'IN_REVIEW'):
         return
-    if state != 'READY_TO_SUBMIT':
+    # After a rejected submission the purchase waits for the developer; it goes back in with the app.
+    if state in ('DEVELOPER_ACTION_NEEDED', 'REJECTED') and 'inAppPurchaseVersion' in submission_kinds(sub_id):
+        return
+    if state not in ('READY_TO_SUBMIT', 'DEVELOPER_ACTION_NEEDED', 'REJECTED'):
         sys.exit(f'Kauf {product_id} ist im Zustand {state} – Texte, Preis oder Prüf-Screenshot fehlen (asc.py iap).')
     if 'inAppPurchaseVersion' in submission_kinds(sub_id):
         return

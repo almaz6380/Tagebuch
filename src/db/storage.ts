@@ -10,6 +10,8 @@ type Row = {
   mood: number | null;
   tags: string;
   photos: string;
+  audio: string;
+  sealed_until: string | null;
   deleted_at: number | null;
   created_at: number;
   updated_at: number;
@@ -38,6 +40,8 @@ function db() {
     const has = (name: string) => columns.some((c) => c.name === name);
     if (!has('photos')) await database.execAsync(`ALTER TABLE entries ADD COLUMN photos TEXT NOT NULL DEFAULT '[]'`);
     if (!has('deleted_at')) await database.execAsync('ALTER TABLE entries ADD COLUMN deleted_at INTEGER');
+    if (!has('audio')) await database.execAsync(`ALTER TABLE entries ADD COLUMN audio TEXT NOT NULL DEFAULT '[]'`);
+    if (!has('sealed_until')) await database.execAsync('ALTER TABLE entries ADD COLUMN sealed_until TEXT');
     return database;
   });
   return dbPromise;
@@ -53,6 +57,8 @@ export async function loadAll(): Promise<Entry[]> {
     mood: r.mood,
     tags: JSON.parse(r.tags) as string[],
     photos: JSON.parse(r.photos) as string[],
+    audio: JSON.parse(r.audio) as Entry['audio'],
+    sealedUntil: r.sealed_until,
     deletedAt: r.deleted_at,
     createdAt: r.created_at,
     updatedAt: r.updated_at,
@@ -61,8 +67,8 @@ export async function loadAll(): Promise<Entry[]> {
 
 export async function put(e: Entry): Promise<void> {
   await (await db()).runAsync(
-    `INSERT OR REPLACE INTO entries (id, date, title, body, mood, tags, photos, deleted_at, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT OR REPLACE INTO entries (id, date, title, body, mood, tags, photos, audio, sealed_until, deleted_at, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     e.id,
     e.date,
     e.title,
@@ -70,6 +76,8 @@ export async function put(e: Entry): Promise<void> {
     e.mood,
     JSON.stringify(e.tags),
     JSON.stringify(e.photos),
+    JSON.stringify(e.audio),
+    e.sealedUntil,
     e.deletedAt,
     e.createdAt,
     e.updatedAt,

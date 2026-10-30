@@ -53,6 +53,16 @@ export function weekdaysShort() {
   return Array.from({ length: 7 }, (_, i) => new Date(2024, 0, 1 + i).toLocaleDateString(locale(), { weekday: 'short' }));
 }
 
+/** Full weekday name; 0 = Monday. */
+export function weekdayLong(index: number) {
+  return new Date(2024, 0, 1 + index).toLocaleDateString(locale(), { weekday: 'long' });
+}
+
+/** Short month names, January first. */
+export function monthsShort() {
+  return Array.from({ length: 12 }, (_, i) => new Date(2024, i, 1).toLocaleDateString(locale(), { month: 'narrow' }));
+}
+
 export function formatNumber(n: number) {
   return n.toLocaleString(locale());
 }

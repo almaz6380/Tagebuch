@@ -91,3 +91,55 @@ export function wordCount(entries: Entry[]) {
     return n + cjk + words;
   }, 0);
 }
+
+/** Average mood per day of one year, keyed by ISO date. */
+export function moodByDay(entries: Entry[], year: number) {
+  const sums = new Map<string, { sum: number; n: number }>();
+  const prefix = `${year}-`;
+  for (const e of entries) {
+    if (e.mood == null || !e.date.startsWith(prefix)) continue;
+    const s = sums.get(e.date) ?? { sum: 0, n: 0 };
+    sums.set(e.date, { sum: s.sum + e.mood, n: s.n + 1 });
+  }
+  return new Map([...sums].map(([date, s]) => [date, s.sum / s.n]));
+}
+
+export type MoodPatterns = {
+  /** Weekday index, Monday = 0. */
+  bestDay: number;
+  worstDay: number;
+  /** Tags whose entries have the highest average mood (at least 3 uses). */
+  happyTags: string[];
+  /** How many rated days had mood 1–5 (index 0 = mood 1). */
+  distribution: number[];
+};
+
+/** Patterns across all rated entries; null until at least 7 days are rated. */
+export function moodPatterns(entries: Entry[]): MoodPatterns | null {
+  const rated = entries.filter((e) => e.mood != null);
+  if (new Set(rated.map((e) => e.date)).size < 7) return null;
+
+  const byDay = Array.from({ length: 7 }, () => ({ sum: 0, n: 0 }));
+  const distribution = [0, 0, 0, 0, 0];
+  const tags = new Map<string, { sum: number; n: number }>();
+  for (const e of rated) {
+    const [y, m, d] = e.date.split('-').map(Number);
+    const weekday = (new Date(y, m - 1, d).getDay() + 6) % 7;
+    byDay[weekday].sum += e.mood!;
+    byDay[weekday].n++;
+    distribution[e.mood! - 1]++;
+    for (const t of e.tags) {
+      const s = tags.get(t) ?? { sum: 0, n: 0 };
+      tags.set(t, { sum: s.sum + e.mood!, n: s.n + 1 });
+    }
+  }
+  const averages = byDay.map((d, i) => ({ i, avg: d.n ? d.sum / d.n : null }));
+  const known = averages.filter((d) => d.avg != null) as { i: number; avg: number }[];
+  known.sort((a, b) => b.avg - a.avg);
+  const happyTags = [...tags]
+    .filter(([, s]) => s.n >= 3 && s.sum / s.n >= 3.5)
+    .sort((a, b) => b[1].sum / b[1].n - a[1].sum / a[1].n || b[1].n - a[1].n)
+    .slice(0, 5)
+    .map(([t]) => t);
+  return { bestDay: known[0].i, worstDay: known[known.length - 1].i, happyTags, distribution };
+}

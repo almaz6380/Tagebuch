@@ -4,7 +4,8 @@
     "NSFaceIDUsageDescription": "Diario usa Face ID para desbloquear tu diario.",
     "NSPhotoLibraryUsageDescription": "Diario necesita acceder a tus fotos para que puedas añadir imágenes a tus entradas.",
     "NSCameraUsageDescription": "Diario necesita la cámara para que puedas hacer fotos para tus entradas.",
-    "NSUserTrackingUsageDescription": "Con tu permiso podemos mostrarte anuncios más relevantes. Tus entradas del diario nunca se comparten."
+    "NSUserTrackingUsageDescription": "Con tu permiso podemos mostrarte anuncios más relevantes. Tus entradas del diario nunca se comparten.",
+    "NSMicrophoneUsageDescription": "Mi Diario usa el micrófono para que puedas grabar notas de voz en tus entradas. Las grabaciones se quedan en tu dispositivo."
   },
   "android": {
     "app_name": "Mi Diario"

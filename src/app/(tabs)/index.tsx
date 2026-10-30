@@ -26,7 +26,7 @@ function greeting(t: Messages) {
 export default function EntriesScreen() {
   const { theme } = useTheme();
   const { t, lang } = useI18n();
-  const { entries, loaded } = useEntries();
+  const { entries, open, sealed, loaded } = useEntries();
 
   const rows = useMemo(() => {
     const out: Row[] = [];
@@ -45,7 +45,7 @@ export default function EntriesScreen() {
   }, [entries, lang]);
 
   const days = currentStreak(entries);
-  const memories = useMemo(() => onThisDay(entries), [entries]);
+  const memories = useMemo(() => onThisDay(open), [open]);
 
   return (
     <Screen>
@@ -82,6 +82,15 @@ export default function EntriesScreen() {
                 </View>
                 <Feather name="chevron-right" size={18} color={theme.colors.textMuted} />
               </Pressable>
+            )}
+            {sealed.length > 0 && (
+              <View style={[styles.memory, { borderColor: theme.colors.border, borderRadius: theme.radius + 4 }]}>
+                <Feather name="lock" size={18} color={theme.colors.accent} />
+                <View style={{ flex: 1 }}>
+                  <T style={{ fontFamily: theme.fonts.uiBold }}>{t.capsule.homeTitle}</T>
+                  <T variant="muted">{t.capsule.homeCount(sealed.length, formatLong(sealed[0].sealedUntil!))}</T>
+                </View>
+              </View>
             )}
             <BackupReminder />
           </View>

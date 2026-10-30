@@ -4,7 +4,8 @@
     "NSFaceIDUsageDescription": "일기 잠금을 해제하기 위해 Face ID를 사용해요.",
     "NSPhotoLibraryUsageDescription": "일기에 사진을 넣을 수 있도록 사진 보관함 접근이 필요해요.",
     "NSCameraUsageDescription": "일기에 넣을 사진을 찍기 위해 카메라가 필요해요.",
-    "NSUserTrackingUsageDescription": "허용하면 더 관심 있는 광고를 보여 드릴 수 있어요. 일기 내용은 절대 공유되지 않아요."
+    "NSUserTrackingUsageDescription": "허용하면 더 관심 있는 광고를 보여 드릴 수 있어요. 일기 내용은 절대 공유되지 않아요.",
+    "NSMicrophoneUsageDescription": "일기에 음성 메모를 녹음할 수 있도록 마이크를 사용합니다. 녹음은 기기에만 저장됩니다."
   },
   "android": {
     "app_name": "일기"

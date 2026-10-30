@@ -1,9 +1,12 @@
 import * as Crypto from 'expo-crypto';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { cancelCapsule, scheduleCapsule, syncCapsules } from '@/lib/reminder';
+import { deleteAudio } from './audio';
 import { deletePhoto } from './photos';
 import * as storage from './storage';
-import type { Entry } from './types';
+import { todayISO } from '@/lib/dates';
+import { isSealed, type Entry } from './types';
 
 /** Entries stay in the trash this long before they are deleted for good. */
 export const TRASH_DAYS = 30;
@@ -12,8 +15,12 @@ const TRASH_MS = TRASH_DAYS * 86_400_000;
 type EntryInput = Omit<Entry, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> & { id?: string };
 
 type EntriesContextValue = {
-  /** Active entries (not in the trash). */
+  /** Active entries (not in the trash), including closed time capsules. */
   entries: Entry[];
+  /** Active entries without the still closed time capsules – for search, stats and look back. */
+  open: Entry[];
+  /** Closed time capsules, the next one to open first. */
+  sealed: Entry[];
   /** Entries in the trash, most recently deleted first. */
   trash: Entry[];
   loaded: boolean;
@@ -22,7 +29,7 @@ type EntriesContextValue = {
   /** Moves an entry to the trash. */
   remove: (id: string) => Promise<void>;
   restore: (id: string) => Promise<void>;
-  /** Deletes an entry and its photos for good. */
+  /** Deletes an entry, its photos and voice notes for good. */
   purge: (id: string) => Promise<void>;
   emptyTrash: () => Promise<void>;
   /** Merge a backup: new entries are added, existing ones only replaced if the backup is newer. */
@@ -40,6 +47,8 @@ function sortEntries(list: Entry[]) {
 async function deleteForGood(e: Entry) {
   await storage.remove(e.id);
   await Promise.all(e.photos.map((p) => deletePhoto(p).catch(() => {})));
+  await Promise.all(e.audio.map((a) => deleteAudio(a.id).catch(() => {})));
+  await cancelCapsule(e.id).catch(() => {});
 }
 
 export function EntriesProvider({ children }: { children: ReactNode }) {
@@ -58,6 +67,12 @@ export function EntriesProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const entries = useMemo(() => all.filter((e) => e.deletedAt == null), [all]);
+  const today = todayISO();
+  const open = useMemo(() => entries.filter((e) => !isSealed(e, today)), [entries, today]);
+  const sealed = useMemo(
+    () => entries.filter((e) => isSealed(e, today)).sort((a, b) => a.sealedUntil!.localeCompare(b.sealedUntil!)),
+    [entries, today],
+  );
   const trash = useMemo(
     () => all.filter((e) => e.deletedAt != null).sort((a, b) => b.deletedAt! - a.deletedAt!),
     [all],
@@ -85,6 +100,11 @@ export function EntriesProvider({ children }: { children: ReactNode }) {
       // Photos removed in the editor are no longer referenced anywhere.
       const dropped = existing?.photos.filter((p) => !entry.photos.includes(p)) ?? [];
       await Promise.all(dropped.map((p) => deletePhoto(p).catch(() => {})));
+      const keptAudio = new Set(entry.audio.map((a) => a.id));
+      const droppedAudio = existing?.audio.filter((a) => !keptAudio.has(a.id)) ?? [];
+      await Promise.all(droppedAudio.map((a) => deleteAudio(a.id).catch(() => {})));
+      if (entry.sealedUntil) await scheduleCapsule(entry.id, entry.sealedUntil).catch(() => {});
+      else await cancelCapsule(entry.id).catch(() => {});
       return entry;
     },
     [all, write],
@@ -133,19 +153,20 @@ export function EntriesProvider({ children }: { children: ReactNode }) {
       }
       for (const e of changed) await storage.put(e);
       if (changed.length) setAll(sortEntries([...byId.values()]));
+      await syncCapsules(changed.filter((e) => e.deletedAt == null)).catch(() => {});
       return { added, updated, unchanged: list.length - changed.length };
     },
     [all],
   );
 
   const allTags = useMemo(
-    () => [...new Set(entries.flatMap((e) => e.tags))].sort((a, b) => a.localeCompare(b, 'de')),
-    [entries],
+    () => [...new Set(open.flatMap((e) => e.tags))].sort((a, b) => a.localeCompare(b)),
+    [open],
   );
 
   const value = useMemo(
-    () => ({ entries, trash, loaded, get, save, remove, restore, purge, emptyTrash, importEntries, allTags }),
-    [entries, trash, loaded, get, save, remove, restore, purge, emptyTrash, importEntries, allTags],
+    () => ({ entries, open, sealed, trash, loaded, get, save, remove, restore, purge, emptyTrash, importEntries, allTags }),
+    [entries, open, sealed, trash, loaded, get, save, remove, restore, purge, emptyTrash, importEntries, allTags],
   );
 
   return <EntriesContext.Provider value={value}>{children}</EntriesContext.Provider>;
