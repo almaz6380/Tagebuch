@@ -4,13 +4,13 @@
   "playLocale": "fr-FR",
   "store": {
     "name": "Journal intime – Mon carnet",
-    "subtitle": "Écris en privé, avec photos",
-    "keywords": "diary,gratitude,humeur,émotions,souvenirs,notes,agenda,bienêtre,écriture,réflexion,quotidien,secret",
-    "promotionalText": "Ton journal intime avec photos, questions d’écriture et suivi de ton humeur. Sans compte, sans cloud : tes pages restent sur ton appareil.",
-    "description": "Ton journal intime : aussi beau qu’un carnet en papier, en sécurité sur ton téléphone.\n\nGarde une trace de ce qui te touche : quelques lignes le soir, la photo du jour ou une question qui fait réfléchir. Tout reste sur ton appareil. Sans compte, sans cloud.\n\nÉCRIS COMME TU AIMES\n• Éditeur façon carnet à lignes, avec titre et date\n• Des photos pour chaque page, depuis ta galerie ou l’appareil photo\n• L’humeur du jour sur cinq niveaux\n• Des mots-clés pour classer tes pages\n• Les brouillons s’enregistrent tout seuls pendant que tu écris\n\nFINI LA PAGE BLANCHE\n• Une nouvelle question chaque jour pour t’inspirer\n• Plus de 40 autres questions à découvrir\n• Des modèles pour la gratitude et le bilan du soir\n\nREGARDE EN ARRIÈRE\n• « Ce jour-là » : qu’as-tu écrit il y a un mois ou un an ?\n• Série d’écriture et plus longue série\n• Évolution de ton humeur sur les 30 derniers jours\n• Calendrier aux couleurs de tes humeurs et recherche dans tout le texte\n\nGARDE LE RYTHME\n• Un rappel quotidien à l’heure de ton choix\n\nPRIVÉ ET SÉCURISÉ\n• Toutes tes pages restent uniquement sur ton appareil\n• Verrouillage par code PIN, avec Face ID ou empreinte digitale en option\n• Sauvegarde dans un fichier, restauration sur n’importe quel appareil\n• Corbeille : les pages supprimées sont récupérables pendant 30 jours\n\nQUATRE STYLES\nPapier, Minimal, Joyeux ou Nuit : choisis l’allure de ton journal.\n\nGRATUIT AVEC PUBLICITÉ\nL’app est gratuite et affiche des publicités. Un achat unique les supprime pour de bon, sans abonnement. Tes pages ne servent jamais à la publicité.\n\nDisponible en 14 langues.",
+    "subtitle": "Capsules temporelles & humeurs",
+    "keywords": "capsule,temporelle,vocal,humeur,émotions,gratitude,souvenirs,diary,notes,pdf,livre,bienêtre,secret",
+    "promotionalText": "Scelle des lettres pour ton toi futur, enregistre des notes vocales, vois ton année en humeurs et fais de ton journal un livre PDF – privé et hors ligne.",
+    "description": "Un journal intime avec des idées qu’aucun carnet ne t’offre : des lettres à ton toi futur, ta voix, toute ton année en couleurs – et, à la fin, un vrai livre.\n\nTout reste sur ton appareil. Sans compte, sans cloud.\n\nCAPSULES TEMPORELLES\n• Scelle une page pour 1 mois, 6 mois, 1 an ou 5 ans\n• Elle reste verrouillée jusqu’au jour J – même la recherche ne la trouve pas\n• Le jour de l’ouverture, une notification te rend ta lettre\n\nNOTES VOCALES\n• Enregistre jusqu’à 5 minutes par note vocale, directement dans la page\n• Réécoute comment sonnait vraiment une journée – stockée uniquement sur ton téléphone\n\nTON ANNÉE EN HUMEURS\n• Un carré coloré pour chaque jour de l’année\n• Tendances : ton meilleur jour de la semaine et le plus difficile, les mots-clés qui accompagnent les bons jours, ton mélange d’humeurs\n\nTON JOURNAL EN LIVRE\n• Exporte un mois, une année ou tout en un PDF joliment mis en page\n• Couverture, humeurs, mots-clés et photos – à imprimer, garder ou offrir\n\nÉCRIS COMME TU AIMES\n• Éditeur façon carnet à lignes, avec des photos de ta galerie ou de l’appareil photo\n• Humeur du jour, mots-clés et brouillons automatiques\n• Une nouvelle question chaque jour, des modèles pour la gratitude et le bilan du soir\n\nREGARDE EN ARRIÈRE\n• « Ce jour-là », série d’écriture, évolution de ton humeur sur 30 jours\n• Calendrier aux couleurs de tes humeurs et recherche dans tout le texte\n\nPRIVÉ ET SÉCURISÉ\n• Verrouillage par code PIN, avec Face ID ou empreinte digitale en option\n• Sauvegarde dans un fichier (notes vocales comprises), restauration sur n’importe quel appareil\n• Corbeille : les pages supprimées sont récupérables pendant 30 jours\n• Quatre styles : Papier, Minimal, Joyeux, Nuit\n\nGRATUIT AVEC PUBLICITÉ\nL’app est gratuite et affiche des publicités. Un achat unique les supprime pour de bon, sans abonnement. Tes pages ne servent jamais à la publicité.\n\nDisponible en 14 langues.",
     "googleTitle": "Journal intime – Mon carnet",
-    "shortDescription": "Journal intime avec photos, questions et humeur du jour. Sans compte ni cloud",
-    "releaseNotes": "Première version : ton journal intime avec photos, questions d’écriture et suivi de ton humeur."
+    "shortDescription": "Journal privé : capsules temporelles, notes vocales, année en humeurs, PDF",
+    "releaseNotes": "Nouveau : des capsules temporelles pour ton toi futur, les notes vocales, l’année en humeurs avec tes tendances et l’export en livre PDF."
   },
   "iap": {
     "name": "Supprimer les pubs",
@@ -23,20 +23,20 @@
         "Beau comme le papier, en sécurité sur ton téléphone"
       ],
       [
-        "Une photo par jour",
-        "Avec humeur, mots-clés et lignes de carnet"
+        "Dis-le à voix haute",
+        "Notes vocales et photos pour chaque page"
       ],
       [
-        "Une question par jour",
-        "Fini l’angoisse de la page blanche"
+        "Lettres à ton toi futur",
+        "Scelle une page en capsule temporelle"
       ],
       [
-        "Regarde en arrière",
-        "« Ce jour-là », séries et suivi de l’humeur"
+        "Ton année en humeurs",
+        "Un carré par jour – et les tendances derrière"
       ],
       [
-        "Tes humeurs en un coup d’œil",
-        "Calendrier aux couleurs de tes humeurs"
+        "Ton journal en livre",
+        "Exporte un PDF à imprimer ou à garder"
       ],
       [
         "Styles, PIN et Face ID",
@@ -123,6 +123,10 @@
           "famille"
         ]
       ]
+    ],
+    "capsule": [
+      "Cher moi, dans un an",
+      "En ce moment, le nouveau boulot me stresse. J’espère que tu en ris aujourd’hui – et que tu vas toujours nager le dimanche."
     ]
   }
 }

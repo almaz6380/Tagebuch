@@ -4,13 +4,13 @@
   "playLocale": "nl-NL",
   "store": {
     "name": "Dagboek – Mijn Journal",
-    "subtitle": "Privé schrijven met foto’s",
-    "keywords": "notitieboek,dankbaarheid,stemming,gevoelens,herinneringen,notities,reflectie,zelfzorg,geheim,diary",
-    "promotionalText": "Je eigen dagboek met foto’s, schrijfvragen en stemmingsverloop – zonder account, zonder cloud. Je notities blijven op je apparaat.",
-    "description": "Je eigen dagboek – zo mooi als een papieren notitieboek, veilig op je telefoon.\n\nLeg vast wat je raakt: een paar regels ’s avonds, een foto van de dag of een vraag die je aan het denken zet. Alles blijft op je apparaat. Geen account, geen cloud.\n\nSCHRIJF ZOALS JIJ WILT\n• Notitieboek met lijntjes, titel en datum\n• Foto’s bij elke notitie, uit je galerij of met de camera\n• Stemming van de dag in vijf stappen\n• Tags om je notities te ordenen\n• Concepten worden tijdens het typen automatisch bewaard\n\nNOOIT MEER EEN LEEG VEL\n• Elke dag een nieuwe schrijfvraag\n• Meer dan 40 andere vragen om door te bladeren\n• Sjablonen voor dankbaarheid en een avondterugblik\n\nTERUGBLIKKEN\n• “Op deze dag”: wat schreef je een maand of een jaar geleden?\n• Schrijfreeks en langste reeks\n• Stemmingsverloop van de afgelopen 30 dagen\n• Kalender met stemmingskleuren en zoeken in alle tekst\n\nVOLHOUDEN\n• Dagelijkse herinnering op het tijdstip dat jij kiest\n\nPRIVÉ EN VEILIG\n• Al je notities blijven alleen op je apparaat\n• Pincodeslot, desgewenst met Face ID of vingerafdruk\n• Back-up als bestand, terugzetten op elk apparaat\n• Prullenbak: verwijderde notities kun je 30 dagen terugzetten\n\nVIER STIJLEN\nPapier, Minimaal, Speels of Nacht – kies zelf hoe je dagboek eruitziet.\n\nGRATIS MET ADVERTENTIES\nDe app is gratis en toont advertenties. Met een eenmalige aankoop verdwijnen ze voorgoed – geen abonnement. Je notities worden nooit voor advertenties gebruikt.\n\nBeschikbaar in 14 talen.",
+    "subtitle": "Tijdcapsules, stem en stemming",
+    "keywords": "tijdcapsule,spraakmemo,stemming,dankbaarheid,gevoelens,herinneringen,notitieboek,pdf,boek,zelfzorg",
+    "promotionalText": "Verzegel brieven aan je toekomstige ik, neem spraakmemo’s op, bekijk je stemmingsjaar en maak van je dagboek een pdf-boek – privé en offline.",
+    "description": "Een privédagboek met ideeën die je in geen notitieboek vindt: brieven aan je toekomstige ik, je eigen stem, je hele jaar in kleuren – en aan het eind een echt boek.\n\nAlles blijft op je apparaat. Geen account, geen cloud.\n\nTIJDCAPSULES\n• Verzegel een notitie voor 1 maand, 6 maanden, 1 jaar of 5 jaar\n• Ze blijft op slot tot de dag aanbreekt – zelfs zoeken vindt haar niet\n• Op de openingsdag brengt een melding je brief terug\n\nSPRAAKMEMO’S\n• Neem tot 5 minuten per spraakmemo op, direct in de notitie\n• Hoor hoe een dag echt klonk – alleen bewaard op je telefoon\n\nJE STEMMINGSJAAR\n• Eén gekleurd vakje voor elke dag van het jaar\n• Patronen: je beste en je zwaarste weekdag, de tags die bij goede dagen horen, je stemmingsmix\n\nJE DAGBOEK ALS BOEK\n• Exporteer een maand, een jaar of alles als mooi opgemaakte pdf\n• Voorblad, stemmingen, tags en foto’s – om te printen, te bewaren of weg te geven\n\nSCHRIJF ZOALS JIJ WILT\n• Notitieboek met lijntjes en foto’s uit je galerij of van de camera\n• Stemming van de dag, tags en automatische concepten\n• Elke dag een nieuwe schrijfvraag, sjablonen voor dankbaarheid en een avondterugblik\n\nTERUGBLIKKEN\n• “Op deze dag”, schrijfreeks, stemmingsverloop van 30 dagen\n• Kalender met stemmingskleuren en zoeken in alle tekst\n\nPRIVÉ EN VEILIG\n• Pincodeslot, desgewenst met Face ID of vingerafdruk\n• Back-up als bestand (inclusief spraakmemo’s), terugzetten op elk apparaat\n• Prullenbak: verwijderde notities kun je 30 dagen terugzetten\n• Vier stijlen: Papier, Minimaal, Speels, Nacht\n\nGRATIS MET ADVERTENTIES\nDe app is gratis en toont advertenties. Met een eenmalige aankoop verdwijnen ze voorgoed – geen abonnement. Je notities worden nooit voor advertenties gebruikt.\n\nBeschikbaar in 14 talen.",
     "googleTitle": "Dagboek – Mijn Privé Journal",
-    "shortDescription": "Privé dagboek met foto’s, schrijfvragen & stemming – geen account, geen cloud",
-    "releaseNotes": "Eerste versie: je eigen dagboek met foto’s, schrijfvragen en stemmingsverloop."
+    "shortDescription": "Privédagboek met tijdcapsules, spraakmemo’s, stemmingsjaar en pdf-boek",
+    "releaseNotes": "Nieuw: tijdcapsules voor je toekomstige ik, spraakmemo’s, het stemmingsjaar met jouw patronen en export als pdf-boek."
   },
   "iap": {
     "name": "Advertenties verwijderen",
@@ -23,23 +23,23 @@
         "Mooi als papier – veilig op je telefoon"
       ],
       [
-        "Foto’s bij elke dag",
-        "Met stemming, tags en lijntjes"
+        "Zeg het hardop",
+        "Spraakmemo’s en foto’s bij elke notitie"
       ],
       [
-        "Elke dag een vraag",
-        "Nooit meer staren naar een leeg vel"
+        "Brieven aan later",
+        "Verzegel een notitie als tijdcapsule"
       ],
       [
-        "Terugblikken",
-        "“Op deze dag”, schrijfreeks en stemmingsverloop"
+        "Je stemmingsjaar",
+        "Eén vakje per dag – en de patronen erachter"
       ],
       [
-        "Stemming in één oogopslag",
-        "Kalender met stemmingskleuren"
+        "Je dagboek als boek",
+        "Exporteer een pdf om te printen of te bewaren"
       ],
       [
-        "Stijlen, pincode & Face ID",
+        "Stijlen, pin & Face ID",
         "Alles blijft op je apparaat"
       ]
     ],
@@ -123,6 +123,10 @@
           "familie"
         ]
       ]
+    ],
+    "capsule": [
+      "Lieve ik, over een jaar",
+      "Op dit moment ben ik zenuwachtig voor de nieuwe baan. Ik hoop dat je er nu om kunt lachen – en dat je op zondag nog steeds gaat zwemmen."
     ]
   }
 }

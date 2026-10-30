@@ -4,13 +4,13 @@
   "playLocale": "es-ES",
   "store": {
     "name": "Diario personal – Privado",
-    "subtitle": "Escribe en secreto, con fotos",
-    "keywords": "agenda,notas,gratitud,ánimo,emociones,recuerdos,cuaderno,íntimo,journal,reflexión,autocuidado,humor",
-    "promotionalText": "Tu diario privado con fotos, preguntas para escribir y la evolución de tu ánimo. Sin cuenta, sin nube: tus entradas se quedan en tu dispositivo.",
-    "description": "Tu diario personal: tan bonito como un cuaderno de papel, y seguro en tu móvil.\n\nGuarda lo que te mueve por dentro: unas líneas por la noche, la foto del día o una pregunta que te haga pensar. Todo se queda en tu dispositivo. Sin cuenta, sin nube.\n\nESCRIBE A TU MANERA\n• Editor con renglones de cuaderno, título y fecha\n• Fotos en cada entrada, desde la galería o la cámara\n• Estado de ánimo del día en cinco niveles\n• Etiquetas para ordenar tus entradas\n• Los borradores se guardan solos mientras escribes\n\nNUNCA MÁS UNA PÁGINA EN BLANCO\n• Una pregunta nueva cada día para inspirarte\n• Más de 40 preguntas más para explorar\n• Plantillas de gratitud y de repaso del día\n\nMIRA ATRÁS\n• “Un día como hoy”: ¿qué escribiste hace un mes o un año?\n• Racha de escritura y racha más larga\n• Evolución de tu ánimo en los últimos 30 días\n• Calendario con colores según el ánimo y búsqueda en todo el texto\n\nNO PIERDAS EL HILO\n• Recordatorio diario a la hora que elijas\n\nPRIVADO Y SEGURO\n• Todas tus entradas se quedan solo en tu dispositivo\n• Bloqueo con PIN, y si quieres con Face ID o huella dactilar\n• Copia de seguridad en un archivo, para restaurarla en cualquier dispositivo\n• Papelera: recupera las entradas eliminadas durante 30 días\n\nCUATRO ESTILOS\nPapel, Minimal, Alegre o Noche: tú decides cómo se ve tu diario.\n\nGRATIS CON ANUNCIOS\nLa app es gratuita y muestra anuncios. Con una única compra los quitas para siempre, sin suscripción. Tus entradas nunca se usan para publicidad.\n\nDisponible en 14 idiomas.",
+    "subtitle": "Cápsulas del tiempo y tu voz",
+    "keywords": "cápsula,tiempo,voz,ánimo,emociones,gratitud,recuerdos,agenda,notas,cuaderno,pdf,libro,autocuidado",
+    "promotionalText": "Sella cartas para tu yo del futuro, graba notas de voz, mira tu año en emociones y convierte tu diario en un libro PDF, privado y sin conexión.",
+    "description": "Un diario privado con ideas que no encontrarás en un cuaderno: cartas a tu yo del futuro, tu propia voz, todo tu año en colores y, al final, un libro de verdad.\n\nTodo se queda en tu dispositivo. Sin cuenta, sin nube.\n\nCÁPSULAS DEL TIEMPO\n• Sella una entrada durante 1 mes, 6 meses, 1 año o 5 años\n• Queda bloqueada hasta que llegue el día: ni siquiera la búsqueda la encuentra\n• El día de la apertura, una notificación te devuelve tu carta\n\nNOTAS DE VOZ\n• Graba hasta 5 minutos por nota de voz, directamente en la entrada\n• Escucha cómo sonaba de verdad un día, guardado solo en tu móvil\n\nTU AÑO EN EMOCIONES\n• Un cuadrado de color por cada día del año\n• Patrones: tu mejor día de la semana y el más difícil, las etiquetas que acompañan a los días buenos y tu mezcla de estados de ánimo\n\nTU DIARIO COMO LIBRO\n• Exporta un mes, un año o todo como un PDF bien maquetado\n• Portada, estados de ánimo, etiquetas y fotos: para imprimir, guardar o regalar\n\nESCRIBE A TU MANERA\n• Editor con renglones de cuaderno y fotos de la galería o la cámara\n• Estado de ánimo del día, etiquetas y borradores automáticos\n• Una pregunta nueva cada día y plantillas de gratitud y de repaso del día\n\nMIRA ATRÁS\n• “Un día como hoy”, racha de escritura e historial de ánimo de 30 días\n• Calendario con colores según el ánimo y búsqueda en todo el texto\n\nPRIVADO Y SEGURO\n• Bloqueo con PIN, y si quieres con Face ID o huella dactilar\n• Copia de seguridad en un archivo (con las notas de voz), para restaurarla en cualquier dispositivo\n• Papelera: recupera las entradas eliminadas durante 30 días\n• Cuatro estilos: Papel, Minimal, Alegre y Noche\n\nGRATIS CON ANUNCIOS\nLa app es gratuita y muestra anuncios. Con una única compra los quitas para siempre, sin suscripción. Tus entradas nunca se usan para publicidad.\n\nDisponible en 14 idiomas.",
     "googleTitle": "Diario personal – Privado",
-    "shortDescription": "Diario íntimo con fotos, preguntas y ánimo del día. Sin cuenta, sin nube",
-    "releaseNotes": "Primera versión: tu diario privado con fotos, preguntas para escribir y la evolución de tu ánimo."
+    "shortDescription": "Diario privado con cápsulas del tiempo, notas de voz, año en emociones y PDF",
+    "releaseNotes": "Novedades: cápsulas del tiempo para tu yo del futuro, notas de voz, tu año en emociones con patrones y exportación como libro PDF."
   },
   "iap": {
     "name": "Quitar anuncios",
@@ -23,20 +23,20 @@
         "Bonito como el papel, seguro en tu móvil"
       ],
       [
-        "Fotos para cada día",
-        "Con ánimo, etiquetas y renglones de cuaderno"
+        "Dilo en voz alta",
+        "Notas de voz y fotos en cada entrada"
       ],
       [
-        "Una pregunta cada día",
-        "Nunca más una página en blanco"
+        "Cartas a tu yo futuro",
+        "Sella una entrada como cápsula del tiempo"
       ],
       [
-        "Mira atrás",
-        "“Un día como hoy”, rachas y evolución del ánimo"
+        "Tu año en emociones",
+        "Un cuadrado al día y los patrones detrás"
       ],
       [
-        "Tu ánimo de un vistazo",
-        "Calendario con los colores de tu ánimo"
+        "Tu diario como libro",
+        "Exporta un PDF para imprimir o guardar"
       ],
       [
         "Estilos, PIN y Face ID",
@@ -123,6 +123,10 @@
           "familia"
         ]
       ]
+    ],
+    "capsule": [
+      "Para mí, dentro de un año",
+      "Ahora mismo me da nervios el trabajo nuevo. Espero que ya te rías de ello, y que sigas yendo a nadar los domingos."
     ]
   }
 }
