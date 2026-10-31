@@ -239,7 +239,8 @@ def cmd_release(args):
         set_track('draft')
         print('Erste Veröffentlichung: Release liegt als ENTWURF bereit. In der Play Console einmal '
               '„Release prüfen“ → „Zur Überprüfung senden“ tippen; ab dem nächsten Release geht es automatisch.')
-    elif check.get('_error'):
+    elif check.get('_error') and 'changesNotSentForReview' not in check.get('_detail', ''):
+        # (changesNotSentForReview: finish() commits without sending for review.)
         sys.exit(f"validate -> {check['_error']}\n{check['_detail'][:1500]}")
     finish(edit, args.ausfuehren)
 
