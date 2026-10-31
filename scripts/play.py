@@ -82,14 +82,30 @@ def new_edit():
     return call('POST', f'{API}/edits', {})['id']
 
 
+MANUAL_REVIEW = False  # set once Play refuses to send changes for review by itself
+
+
 def finish(edit, ausfuehren):
-    call('POST', f'{API}/edits/{edit}:validate')
+    global MANUAL_REVIEW
+    query = '?changesNotSentForReview=true' if MANUAL_REVIEW else ''
+    res = call('POST', f'{API}/edits/{edit}:validate{query}', fatal=False)
+    if res.get('_error') == 400 and 'changesNotSentForReview' in res.get('_detail', ''):
+        # After a policy rejection (or with managed publishing) Play won't send changes for
+        # review itself: they are committed here and sent from the Play Console.
+        MANUAL_REVIEW, query = True, '?changesNotSentForReview=true'
+        res = call('POST', f'{API}/edits/{edit}:validate{query}', fatal=False)
+    if res.get('_error'):
+        sys.exit(f"POST {API}/edits/{edit}:validate -> {res['_error']}\n{res['_detail'][:1500]}")
     if not ausfuehren:
         call('DELETE', f'{API}/edits/{edit}')
         print('Probelauf: Änderungen geprüft und verworfen (nichts veröffentlicht).')
         return
-    call('POST', f'{API}/edits/{edit}:commit')
-    print('Übernommen.')
+    call('POST', f'{API}/edits/{edit}:commit{query}')
+    if MANUAL_REVIEW:
+        print('Übernommen, aber NICHT zur Prüfung gesendet: Play Console → Veröffentlichungsübersicht → '
+              '„Änderungen zur Überprüfung senden“.')
+    else:
+        print('Übernommen.')
 
 
 def upload_image(edit, lang, kind, path: Path):
