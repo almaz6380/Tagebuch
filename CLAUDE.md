@@ -74,8 +74,18 @@ Version bleibt 1.0.0, bis die erste Fassung veröffentlicht ist.
   lässt sie dann in Ruhe.
 - Android: Das erste Release musste Josef in der Play Console selbst zur Prüfung senden; solange es
   geprüft wird, ersetzt ein neuer Upload nur den Entwurf.
+- **31.10.2026: Google beanstandet „Abstürze bei Nutzern“** (Richtlinie zu fehlerhaften
+  Funktionen) — die Android-Release-App stürzte auf JEDEM Gerät sofort ab:
+  `Failed to create an instance of androidx.work.impl.WorkDatabase`. Ursache: Expo SDK 58 schreibt
+  `android.enableMinifyInReleaseBuilds=true`, R8 entfernte die per Reflexion geladene
+  WorkManager-Datenbank. Fix: `plugins/withNoMinify.js` schaltet R8 und Resource-Shrinking ab
+  (Keep-Regeln für eine Klasse wären zu eng — Werbung, Kauf, Mitteilungen laden genauso).
+  ⚠ **Vor jedem Android-Upload** den Workflow **„Tagebuch Android-Test“** (mahjong-app,
+  `tagebuch-android-test.yml`, Input `ref`) laufen lassen: baut die Release-APK, startet sie auf
+  Emulatoren API 34/35 und schlägt fehl, wenn sie nach 40 s nicht mehr läuft; Stacktrace im
+  Protokoll. Debug-Builds und das Web zeigen solche Fehler nie.
 
-## Stand 30.10.2026
-iOS 1.0.0 / Build 120 in Apples Prüfung, Android-Build mit den vier Funktionen bei Google (erstes
-Release in Prüfung). Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails
-Screenshot von Josef auswerten.
+## Stand 31.10.2026
+iOS 1.0.0 / Build 120 in Apples Prüfung. Android: Absturz-Fix (R8 aus) im Emulator bestätigt, neuer
+Build an Google. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails Screenshot
+von Josef auswerten.
