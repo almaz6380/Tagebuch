@@ -84,8 +84,12 @@ Version bleibt 1.0.0, bis die erste Fassung veröffentlicht ist.
   `tagebuch-android-test.yml`, Input `ref`) laufen lassen: baut die Release-APK, startet sie auf
   Emulatoren API 34/35 und schlägt fehl, wenn sie nach 40 s nicht mehr läuft; Stacktrace im
   Protokoll. Debug-Builds und das Web zeigen solche Fehler nie.
+- Nach einer Beanstandung nimmt Play Änderungen nicht mehr automatisch zur Prüfung an
+  (400 „Changes cannot be sent for review automatically“). `play.py` übernimmt dann mit
+  `changesNotSentForReview=true` — **nur** am `:commit`, `:validate` kennt den Parameter nicht —
+  und Josef tippt in der Play Console „Änderungen zur Überprüfung senden“.
 
 ## Stand 31.10.2026
-iOS 1.0.0 / Build 120 in Apples Prüfung. Android: Absturz-Fix (R8 aus) im Emulator bestätigt, neuer
-Build an Google. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails Screenshot
+iOS 1.0.0 / Build 120 in Apples Prüfung. Android: Absturz-Fix (R8 aus) im Emulator bestätigt,
+versionCode 124 in Production übernommen, wartet auf Josefs „Zur Überprüfung senden“. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails Screenshot
 von Josef auswerten.
