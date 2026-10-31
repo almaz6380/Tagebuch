@@ -87,15 +87,15 @@ MANUAL_REVIEW = False  # set once Play refuses to send changes for review by its
 
 def finish(edit, ausfuehren):
     global MANUAL_REVIEW
-    query = '?changesNotSentForReview=true' if MANUAL_REVIEW else ''
-    res = call('POST', f'{API}/edits/{edit}:validate{query}', fatal=False)
+    res = call('POST', f'{API}/edits/{edit}:validate', fatal=False)
     if res.get('_error') == 400 and 'changesNotSentForReview' in res.get('_detail', ''):
         # After a policy rejection (or with managed publishing) Play won't send changes for
-        # review itself: they are committed here and sent from the Play Console.
-        MANUAL_REVIEW, query = True, '?changesNotSentForReview=true'
-        res = call('POST', f'{API}/edits/{edit}:validate{query}', fatal=False)
-    if res.get('_error'):
+        # review itself: they are committed with the flag (only :commit knows it, :validate
+        # rejects it) and sent for review from the Play Console.
+        MANUAL_REVIEW = True
+    elif res.get('_error'):
         sys.exit(f"POST {API}/edits/{edit}:validate -> {res['_error']}\n{res['_detail'][:1500]}")
+    query = '?changesNotSentForReview=true' if MANUAL_REVIEW else ''
     if not ausfuehren:
         call('DELETE', f'{API}/edits/{edit}')
         print('Probelauf: Änderungen geprüft und verworfen (nichts veröffentlicht).')
