@@ -621,9 +621,20 @@ def cmd_einreichen(args):
     if 'appStoreVersion' not in submission_kinds(sub['id']):
         add_submission_item(sub['id'], 'appStoreVersion', 'appStoreVersions', version['id'])
     attach_iap(app['id'], sub['id'], t['iap']['productId'])
-    call('PATCH', f"/v1/reviewSubmissions/{sub['id']}", {
-        'data': {'type': 'reviewSubmissions', 'id': sub['id'], 'attributes': {'submitted': True}}
-    })
+    # Right after a new build is attached Apple answers 409 "Version is not ready to be
+    # submitted yet, please try again later" for a few minutes; wait and try again.
+    for _ in range(20):
+        res = call('PATCH', f"/v1/reviewSubmissions/{sub['id']}", {
+            'data': {'type': 'reviewSubmissions', 'id': sub['id'], 'attributes': {'submitted': True}}
+        }, ok=(200, 201, 204, 409))
+        if not res.get('errors'):
+            break
+        if 'not ready to be submitted' not in json.dumps(res['errors']):
+            sys.exit(f"PATCH reviewSubmissions -> 409\n{json.dumps(res['errors'], indent=2)[:2500]}")
+        print('Apple: Version noch nicht bereit, warte 1 min …', flush=True)
+        time.sleep(60)
+    else:
+        sys.exit('Apple hat die Version nach 20 min noch nicht zur Einreichung freigegeben – Lauf später wiederholen.')
     print(f"Zur Prüfung eingereicht: Version {t['version']}, Build {args.build} (reviewSubmission {sub['id']}).")
 
 
