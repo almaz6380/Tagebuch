@@ -89,6 +89,19 @@ Version bleibt 1.0.0, bis die erste Fassung veröffentlicht ist.
   `changesNotSentForReview=true` — **nur** am `:commit`, `:validate` kennt den Parameter nicht —
   und Josef tippt in der Play Console „Änderungen zur Überprüfung senden“.
 
+- **22.11.2026: Apple lehnt Build 120 nach 2.1(a) ab — Absturz beim Start** (iPhone + iPad, iOS 27.2.1).
+  Crash-Log (Resolution Center, Anhang `.ips`): dyld `Symbol not found:
+  AnyModule._classTypes`, referenziert von `ExpoPrint.framework`, erwartet in `ExpoModulesCore`.
+  Expo 58 liefert Module als **vorgebaute Frameworks**: expo-print 58.0.8 war gegen ExpoModulesCore
+  ≥ 58.0.28 gebaut, installiert war 58.0.23 (über `expo ~58.0.16`). Fix: `expo ~58.0.26` und
+  `npx expo install --fix` (Core 58.1.0, kennt `_classTypes`), dazu Peer-Paket `expo-asset`.
+  ⚠ **Neue Expo-Pakete nie einzeln auf einen alten SDK-Patchstand setzen:** nach jedem
+  `npx expo install <paket>` auch `npx expo install --fix` und `npx expo-doctor` laufen lassen.
+  Typecheck, Web-Build und Android fangen so etwas NICHT ab — nur der iOS-Start.
+  Workflow **„Tagebuch iOS-Test“** (mahjong-app, `tagebuch-ios-test.yml`) startet den Release-Build im
+  Simulator; die Lebend-Erkennung ist noch unzuverlässig (meldete auch ohne Absturzbericht „beendet“),
+  das Apple-Crash-Log ist die verlässliche Quelle.
+
 ## Stand 31.10.2026
 iOS 1.0.0 / Build 120 in Apples Prüfung. Android: Absturz-Fix (R8 aus) im Emulator bestätigt,
 versionCode 124 in Production übernommen, wartet auf Josefs „Zur Überprüfung senden“. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails Screenshot
