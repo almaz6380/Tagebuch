@@ -634,8 +634,21 @@ def cmd_einreichen(args):
         print('Apple: Version noch nicht bereit, warte 1 min …', flush=True)
         time.sleep(60)
     else:
+        describe_submission(sub['id'], version['id'])
         sys.exit('Apple hat die Version nach 20 min noch nicht zur Einreichung freigegeben – Lauf später wiederholen.')
     print(f"Zur Prüfung eingereicht: Version {t['version']}, Build {args.build} (reviewSubmission {sub['id']}).")
+
+
+def describe_submission(sub_id: str, version_id: str):
+    """Prints what Apple holds for a submission that won't go through, for diagnosis."""
+    v = get(f'/v1/appStoreVersions/{version_id}?include=build&fields[appStoreVersions]=versionString,appStoreState,appVersionState')
+    print('Version:', json.dumps(v['data']['attributes']), '| Build:',
+          [b['attributes'].get('version') for b in v.get('included', [])])
+    sub = get(f'/v1/reviewSubmissions/{sub_id}')['data']['attributes']
+    print('Einreichung:', json.dumps(sub))
+    for item in get(f'/v1/reviewSubmissions/{sub_id}/items?limit=50&include=appStoreVersion,inAppPurchaseVersion')['data']:
+        rel = {k: (v.get('data') or {}).get('id') for k, v in (item.get('relationships') or {}).items() if isinstance(v, dict)}
+        print('Eintrag:', item['id'], json.dumps(item['attributes']), {k: x for k, x in rel.items() if x})
 
 
 def resolve_items(sub_id: str):
@@ -645,8 +658,11 @@ def resolve_items(sub_id: str):
         res = call('PATCH', f"/v1/reviewSubmissionItems/{item['id']}", {
             'data': {'type': 'reviewSubmissionItems', 'id': item['id'], 'attributes': {'resolved': True}}
         }, ok=(200, 201, 204, 409))
-        note = ' (Apple: nicht nötig)' if res.get('errors') else ''
-        print(f"Eintrag {item['id'][:8]}… ({item['attributes'].get('state')}) als gelöst markiert{note}.")
+        if res.get('errors'):
+            print(f"Eintrag {item['id'][:8]}… ({item['attributes'].get('state')}): Apple lehnt 'resolved' ab:\n"
+                  f"{json.dumps(res['errors'], indent=2)[:1500]}")
+        else:
+            print(f"Eintrag {item['id'][:8]}… ({item['attributes'].get('state')}) als gelöst markiert.")
 
 
 def submission_kinds(sub_id: str) -> set:
