@@ -102,7 +102,17 @@ Version bleibt 1.0.0, bis die erste Fassung veröffentlicht ist.
   Simulator; die Lebend-Erkennung ist noch unzuverlässig (meldete auch ohne Absturzbericht „beendet“),
   das Apple-Crash-Log ist die verlässliche Quelle.
 
-## Stand 31.10.2026
-iOS 1.0.0 / Build 120 in Apples Prüfung. Android: Absturz-Fix (R8 aus) im Emulator bestätigt,
-versionCode 124 in Production übernommen, wartet auf Josefs „Zur Überprüfung senden“. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails Screenshot
-von Josef auswerten.
+- **22.11.2026: Einreichung blockiert durch Pflicht-Formulare.** Nach dem Absturz-Fix nahm Apple Build
+  126 nicht an: `submitted: true` → 409 „Version is not ready to be submitted yet“ (auch nach 20 min),
+  das Auflösen des abgelehnten Eintrags → `STATE_ERROR.PPM.compliance.form.SECURITY….NEW_APP_SUBMISSION_BLOCK`
+  und `….AIGENERATE….` am **appInfo**. Das sind neue Pflicht-Angaben (Sicherheit, KI-generierte Inhalte),
+  die nur Josef in App Store Connect ausfüllen kann (App-Informationen). `asc.py` gibt solche
+  Meldungen jetzt vollständig aus (`resolve_items`, `describe_submission`).
+  Zum erneuten Einreichen ohne Neubau: Workflow **„Tagebuch iOS einreichen“** (mahjong-app,
+  `tagebuch-einreichen.yml`, Input `build`).
+
+## Stand 22.11.2026
+iOS 1.0.0 / Build 126 (Absturz-Fix) eingereicht, nach Ablehnung von Build 120 wegen Absturz beim Start.
+Android: versionCode 124 (R8-Fix) in Production übernommen, wartet auf Josefs „Zur Überprüfung
+senden“ in der Play Console. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails
+Screenshot von Josef auswerten.
