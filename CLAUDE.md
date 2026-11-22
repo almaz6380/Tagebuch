@@ -112,7 +112,7 @@ Version bleibt 1.0.0, bis die erste Fassung veröffentlicht ist.
   `tagebuch-einreichen.yml`, Input `build`).
 
 ## Stand 22.11.2026
-iOS 1.0.0 / Build 126 (Absturz-Fix) eingereicht, nach Ablehnung von Build 120 wegen Absturz beim Start.
-Android: versionCode 124 (R8-Fix) in Production übernommen, wartet auf Josefs „Zur Überprüfung
-senden“ in der Play Console. Web live. Als Nächstes: Antworten von Apple/Google abwarten; bei Mails
-Screenshot von Josef auswerten.
+iOS 1.0.0 / Build 126 (Absturz-Fix) in Apples Prüfung (eingereicht 22.11., 16:56), nach Ablehnung
+von Build 120 wegen Absturz beim Start. Android: veröffentlicht seit 12.11.2026 (versionCode 124,
+R8-Fix); die neueren Expo-Pakete kommen mit dem nächsten Android-Update. Web live. Als Nächstes:
+Apples Antwort abwarten; bei Mails Screenshot von Josef auswerten.
